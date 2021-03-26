@@ -12,6 +12,7 @@ import android.widget.Button;
 public class FirstActivity extends AppCompatActivity {
 
     private Button signInButton;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,15 @@ public class FirstActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FirstActivity.this, RegisterActivity.class);
                 FirstActivity.this.startActivity(intent);
-//                finish();
+            }
+        });
+
+        loginButton = (Button) findViewById(R.id.loginButton);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FirstActivity.this, LoginActivity.class);
+                FirstActivity.this.startActivity(intent);
             }
         });
     }

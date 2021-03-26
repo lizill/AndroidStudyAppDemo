@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.studyapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,8 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyApp">
         <activity
+            android:name=".UserNameActivity"
+            android:parentActivityName=".LoginActivity"/>
+        <activity
+            android:name=".LoginActivity"
+            android:parentActivityName=".FirstActivity" />
+        <activity
             android:name=".RegisterActivity"
-            android:parentActivityName=".FirstActivity"/>
+            android:parentActivityName=".FirstActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".FirstActivity">
             <intent-filter>
