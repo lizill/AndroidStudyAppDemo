@@ -46,4 +46,6 @@
         android:id="@+id/loginButton"
         />
 
+    <include layout="@layout/progress_bar"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -40,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String userID = idET.getText().toString();
-                String userPW = passwordET.getText().toString();
+                String userPassword = passwordET.getText().toString();
 
                 if(userID.isEmpty()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
@@ -50,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                             .show();
                     return;
                 }
-                if(userPW.isEmpty()) {
+                if(userPassword.isEmpty()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                     builder.setMessage("Please insert Password")
                             .setPositiveButton("close", null)
@@ -67,6 +68,12 @@ public class LoginActivity extends AppCompatActivity {
                             JSONObject jsonResponse = new JSONObject(response);
                             boolean success = jsonResponse.getBoolean("success");
                             if(success) {
+                                // Save user info
+                                SharedPreferences.Editor autoLogin = FirstActivity.userInfo.edit();
+                                autoLogin.putString("inputID", userID);
+                                autoLogin.putString("inputPassword", userPassword);
+                                autoLogin.commit();
+
                                 progressBar.setVisibility(View.GONE);
                                 Intent intent = new Intent(LoginActivity.this, UserNameActivity.class);
                                 LoginActivity.this.startActivity(intent);
@@ -86,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 };
-                LoginRequest loginRequest = new LoginRequest(userID, userPW, responseLister);
+                LoginRequest loginRequest = new LoginRequest(userID, userPassword, responseLister);
                 RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                 queue.add(loginRequest);
             }
