@@ -70,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
                             if(success) {
                                 // Save user info
                                 SharedPreferences.Editor autoLogin = FirstActivity.userInfo.edit();
-                                autoLogin.putString("inputID", userID);
-                                autoLogin.putString("inputPassword", userPassword);
+                                autoLogin.putString(FirstActivity.USER_ID, userID);
+                                autoLogin.putString(FirstActivity.USER_PASSWORD, userPassword);
                                 autoLogin.commit();
 
                                 progressBar.setVisibility(View.GONE);

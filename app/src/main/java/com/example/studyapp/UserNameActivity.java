@@ -34,7 +34,8 @@ public class UserNameActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         userNameET = (EditText) findViewById(R.id.userNameET);
-        userID = FirstActivity.userInfo.getString("inputID", null);
+
+        userID = FirstActivity.userInfo.getString(FirstActivity.USER_ID, null);
 
         completeButton = (Button) findViewById(R.id.completeButton);
         completeButton.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +62,7 @@ public class UserNameActivity extends AppCompatActivity {
                             if(success) {
                                 // Save user Name
                                 SharedPreferences.Editor autoLogin = FirstActivity.userInfo.edit();
-                                autoLogin.putString("inputName", userName);
+                                autoLogin.putString(FirstActivity.USER_NAME, userName);
                                 autoLogin.commit();
 
                                 Toast.makeText(UserNameActivity.this, "Wellcome !! " + userName + " !!", Toast.LENGTH_LONG).show();

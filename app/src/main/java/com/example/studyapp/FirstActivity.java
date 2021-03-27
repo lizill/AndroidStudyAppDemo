@@ -22,8 +22,12 @@ import org.json.JSONObject;
 public class FirstActivity extends AppCompatActivity {
 
     public static SharedPreferences userInfo;
+    public static final String USER_INFO = "userInfo";
+    public static final String USER_ID = "userId";
+    public static final String USER_PASSWORD = "userPassword";
+    public static final String USER_NAME = "userName";
 
-    private String userID, userPassword, userName;
+    private String userId, userPassword, userName;
     private ProgressBar progressBar;
     private Button signInButton;
     private Button loginButton;
@@ -39,13 +43,13 @@ public class FirstActivity extends AppCompatActivity {
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        userInfo = getSharedPreferences("userInfo", Activity.MODE_PRIVATE);
+        userInfo = getSharedPreferences(USER_INFO, Activity.MODE_PRIVATE);
 
-        userID = userInfo.getString("inputID",null);
-        userPassword = userInfo.getString("inputPassword",null);
-        userName = userInfo.getString("inputName", null);
+        userId = userInfo.getString(USER_ID,null);
+        userPassword = userInfo.getString(USER_PASSWORD,null);
+        userName = userInfo.getString(USER_NAME, null);
 
-        if(userID != null && userPassword != null && userName != null) {
+        if(userId != null && userPassword != null && userName != null) {
             progressBar.setVisibility(View.VISIBLE);
             Response.Listener<String> responseLister = new Response.Listener<String>() {
                 @Override
@@ -73,11 +77,11 @@ public class FirstActivity extends AppCompatActivity {
                     }
                 }
             };
-            LoginRequest loginRequest = new LoginRequest(userID, userPassword, responseLister);
+            LoginRequest loginRequest = new LoginRequest(userId, userPassword, responseLister);
             RequestQueue queue = Volley.newRequestQueue(FirstActivity.this);
             queue.add(loginRequest);
         }
-        else if (userID != null && userPassword != null && userName == null) {
+        else if (userId != null && userPassword != null && userName == null) {
             progressBar.setVisibility(View.VISIBLE);
             Response.Listener<String> responseLister = new Response.Listener<String>() {
                 @Override
@@ -105,7 +109,7 @@ public class FirstActivity extends AppCompatActivity {
                     }
                 }
             };
-            LoginRequest loginRequest = new LoginRequest(userID, userPassword, responseLister);
+            LoginRequest loginRequest = new LoginRequest(userId, userPassword, responseLister);
             RequestQueue queue = Volley.newRequestQueue(FirstActivity.this);
             queue.add(loginRequest);
         }
