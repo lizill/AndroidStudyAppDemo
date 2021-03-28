@@ -44,11 +44,7 @@ public class UserNameActivity extends AppCompatActivity {
                 String userName = userNameET.getText().toString();
 
                 if(userName.isEmpty()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(UserNameActivity.this);
-                    builder.setMessage("Please insert Name")
-                            .setPositiveButton("close", null)
-                            .create()
-                            .show();
+                    negativeBuilder("Please insert Name", "close");
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
@@ -65,18 +61,14 @@ public class UserNameActivity extends AppCompatActivity {
                                 autoLogin.putString(FirstActivity.USER_NAME, userName);
                                 autoLogin.commit();
 
-                                Toast.makeText(UserNameActivity.this, "Wellcome !! " + userName + " !!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(UserNameActivity.this, "Welcome " + userName + " !!", Toast.LENGTH_LONG).show();
                                 progressBar.setVisibility(View.GONE);
                                 Intent intent = new Intent(UserNameActivity.this, MainActivity.class);
                                 UserNameActivity.this.startActivity(intent);
                                 finish();
                             }
                             else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(UserNameActivity.this);
-                                builder.setMessage("Failed Sign Up")
-                                        .setNegativeButton("Retry", null)
-                                        .create()
-                                        .show();
+                                negativeBuilder("Failed Sign Up", "Retry");
                                 progressBar.setVisibility(View.GONE);
                             }
                         } catch (JSONException e) {
@@ -91,5 +83,13 @@ public class UserNameActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void negativeBuilder(String msg, String text) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(UserNameActivity.this);
+        builder.setMessage(msg)
+                .setNegativeButton(text, null)
+                .create()
+                .show();
     }
 }

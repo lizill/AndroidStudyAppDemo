@@ -44,19 +44,11 @@ public class LoginActivity extends AppCompatActivity {
                 String userPassword = passwordET.getText().toString();
 
                 if(userID.isEmpty()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setMessage("Please insert Email")
-                            .setPositiveButton("close", null)
-                            .create()
-                            .show();
+                    negativeBuilder("Please insert Email");
                     return;
                 }
                 if(userPassword.isEmpty()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setMessage("Please insert Password")
-                            .setPositiveButton("close", null)
-                            .create()
-                            .show();
+                    negativeBuilder("Please insert Password");
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
@@ -75,16 +67,14 @@ public class LoginActivity extends AppCompatActivity {
                                 autoLogin.commit();
 
                                 progressBar.setVisibility(View.GONE);
+
+                                // Next Screen
                                 Intent intent = new Intent(LoginActivity.this, UserNameActivity.class);
                                 LoginActivity.this.startActivity(intent);
                                 finish();
                             }
                             else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                builder.setMessage("Failed Sign In")
-                                        .setNegativeButton("Retry", null)
-                                        .create()
-                                        .show();
+                                negativeBuilder("Failed Sign In");
                                 progressBar.setVisibility(View.GONE);
                             }
                         } catch (Exception e) {
@@ -98,5 +88,13 @@ public class LoginActivity extends AppCompatActivity {
                 queue.add(loginRequest);
             }
         });
+    }
+
+    private void negativeBuilder(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setMessage(msg)
+                .setNegativeButton("close", null)
+                .create()
+                .show();
     }
 }

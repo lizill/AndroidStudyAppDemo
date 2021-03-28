@@ -43,7 +43,6 @@ public class RegisterActivity extends AppCompatActivity {
         passwordCheckET = (EditText) findViewById(R.id.passwordCheckET);
 
         registerButton = (Button) findViewById(R.id.registerButton);
-
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,35 +52,19 @@ public class RegisterActivity extends AppCompatActivity {
                 String userPasswordCheck = passwordCheckET.getText().toString();
 
                 if(userID.isEmpty()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                    builder.setMessage("Please insert Email")
-                            .setPositiveButton("close", null)
-                            .create()
-                            .show();
+                    negativeBuilder("Please insert Email", "close");
                     return;
                 }
                 if(userPassword.isEmpty()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                    builder.setMessage("Please insert Password")
-                            .setPositiveButton("close", null)
-                            .create()
-                            .show();
+                    negativeBuilder("Please insert Password", "close");
                     return;
                 }
                 if(userPasswordCheck.isEmpty()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                    builder.setMessage("Please insert Password Check")
-                            .setPositiveButton("close", null)
-                            .create()
-                            .show();
+                    negativeBuilder("Please insert Password Check", "close");
                     return;
                 }
                 if(!userPassword.equals(userPasswordCheck)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                    builder.setMessage("It doesn't match Password And Password Check")
-                            .setPositiveButton("close", null)
-                            .create()
-                            .show();
+                    negativeBuilder("It doesn't match Password And Password Check", "close");
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
@@ -110,11 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 finish();
                                             }
                                             else {
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                                                builder.setMessage("Failed Sign Up")
-                                                        .setNegativeButton("Retry", null)
-                                                        .create()
-                                                        .show();
+                                                negativeBuilder("Failed Sign Up", "Retry");
                                                 progressBar.setVisibility(View.GONE);
                                             }
                                         } catch (JSONException e) {
@@ -128,11 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 queue.add(registerRequest);
                             }
                             else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                                builder.setMessage("Duplicate Email")
-                                        .setNegativeButton("Retry", null)
-                                        .create()
-                                        .show();
+                                negativeBuilder("Duplicate Email", "Retry");
                                 progressBar.setVisibility(View.GONE);
                             }
                         } catch (Exception e) {
@@ -146,5 +121,13 @@ public class RegisterActivity extends AppCompatActivity {
                 queue.add(registerCheck);
             }
         });
+    }
+
+    private void negativeBuilder(String msg, String text) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+        builder.setMessage(msg)
+                .setNegativeButton(text, null)
+                .create()
+                .show();
     }
 }

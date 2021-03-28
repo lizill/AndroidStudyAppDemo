@@ -7,15 +7,27 @@
     tools:context=".FirstActivity"
     android:padding="30dp">
 
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/logoText"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/logo_img"
+        />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="勉強、一人でせずに清熱ダイマーで一緒にしよう！"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/logoText"
+        android:layout_marginTop="10dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <androidx.appcompat.widget.AppCompatButton

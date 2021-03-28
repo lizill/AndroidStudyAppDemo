@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 유저정보 데이터 초기화 (로그아웃)
+                // Logout
                 SharedPreferences.Editor editor = FirstActivity.userInfo.edit();
                 editor.clear();
                 editor.commit();
