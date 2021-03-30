@@ -2,7 +2,6 @@ package com.example.studyapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +10,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class GroupActivity extends AppCompatActivity {
 
     private Button logoutButton;
 
@@ -20,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_group);
 
         logoutButton = (Button) findViewById(R.id.logoutButton);
         logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -30,10 +29,10 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = FirstActivity.userInfo.edit();
                 editor.clear();
                 editor.commit();
-                Intent intent = new Intent(MainActivity.this, FirstActivity.class);
-                MainActivity.this.startActivity(intent);
+                Intent intent = new Intent(GroupActivity.this, FirstActivity.class);
+                GroupActivity.this.startActivity(intent);
                 finish();
-                Toast.makeText(MainActivity.this, "Logout!", Toast.LENGTH_LONG).show();
+                Toast.makeText(GroupActivity.this, "Logout!", Toast.LENGTH_LONG).show();
             }
         });
     }

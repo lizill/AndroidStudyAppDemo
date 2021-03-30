@@ -63,7 +63,7 @@ public class UserNameActivity extends AppCompatActivity {
 
                                 Toast.makeText(UserNameActivity.this, "Welcome " + userName + " !!", Toast.LENGTH_LONG).show();
                                 progressBar.setVisibility(View.GONE);
-                                Intent intent = new Intent(UserNameActivity.this, MainActivity.class);
+                                Intent intent = new Intent(UserNameActivity.this, HomeActivity.class);
                                 UserNameActivity.this.startActivity(intent);
                                 finish();
                             }

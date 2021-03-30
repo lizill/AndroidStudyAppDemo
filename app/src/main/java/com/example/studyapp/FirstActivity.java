@@ -57,9 +57,9 @@ public class FirstActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonResponse = new JSONObject(response);
                         boolean success = jsonResponse.getBoolean("success");
-                        if(success) {
+                        if(success) { // 아이디 비번 닉네임이 정해지면 홈화면으로 자동 로그인
                             progressBar.setVisibility(View.GONE);
-                            Intent intent = new Intent(FirstActivity.this, MainActivity.class);
+                            Intent intent = new Intent(FirstActivity.this, HomeActivity.class);
                             FirstActivity.this.startActivity(intent);
                             finish();
                         }
@@ -89,7 +89,7 @@ public class FirstActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonResponse = new JSONObject(response);
                         boolean success = jsonResponse.getBoolean("success");
-                        if(success) {
+                        if(success) { // 닉네임이 아직 널값일경우 userName으로 이동
                             progressBar.setVisibility(View.GONE);
                             Intent intent = new Intent(FirstActivity.this, UserNameActivity.class);
                             FirstActivity.this.startActivity(intent);

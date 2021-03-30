@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity"
+    android:orientation="vertical"
+    >
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/page"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:layout_above="@id/btns"/>
+
+    <LinearLayout
+        android:id="@+id/btns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/chartonoff"
+            android:textColor="@color/textonoff"
+            android:textStyle="bold"
+            android:text="통계"
+            android:background="#F8F8FA"
+            app:backgroundTint="#F8F8FA"
+            app:backgroundTintMode="multiply"/>
+
+        <Button
+            android:id="@+id/btn2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/planonoff"
+            android:textColor="@color/textonoff"
+            android:textStyle="bold"
+            android:text="플래너"
+            android:background="#F8F8FA"
+            app:backgroundTint="#F8F8FA"
+            app:backgroundTintMode="multiply"/>
+
+        <Button
+            android:id="@+id/btn3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/homeonoff"
+            android:textColor="@color/textonoff"
+            android:textStyle="bold"
+            android:text="홈"
+            android:background="#F8F8FA"
+            app:backgroundTint="#F8F8FA"
+            app:backgroundTintMode="multiply"/>
+
+        <Button
+            android:id="@+id/btn4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/rankonoff"
+            android:textColor="@color/textonoff"
+            android:textStyle="bold"
+            android:text="랭킹"
+            android:background="#F8F8FA"
+            app:backgroundTint="#F8F8FA"
+            app:backgroundTintMode="multiply"/>
+
+        <Button
+            android:id="@+id/btn5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/grouponoff"
+            android:textColor="@color/textonoff"
+            android:textStyle="bold"
+            android:text="그룹"
+            android:background="#F8F8FA"
+            app:backgroundTint="#F8F8FA"
+            app:backgroundTintMode="multiply"/>
+    </LinearLayout>
+
+</RelativeLayout>
