@@ -8,12 +8,50 @@
     android:orientation="vertical"
     >
 
-    <androidx.viewpager.widget.ViewPager
+    <FrameLayout
         android:id="@+id/page"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:layout_above="@id/btns"/>
+        android:layout_above="@id/btns">
+
+        <include
+        android:id="@+id/p1"
+        layout="@layout/p1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+        <include
+            android:id="@+id/p2"
+            layout="@layout/p2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            android:id="@+id/p3"
+            layout="@layout/p3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            android:id="@+id/p4"
+            layout="@layout/p4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            android:id="@+id/p5"
+            layout="@layout/p5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+<!--    <androidx.viewpager.widget.ViewPager-->
+<!--        android:id="@+id/page"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:background="@color/white"-->
+<!--        android:layout_above="@id/btns"/>-->
 
     <LinearLayout
         android:id="@+id/btns"

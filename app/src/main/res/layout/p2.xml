@@ -5,10 +5,16 @@
     android:orientation="vertical"
     android:background="#fff">
 
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="page2"
         />
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:text="page2"-->
+<!--        />-->
 </RelativeLayout>
