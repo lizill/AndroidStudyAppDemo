@@ -18,9 +18,6 @@ public class HomeActivity extends AppCompatActivity {
     String[] name ={"STATISTIC","PLAN","HOME","RANK","GROUP"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#39C0FA")));
-//        getSupportActionBar().setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#39C0FA")));
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -44,31 +41,12 @@ public class HomeActivity extends AppCompatActivity {
                     int tag = (int) v.getTag();
                     page.setCurrentItem(tag);
                     for(int i = 0;i<btns.length;i++){
-//                        btns[i].setTextColor(getResources().getColorStateList(R.color.textonoff));
                         if(tag==i){
                             btns[i].setSelected(true);
-//                            btns[i].setTextColor(Color.parseColor("#454658"));
                         }else{
                             btns[i].setSelected(false);
                         }
                     }
-//                    switch(tag) {
-//                        case 0:
-//                            setTitle("STATISTIC");
-//                            break;
-//                        case 1:
-//                            setTitle("PLAN");
-//                            break;
-//                        case 2:
-//                            setTitle("HOME");
-//                            break;
-//                        case 3:
-//                            setTitle("RANK");
-//                            break;
-//                        case 4:
-//                            setTitle("GROUP");
-//                            break;
-//                    }
                 }
             });
             btns[i].setTag(i);
@@ -82,24 +60,6 @@ public class HomeActivity extends AppCompatActivity {
         }
         @Override
         public Fragment getItem(int position) {
-//            System.out.println(page.getCurrentItem());
-//            switch(page.getCurrentItem()) {
-//                case 0:
-//                    setTitle("STATISTIC");
-//                    break;
-//                case 1:
-//                    setTitle("PLAN");
-//                    break;
-//                case 2:
-//                    setTitle("HOME");
-//                    break;
-//                case 3:
-//                    setTitle("RANK");
-//                    break;
-//                case 4:
-//                    setTitle("GROUP");
-//                    break;
-//            }
 
             switch(position) {
                 case 0:
@@ -116,22 +76,6 @@ public class HomeActivity extends AppCompatActivity {
                     return null;
             }
         }
-
-//        case 0:
-//        setTitle("STATISTIC");
-//                    return new page1();
-//                case 1:
-//        setTitle("PLAN");
-//                    return new page2();
-//                case 2:
-//        setTitle("HOME");
-//                    return new page3();
-//                case 3:
-//        setTitle("RANK");
-//                    return new page4();
-//                case 4:
-//        setTitle("GROUP");
-//                    return new page5();
 
         @Override
         public int getCount() {
