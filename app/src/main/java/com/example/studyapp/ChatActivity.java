@@ -66,8 +66,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private void socketConnect() {
         try {
-            mSocket = IO.socket("http://www.dong0110.com:9876");
-            Log.d("SOCKET", "Connection sucess: " + mSocket.id());
+            mSocket = IO.socket("http://132.226.20.130:9876");
+            Log.d("SOCKET", "Connection success: " + mSocket.id());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
