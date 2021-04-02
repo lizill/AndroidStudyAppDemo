@@ -1,6 +1,7 @@
 package com.example.studyapp.ui.group;
 
 public class RoomData {
+
     private String userID;
     private String roomName;
 
@@ -9,11 +10,11 @@ public class RoomData {
         this.roomName = roomName;
     }
 
-    public String getUserID() {
+    public String getUserId() {
         return userID;
     }
 
-    public void setUserID(String userID) {
+    public void setUserId(String userID) {
         this.userID = userID;
     }
 

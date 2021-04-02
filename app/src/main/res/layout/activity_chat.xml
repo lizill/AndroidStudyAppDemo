@@ -24,7 +24,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <EditText
-            android:id="@+id/send_test"
+            android:id="@+id/send_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="メッセージ作成…"

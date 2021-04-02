@@ -13,11 +13,10 @@ import com.example.studyapp.R;
 import java.util.ArrayList;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private ArrayList<ChatItem> items = new ArrayList<>();
 
-    private ArrayList<ChatItem> itemList = new ArrayList<>();
-
-    public ChatAdapter(ArrayList<ChatItem> itemList) {
-        this.itemList = itemList;
+    public ChatAdapter(ArrayList<ChatItem> list) {
+        this.items = list;
     }
 
     @NonNull
@@ -42,54 +41,57 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (viewHolder instanceof CenterViewHolder) {
-            ChatItem item = itemList.get(position);
+            ChatItem item = items.get(position);
             ((CenterViewHolder) viewHolder).setItem(item);
         } else if (viewHolder instanceof LeftViewHolder) {
-            ChatItem item = itemList.get(position);
+            ChatItem item = items.get(position);
             ((LeftViewHolder) viewHolder).setItem(item);
         } else if (viewHolder instanceof RightViewHolder) {
-            ChatItem item = itemList.get(position);
+            ChatItem item = items.get(position);
             ((RightViewHolder) viewHolder).setItem(item);
         }
     }
 
-    @Override
     public int getItemCount() {
-        return itemList.size();
+        return items.size();
     }
 
     public void addItem(ChatItem item) {
-        itemList.add(item);
+        items.add(item);
         notifyDataSetChanged();
+    }
+
+    public void setItems(ArrayList<ChatItem> items) { this.items = items; }
+
+    public ChatItem getItem(int position){
+        return items.get(position);
     }
 
     @Override
     public int getItemViewType(int position) {
-        return itemList.get(position).getViewType();
+        return items.get(position).getViewType();
     }
 
-    public class CenterViewHolder extends RecyclerView.ViewHolder {
-
+    public class CenterViewHolder extends RecyclerView.ViewHolder{
         TextView contentText;
 
-        public CenterViewHolder(@NonNull View itemView) {
+        public CenterViewHolder(View itemView) {
             super(itemView);
 
             contentText = itemView.findViewById(R.id.content_text);
         }
 
-        public void setItem(ChatItem item) {
+        public void setItem(ChatItem item){
             contentText.setText(item.getContent());
         }
     }
 
     public class LeftViewHolder extends RecyclerView.ViewHolder {
-
         TextView nameText;
         TextView contentText;
         TextView sendTimeText;
 
-        public LeftViewHolder(@NonNull View itemView) {
+        public LeftViewHolder(View itemView) {
             super(itemView);
 
             nameText = itemView.findViewById(R.id.name_text);
@@ -97,19 +99,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             sendTimeText = itemView.findViewById(R.id.send_time_text);
         }
 
-        public void setItem(ChatItem item) {
+        public void setItem(ChatItem item){
             nameText.setText(item.getName());
             contentText.setText(item.getContent());
             sendTimeText.setText(item.getSendTime());
         }
     }
 
-    public class RightViewHolder extends  RecyclerView.ViewHolder {
-
+    public class RightViewHolder extends RecyclerView.ViewHolder{
         TextView contentText;
         TextView sendTimeText;
 
-        public RightViewHolder(@NonNull View itemView) {
+        public RightViewHolder(View itemView) {
             super(itemView);
 
             contentText = itemView.findViewById(R.id.msg_text);

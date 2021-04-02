@@ -28,11 +28,11 @@ public class ChatActivity extends AppCompatActivity {
     private Socket mSocket;
     private Gson gson = new Gson();
 
-    private RecyclerView recyclerView;
-    private ChatAdapter adapter;
-
     private Button sendButton;
     private EditText sendText;
+
+    private RecyclerView recyclerView;
+    private ChatAdapter adapter;
 
     private String userID;
     private String roomName;
@@ -43,33 +43,22 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         Intent intent = getIntent();
+        roomName = intent.getStringExtra("roomName");
         userID = FirstActivity.userInfo.getString(FirstActivity.USER_ID,null);
-        roomName = "testRoom";
 
-        // set recyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ArrayList<ChatItem> itemList = new ArrayList<>();
-        adapter = new ChatAdapter(itemList);
+
+        ArrayList<ChatItem> list = new ArrayList<>();
+
+        adapter = new ChatAdapter(list);
         recyclerView.setAdapter(adapter);
 
-        sendText = (EditText) findViewById(R.id.send_test);
+        sendText = findViewById(R.id.send_text);
 
-        sendButton = (Button) findViewById(R.id.send_btn);
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendMessage();
-            }
-        });
-
-        socketConnect();
-    }
-
-    private void socketConnect() {
         try {
             mSocket = IO.socket("http://132.226.20.103:9876");
-            Log.d("SOCKET", "Connection success: " + mSocket.id());
+            Log.d("SOCKET", "Connection success : " + mSocket.id());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -84,11 +73,19 @@ public class ChatActivity extends AppCompatActivity {
             MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
             addChat(data);
         });
+
+        sendButton = (Button) findViewById(R.id.send_btn);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage();
+            }
+        });
     }
 
     private void addChat(MessageData data) {
         runOnUiThread(() -> {
-            if(data.getType().equals("ENTER") || data.getType().equals("LEFT")) {
+            if (data.getType().equals("ENTER") || data.getType().equals("LEFT")) {
                 adapter.addItem(new ChatItem(data.getFrom(), data.getContent(), toDate(data.getSendTime()), ChatType.CENTER_MESSAGE));
                 adapter.notifyDataSetChanged();
                 recyclerView.scrollToPosition(adapter.getItemCount() - 1);
@@ -103,13 +100,13 @@ public class ChatActivity extends AppCompatActivity {
 
     private void sendMessage() {
         String content = sendText.getText().toString();
-
         if(!content.equals("")) {
             mSocket.emit("newMessage", gson.toJson(new MessageData("MESSAGE",
                     userID,
                     roomName,
                     content,
-                    System.currentTimeMillis())));
+                    System.currentTimeMillis()
+            )));
             adapter.addItem(new ChatItem(userID, content, toDate(System.currentTimeMillis()), ChatType.RIGHT_MESSAGE));
             adapter.notifyDataSetChanged();
             recyclerView.scrollToPosition(adapter.getItemCount() - 1);
