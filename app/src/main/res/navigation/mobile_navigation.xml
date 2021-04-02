@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_chart"
+        android:name="com.example.studyapp.ui.chart.ChartFragment"
+        android:label="@string/title_chart"
+        tools:layout="@layout/fragment_chart" />
+
+    <fragment
+        android:id="@+id/navigation_plan"
+        android:name="com.example.studyapp.ui.plan.PlanFragment"
+        android:label="@string/title_plan"
+        tools:layout="@layout/fragment_plan" />
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.studyapp.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_rank"
+        android:name="com.example.studyapp.ui.rank.RankFragment"
+        android:label="@string/title_rank"
+        tools:layout="@layout/fragment_rank" />
+
+    <fragment
+        android:id="@+id/navigation_group"
+        android:name="com.example.studyapp.ui.group.GroupFragment"
+        android:label="@string/title_rank"
+        tools:layout="@layout/fragment_group" />
+</navigation>
