@@ -11,7 +11,7 @@
         android:id="@+id/rv_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+
         android:scrollbarFadeDuration="0"
         android:scrollbarSize="5dp"
         android:scrollbarThumbVertical="@android:color/darker_gray"
@@ -23,5 +23,5 @@
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
 
-        android:text="추가" />
+        android:text="add" />
 </androidx.constraintlayout.widget.ConstraintLayout>

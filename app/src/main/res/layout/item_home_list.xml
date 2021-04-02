@@ -10,8 +10,9 @@
 
         <ImageView
             android:id="@+id/iv_home_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+
             android:src="@drawable/rp" />
 
         <LinearLayout
@@ -24,13 +25,13 @@
                 android:id="@+id/tv_home_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="홍드로이드" />
+                android:text="testdroid" />
 
             <TextView
                 android:id="@+id/tv_home_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="리사이클러뷰" />
+                android:text="recyclerview" />
 
 
         </LinearLayout>

@@ -17,17 +17,25 @@ import com.example.studyapp.R;
 public class PlanFragment extends Fragment {
 
     private PlanViewModel planViewModel;
-
+    /*
+    view 생성 선언 등등...
+    TextView textView = root.findViewById(R.id.text_home);
+    */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         planViewModel =
                 new ViewModelProvider(this).get(PlanViewModel.class);
         View root = inflater.inflate(R.layout.fragment_plan, container, false);
-
+        /*
+        view 생성 선언 등등...
+        TextView textView = root.findViewById(R.id.text_home);
+        */
         planViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-
+                /*
+                onChnaged= 뷰를 눌러서 실행했을때 실행시킬 이벤트 삽입
+                 */
             }
         });
         return root;
