@@ -17,8 +17,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyapp.FirstActivity;
-import com.example.studyapp.GroupActivity;
-import com.example.studyapp.HomeActivity;
 import com.example.studyapp.R;
 
 public class GroupFragment extends Fragment {
@@ -35,7 +33,6 @@ public class GroupFragment extends Fragment {
         groupViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-
                 logoutButton = (Button) root.findViewById(R.id.logoutButton);
                 logoutButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -50,7 +47,6 @@ public class GroupFragment extends Fragment {
                         Toast.makeText(root.getContext(), "Logout!", Toast.LENGTH_LONG).show();
                     }
                 });
-
                 textView.setText(s);
             }
         });
