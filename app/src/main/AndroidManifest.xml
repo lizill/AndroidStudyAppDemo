@@ -49,6 +49,10 @@
             android:parentActivityName=".HomeActivity"
             >
         </activity>
+        <activity android:name=".ui.group.SearchGroupPage"
+            android:parentActivityName=".HomeActivity"
+            >
+        </activity>
     </application>
 
 </manifest>
