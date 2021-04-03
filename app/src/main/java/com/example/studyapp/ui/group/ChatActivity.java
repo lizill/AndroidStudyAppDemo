@@ -43,7 +43,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         Intent intent = getIntent();
-        roomName = intent.getStringExtra("roomName");
+        roomName = intent.getStringExtra("group");
         userID = FirstActivity.userInfo.getString(FirstActivity.USER_ID,null);
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -57,7 +57,7 @@ public class ChatActivity extends AppCompatActivity {
         sendText = findViewById(R.id.send_text);
 
         try {
-            mSocket = IO.socket("https://132.226.20.103:9876");
+            mSocket = IO.socket("http://132.226.20.103:9876");
             Log.d("SOCKET", "Connection success : " + mSocket.id());
         } catch (URISyntaxException e) {
             e.printStackTrace();

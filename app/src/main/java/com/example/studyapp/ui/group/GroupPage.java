@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.studyapp.GroupActivity;
 import com.example.studyapp.HomeActivity;
 import com.example.studyapp.R;
 
@@ -26,6 +27,7 @@ public class GroupPage extends AppCompatActivity {
     private TextView groupTextView;
     private TextView contentsTextView;
     private Button LeaveButton;
+    private Button enterChatButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,17 @@ public class GroupPage extends AppCompatActivity {
         contentsTextView = findViewById(R.id.contents);
         contentsTextView.setText(contents);
 
+        enterChatButton = findViewById(R.id.chatting);
+        enterChatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupPage.this, ChatActivity.class);
+                intent.putExtra("userID", userID);
+                intent.putExtra("group", group);
+                startActivity(intent);
+            }
+        });
+
         LeaveButton = findViewById(R.id.leaveGroup);
         LeaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +66,7 @@ public class GroupPage extends AppCompatActivity {
             }
         });
     }
+
     private void leaveGroup(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(group).setMessage("정말로 그룹을 탈퇴하시겠습니까?");
