@@ -57,7 +57,7 @@ public class ChatActivity extends AppCompatActivity {
         sendText = findViewById(R.id.send_text);
 
         try {
-            mSocket = IO.socket("http://132.226.20.103:9876");
+            mSocket = IO.socket("https://132.226.20.103:9876");
             Log.d("SOCKET", "Connection success : " + mSocket.id());
         } catch (URISyntaxException e) {
             e.printStackTrace();
