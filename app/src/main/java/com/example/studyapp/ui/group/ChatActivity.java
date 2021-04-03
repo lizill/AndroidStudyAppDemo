@@ -114,8 +114,8 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private String toDate(long currentMiliis) {
-        return new SimpleDateFormat("hh:mm a").format(new Date(currentMiliis));
+    private String toDate(long currentMillis) {
+        return new SimpleDateFormat("hh:mm a").format(new Date(currentMillis));
     }
 
     @Override
