@@ -28,8 +28,6 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
 
-
-
     private HomeViewModel homeViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -62,7 +60,7 @@ public class HomeFragment extends Fragment {
                 btn_add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        HomeData homeData = new HomeData(R.mipmap.ic_launcher, "홍드로이드", "리사이클러뷰");
+                        HomeData homeData = new HomeData(R.mipmap.ic_launcher, "test", "view");
                         arrayList.add(homeData);
                         homeAdapter.notifyDataSetChanged();
                     }
