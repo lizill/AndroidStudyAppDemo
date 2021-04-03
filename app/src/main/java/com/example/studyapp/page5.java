@@ -1,5 +1,6 @@
 package com.example.studyapp;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ public class page5 extends Fragment {
     private Button logoutButton;
 
     public page5() {
-
     }
 
     @Override
