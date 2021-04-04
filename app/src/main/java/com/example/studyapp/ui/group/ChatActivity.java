@@ -83,19 +83,8 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void addChat(MessageData data) {
-        runOnUiThread(() -> {
-            if (data.getType().equals("ENTER") || data.getType().equals("LEFT")) {
-                adapter.addItem(new ChatItem(data.getFrom(), data.getContent(), toDate(data.getSendTime()), ChatType.CENTER_MESSAGE));
-                adapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(adapter.getItemCount() - 1);
-            }
-            else if (!userID.equals(data.getFrom())) {
-                adapter.addItem(new ChatItem(data.getFrom(), data.getContent(), toDate(data.getSendTime()), ChatType.LEFT_MESSAGE));
-                adapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(adapter.getItemCount() - 1);
-            }
-        });
+    private String toDate(long currentMillis) {
+        return new SimpleDateFormat("hh:mm a").format(new Date(currentMillis));
     }
 
     private void sendMessage() {
@@ -114,8 +103,19 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private String toDate(long currentMillis) {
-        return new SimpleDateFormat("hh:mm a").format(new Date(currentMillis));
+    private void addChat(MessageData data) {
+        runOnUiThread(() -> {
+            if (data.getType().equals("ENTER") || data.getType().equals("LEFT")) {
+                adapter.addItem(new ChatItem(data.getFrom(), data.getContent(), toDate(data.getSendTime()), ChatType.CENTER_MESSAGE));
+                adapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+            }
+            else if (!userID.equals(data.getFrom())) {
+                adapter.addItem(new ChatItem(data.getFrom(), data.getContent(), toDate(data.getSendTime()), ChatType.LEFT_MESSAGE));
+                adapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+            }
+        });
     }
 
     @Override
