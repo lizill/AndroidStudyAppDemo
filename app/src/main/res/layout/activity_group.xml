@@ -18,5 +18,18 @@
         android:id="@+id/logoutButton"
         />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="내가 가입한 그룹"
+        android:paddingTop="10dp"
+        android:textAlignment="center"
+        android:background="#3080ff"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        >
+    </TextView>
+
 </RelativeLayout>
 <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
