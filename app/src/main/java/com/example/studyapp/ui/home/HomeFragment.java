@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,8 +19,10 @@ import com.example.studyapp.R;
 import com.example.studyapp.recycle.HomeAdapter;
 import com.example.studyapp.recycle.HomeData;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+import java.util.Timer;
 
 public class HomeFragment extends Fragment {
 
@@ -30,8 +31,6 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
 
-
-
     private HomeViewModel homeViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -39,10 +38,6 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        /*
-        view 생성 선언 등등...
-        TextView textView = root.findViewById(R.id.text_home);
-        */
 
         recyclerView = (RecyclerView) root.findViewById(R.id.rv_home);
         linearLayoutManager = new LinearLayoutManager(root.getContext());
@@ -51,12 +46,9 @@ public class HomeFragment extends Fragment {
         homeAdapter = new HomeAdapter(arrayList);
         recyclerView.setAdapter(homeAdapter);
 
-
-
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-
                 /*
                 onChnaged= 뷰를 눌러서 실행했을때 실행시킬 이벤트 삽입
                  */

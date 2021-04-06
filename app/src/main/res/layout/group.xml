@@ -5,9 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_marginTop="10dp"
-    android:padding="5dp"
+    android:padding="5dp">
 
-    >
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,6 +18,7 @@
         android:textSize="15dp"
         >
     </TextView>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,4 +29,5 @@
         android:id="@+id/contentsText"
         >
     </TextView>
+
 </LinearLayout>
