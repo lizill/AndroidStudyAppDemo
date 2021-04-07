@@ -28,6 +28,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static com.example.studyapp.FirstActivity.USER_ID;
+import static com.example.studyapp.FirstActivity.userInfo;
+
 public class GroupPage extends AppCompatActivity {
     private String group;
     private String contents;
@@ -43,7 +46,7 @@ public class GroupPage extends AppCompatActivity {
         setContentView(R.layout.activity_group_page);
 
         Intent intent = getIntent();
-        userID = intent.getStringExtra("userID");
+        userID = userInfo.getString(USER_ID,null);
         group = intent.getStringExtra("group");
         contents = intent.getStringExtra("contents");
         Log.d("llll", group);

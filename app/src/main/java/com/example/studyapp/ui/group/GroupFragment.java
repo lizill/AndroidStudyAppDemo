@@ -3,6 +3,7 @@ package com.example.studyapp.ui.group;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,6 @@ public class GroupFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), SearchGroupPage.class);
-                        intent.putExtra("userID", userID);
                         startActivity(intent);
                     }
                 });
@@ -75,7 +75,6 @@ public class GroupFragment extends Fragment {
                         String group = (String)((TextView)view.findViewById(R.id.groupText)).getText();
                         String contents = (String)((TextView)view.findViewById(R.id.contentsText)).getText();
                         Intent intent = new Intent(getActivity(), GroupPage.class);
-                        intent.putExtra("userID", userID);
                         intent.putExtra("group", group);
                         intent.putExtra("contents", contents);
                         startActivity(intent);
@@ -128,12 +127,13 @@ public class GroupFragment extends Fragment {
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
                 if(jsonArray.length() == 0) return;
                 int count = 0;
-                String groupName, contents;
+                String groupName, contents, peopleCount;
                 while(count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     groupName = object.getString("groupName");
                     contents = object.getString("contents");
-                    Group group = new Group(groupName, contents);
+                    peopleCount = object.getString("count");
+                    Group group = new Group(groupName, contents, peopleCount);
                     groupList.add(group);
                     adapter.notifyDataSetChanged();
                     count++;

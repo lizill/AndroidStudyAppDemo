@@ -31,6 +31,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.studyapp.FirstActivity.USER_ID;
+import static com.example.studyapp.FirstActivity.userInfo;
+
 public class SearchGroupPage extends AppCompatActivity {
     private ListView groupListView;
     private GroupListAdapter adapter;
@@ -46,9 +49,7 @@ public class SearchGroupPage extends AppCompatActivity {
         actionBar.setTitle("Search new group");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        userID = intent.getStringExtra("userID");
-        Log.d("llll", userID);
+        userID = userInfo.getString(USER_ID,null);
 
         groupListView = (ListView)findViewById(R.id.groupListView);
         groupList = new ArrayList<Group>();
@@ -169,12 +170,13 @@ public class SearchGroupPage extends AppCompatActivity {
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
                 if(jsonArray.length() == 0) return;
                 int count = 0;
-                String groupName, contents;
+                String groupName, contents, peopleCount;
                 while(count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     groupName = object.getString("groupName");
                     contents = object.getString("contents");
-                    Group group = new Group(groupName, contents);
+                    peopleCount = object.getString("count");
+                    Group group = new Group(groupName, contents, peopleCount);
                     groupList.add(group);
                     adapter.notifyDataSetChanged();
                     count++;
