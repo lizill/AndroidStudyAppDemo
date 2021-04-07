@@ -67,6 +67,25 @@ public class SearchGroupPage extends AppCompatActivity {
 
         new BackgroundTask().execute();
     }
+    private void peopleCountIncrease(String group) {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    if (success) {
+                        Log.d("성공",":::");
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        PeopleCountIncreaseRequest peopleCountIncreaseRequest = new PeopleCountIncreaseRequest(group, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(SearchGroupPage.this);
+        queue.add(peopleCountIncreaseRequest);
+    }
 
     private void joinGroup(String group) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -82,6 +101,7 @@ public class SearchGroupPage extends AppCompatActivity {
                             boolean success = jsonResponse.getBoolean("success");
                             if (success) {
                                 Log.d("성공",":::");
+                                peopleCountIncrease(group);
                                 Intent intent = new Intent(SearchGroupPage.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -95,6 +115,7 @@ public class SearchGroupPage extends AppCompatActivity {
                 RequestQueue queue = Volley.newRequestQueue(SearchGroupPage.this);
                 queue.add(joinGroupRequest);
             }
+
         });
 
         builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {

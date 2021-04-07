@@ -6,11 +6,11 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PeopleCountIncreaseRequest extends StringRequest {
-    final static private String URL = "https://www.dong0110.com/chatphp/JoinGroup.php";
+public class PeopleCountDecreaseRequest extends StringRequest {
+    final static private String URL = "https://www.dong0110.com/chatphp/PeopleCountDecrease.php";
     private Map<String, String> parameters;
 
-    public PeopleCountIncreaseRequest(String group, Response.Listener<String> listener){
+    public PeopleCountDecreaseRequest(String group, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
         parameters = new HashMap<>();
         parameters.put("group", group);

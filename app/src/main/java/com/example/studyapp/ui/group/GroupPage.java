@@ -2,6 +2,7 @@ package com.example.studyapp.ui.group;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +19,14 @@ import com.example.studyapp.GroupActivity;
 import com.example.studyapp.HomeActivity;
 import com.example.studyapp.R;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class GroupPage extends AppCompatActivity {
     private String group;
@@ -67,6 +75,26 @@ public class GroupPage extends AppCompatActivity {
         });
     }
 
+    private void peopleCountDecrease() {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    if (success) {
+                        Log.d("성공",":::");
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        PeopleCountDecreaseRequest peopleCountDecreaseRequest = new PeopleCountDecreaseRequest(group, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(GroupPage.this);
+        queue.add(peopleCountDecreaseRequest);
+    }
+
     private void leaveGroup(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(group).setMessage("정말로 그룹을 탈퇴하시겠습니까?");
@@ -81,6 +109,7 @@ public class GroupPage extends AppCompatActivity {
                             boolean success = jsonResponse.getBoolean("success");
                             if (success) {
                                 Log.d("성공",":::");
+                                peopleCountDecrease();
                                 Intent intent = new Intent(GroupPage.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();
