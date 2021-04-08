@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.group.GroupPage"
+    android:orientation="vertical"
+    android:padding="5sp"
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="GroupName"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:id="@+id/groupName"
+        >
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/NumberOfPeople"
+        android:layout_marginTop="30dp"
+        android:textSize="20dp"
+        android:text="멤버 수"
+        android:padding="5dp"
+        android:layout_gravity="center"
+        >
+    </TextView>
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:text="채팅"
+        android:id="@+id/chatting"
+        android:layout_marginTop="20dp"
+        >
+    </Button>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/contents"
+        android:layout_marginTop="30dp"
+        android:textSize="20dp"
+        android:text="내용"
+        android:padding="5dp"
+        >
+    </TextView>
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:text="그룹탈퇴"
+        android:id="@+id/leaveGroup"
+        android:layout_marginTop="20dp"
+        >
+    </Button>
+</LinearLayout>
