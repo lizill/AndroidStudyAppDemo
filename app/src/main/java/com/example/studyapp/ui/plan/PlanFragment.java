@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.studyapp.R;
 import com.example.studyapp.recycle.PlanAdapter;
+import com.example.studyapp.recycle.PlanBtnData;
 import com.example.studyapp.recycle.PlanData;
 
 import java.util.ArrayList;
@@ -25,7 +26,9 @@ import java.util.ArrayList;
 public class PlanFragment extends Fragment {
 
     private ArrayList<PlanData> arrayList;
+    private ArrayList<PlanBtnData> arrayListBtn;
     private PlanAdapter planAdapter;
+
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
 
@@ -47,8 +50,18 @@ public class PlanFragment extends Fragment {
         recyclerView = (RecyclerView) root.findViewById(R.id.rv_plan);
         linearLayoutManager = new LinearLayoutManager(root.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
+
+
         arrayList = new ArrayList<>();
         planAdapter = new PlanAdapter(arrayList);
+
+
+        /*
+        arrayListBtn
+        planBtnAdapter
+
+        */
+
         recyclerView.setAdapter(planAdapter);
 
         planViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
