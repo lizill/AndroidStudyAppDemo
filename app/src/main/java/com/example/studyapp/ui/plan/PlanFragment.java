@@ -76,7 +76,58 @@ public class PlanFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         if(arrayList.size()<=20){
-                            PlanData planData = new PlanData(R.drawable.rp, "test", "view");
+                            PlanData planData=new PlanData(R.drawable.rp, "test", "view","#003080ff");
+                            switch(arrayList.size()){
+                                case 1:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#003080ff");
+                                    break;
+                                case 2:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#113080ff");
+                                    break;
+                                case 3:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#223080ff");
+                                    break;
+                                case 4:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#333080ff");
+                                    break;
+                                case 5:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#443080ff");
+                                    break;
+                                case 6:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#553080ff");
+                                    break;
+                                case 7:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#663080ff");
+                                    break;
+                                case 8:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#773080ff");
+                                    break;
+                                case 9:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#883080ff");
+                                    break;
+                                case 10:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#993080ff");
+                                    break;
+                                case 11:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#aa3080ff");
+                                    break;
+                                case 12:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#bb3080ff");
+                                    break;
+                                case 13:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#cc3080ff");
+                                    break;
+                                case 14:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#dd3080ff");
+                                    break;
+                                case 15:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#ee3080ff");
+                                    break;
+                                default:
+                                    planData = new PlanData(R.drawable.rp, "test", "view","#ff3080ff");
+                                    break;
+                            }
+//                            PlanData planData = new PlanData(R.drawable.rp, "test", "view","ffffff");
                             arrayList.add(planData);
                             planAdapter.notifyDataSetChanged();
                         }else{

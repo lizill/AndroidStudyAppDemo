@@ -1,5 +1,6 @@
 package com.example.studyapp.recycle;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,10 +39,19 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.CustomViewHold
 
     @Override
     public void onBindViewHolder(@NonNull final PlanAdapter.CustomViewHolder holder, int position) {
+
+        if(arrayList.size()==position-1){
+
+            System.out.println(position);
+        }
+
         holder.iv_profile.setImageResource(arrayList.get(position).getIv_profile());
         holder.tv_name.setText(arrayList.get(position).getTv_name());
         holder.tv_content.setText(arrayList.get(position).getTv_content());
-
+//        holder.iv_profile.setBackgroundColor(arrayList.get(position).getTv_content());
+//        holder.iv_profile.setBackgroundColor(Color.parseColor("#dd3080ff"));
+        holder.iv_color.setBackgroundColor(Color.parseColor(arrayList.get(position).getIv_color()));
+//        System.out.println(arrayList.get(position).getIv_color());
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,12 +90,14 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.CustomViewHold
         protected ImageView iv_profile;
         protected TextView tv_name;
         protected TextView tv_content;
+        protected ImageView iv_color;
 
         public CustomViewHolder(View itemView) {
             super(itemView);
             this.iv_profile = (ImageView) itemView.findViewById(R.id.iv_plan_profile);
             this.tv_name = (TextView) itemView.findViewById(R.id.tv_plan_name);
             this.tv_content = (TextView) itemView.findViewById(R.id.tv_plan_content);
+            this.iv_color = (ImageView) itemView.findViewById(R.id.iv_color);
         }
     }
 

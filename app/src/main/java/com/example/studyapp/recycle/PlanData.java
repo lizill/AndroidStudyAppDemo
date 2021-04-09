@@ -4,12 +4,13 @@ public class PlanData {
     private int iv_profile;
     private String tv_name;
     private String tv_content;
+    private String iv_color;
 
-
-    public PlanData(int iv_profile, String tv_name, String tv_content) {
+    public PlanData(int iv_profile, String tv_name, String tv_content, String iv_color) {
         this.iv_profile = iv_profile;
         this.tv_name = tv_name;
         this.tv_content = tv_content;
+        this.iv_color = iv_color;
     }
 
 
@@ -35,5 +36,13 @@ public class PlanData {
 
     public void setTv_content(String tv_content) {
         this.tv_content = tv_content;
+    }
+
+    public String getIv_color() {
+        return iv_color;
+    }
+
+    public void setTv_color(String iv_color) {
+        this.iv_color = iv_color;
     }
 }

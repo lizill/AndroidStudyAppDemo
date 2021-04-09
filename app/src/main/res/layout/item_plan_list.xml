@@ -15,10 +15,10 @@
             android:layout_height="60dp"
             android:src="@drawable/rp" />
         <ImageView
+            android:id="@+id/iv_color"
             android:layout_width="15dp"
             android:layout_height="57dp"
-            android:background="@color/maincolor"
-            android:backgroundTint="@color/maincolor"
+            android:background="@color/white"
             android:layout_marginRight="10dp"/>
 
         <LinearLayout
