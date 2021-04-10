@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
@@ -53,39 +54,48 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 progressBar.setVisibility(View.VISIBLE);
 
-                Response.Listener<String> responseLister = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if(success) {
-                                // Save user info
-                                SharedPreferences.Editor autoLogin = FirstActivity.userInfo.edit();
-                                autoLogin.putString(FirstActivity.USER_ID, userID);
-                                autoLogin.putString(FirstActivity.USER_PASSWORD, userPassword);
-                                autoLogin.commit();
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.accumulate("user_id", userID);
+                    jsonObject.accumulate("user_password", userPassword);
+                    new JSONTask(jsonObject).execute();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                                progressBar.setVisibility(View.GONE);
-
-                                // Next Screen
-                                Intent intent = new Intent(LoginActivity.this, UserNameActivity.class);
-                                LoginActivity.this.startActivity(intent);
-                                finish();
-                            }
-                            else {
-                                negativeBuilder("Failed Sign In");
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                };
-                LoginRequest loginRequest = new LoginRequest(userID, userPassword, responseLister);
-                RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-                queue.add(loginRequest);
+//                Response.Listener<String> responseLister = new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        try {
+//                            JSONObject jsonResponse = new JSONObject(response);
+//                            boolean success = jsonResponse.getBoolean("success");
+//                            if(success) {
+//                                // Save user info
+//                                SharedPreferences.Editor autoLogin = FirstActivity.userInfo.edit();
+//                                autoLogin.putString(FirstActivity.USER_ID, userID);
+//                                autoLogin.putString(FirstActivity.USER_PASSWORD, userPassword);
+//                                autoLogin.commit();
+//
+//                                progressBar.setVisibility(View.GONE);
+//
+//                                // Next Screen
+//                                Intent intent = new Intent(LoginActivity.this, UserNameActivity.class);
+//                                LoginActivity.this.startActivity(intent);
+//                                finish();
+//                            }
+//                            else {
+//                                negativeBuilder("Failed Sign In");
+//                                progressBar.setVisibility(View.GONE);
+//                            }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            progressBar.setVisibility(View.GONE);
+//                        }
+//                    }
+//                };
+//                LoginRequest loginRequest = new LoginRequest(userID, userPassword, responseLister);
+//                RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+//                queue.add(loginRequest);
             }
         });
     }
