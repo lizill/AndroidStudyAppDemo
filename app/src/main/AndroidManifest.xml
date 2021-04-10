@@ -44,6 +44,8 @@
             android:parentActivityName=".HomeActivity"
             >
         </activity>
+        <activity android:name=".ui.plan.PlanSetPage"
+            android:parentActivityName=".HomeActivity"/>
     </application>
 
 </manifest>

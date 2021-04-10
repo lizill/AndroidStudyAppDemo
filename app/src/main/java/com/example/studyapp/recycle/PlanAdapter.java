@@ -41,7 +41,6 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.CustomViewHold
     public void onBindViewHolder(@NonNull final PlanAdapter.CustomViewHolder holder, int position) {
 
         if(arrayList.size()==position-1){
-
             System.out.println(position);
         }
 

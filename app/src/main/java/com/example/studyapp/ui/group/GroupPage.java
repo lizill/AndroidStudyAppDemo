@@ -1,5 +1,6 @@
 package com.example.studyapp.ui.group;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,6 +12,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavInflater;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -18,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.studyapp.GroupActivity;
 import com.example.studyapp.HomeActivity;
 import com.example.studyapp.R;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -73,6 +79,7 @@ public class GroupPage extends AppCompatActivity {
         LeaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                
                 leaveGroup();
             }
         });
@@ -113,6 +120,7 @@ public class GroupPage extends AppCompatActivity {
                             if (success) {
                                 Log.d("성공",":::");
                                 peopleCountDecrease();
+//                                GroupPage.super.onBackPressed();
                                 Intent intent = new Intent(GroupPage.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();
