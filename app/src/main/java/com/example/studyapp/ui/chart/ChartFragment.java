@@ -40,7 +40,6 @@ public class ChartFragment extends Fragment {
 
     private ChartViewModel chartViewModel;
     private RequestQueue requestQueue;
-    private String userID = "gjgjajaj";
     private ArrayList<String> studyTimes = new ArrayList<>();
     private ArrayList<String> studyDates = new ArrayList<>();
     private MaterialCalendarView materialCalendarView;
@@ -115,7 +114,7 @@ public class ChartFragment extends Fragment {
     }
     // _GET request json
     private void parseJson(){
-        String url = String.format("http://gjgjajaj.dothome.co.kr/study.php?userID=%s",userID);
+        String url = String.format(Env.url,Env.userID);
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>(){
                     @Override
