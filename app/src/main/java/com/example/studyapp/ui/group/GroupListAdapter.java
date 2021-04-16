@@ -41,9 +41,11 @@ public class GroupListAdapter extends BaseAdapter {
         View v = View.inflate(context, R.layout.group, null);
         TextView groupText = (TextView)v.findViewById(R.id.groupText);
         TextView contentsText = (TextView)v.findViewById(R.id.contentsText);
+        TextView peopleCountText = (TextView)v.findViewById(R.id.peopleCount);
 
         groupText.setText(groupList.get(position).getGroup());
         contentsText.setText(groupList.get(position).getContents());
+        peopleCountText.setText(groupList.get(position).getPeopleCount());
 
         v.setTag(groupList.get(position).getGroup());
         return v;
