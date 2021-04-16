@@ -2,6 +2,8 @@ package com.example.studyapp;
 
 import android.os.AsyncTask;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -18,9 +20,11 @@ import java.net.URL;
 public class JSONTask extends AsyncTask<String, String, String> {
 
     private JSONObject jsonObject;
+    private String urlPath = "";
 
-    public JSONTask(JSONObject jsonObject) {
+    public JSONTask(JSONObject jsonObject, String urlPath) {
         this.jsonObject = jsonObject;
+        this.urlPath = urlPath;
     }
 
     @Override
@@ -30,7 +34,7 @@ public class JSONTask extends AsyncTask<String, String, String> {
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("http://132.226.20.103:3000/login");
+                URL url = new URL("http://132.226.20.103:3000/" + urlPath);
                 con = (HttpURLConnection) url.openConnection();
 
                 con.setRequestMethod("POST");
@@ -82,5 +86,22 @@ public class JSONTask extends AsyncTask<String, String, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
         System.out.println(result);
+        try {
+            JSONArray jsonArray = new JSONArray(result);
+            JSONObject userInfo = null;
+            for(int i=0; i<jsonArray.length(); i++) {
+                userInfo = jsonArray.getJSONObject(i);
+            }
+            if(userInfo == null) {
+                System.out.println("없는 아이디이거나 비밀번호가 틀렸습니다.");
+                return;
+            }
+            System.out.println("어서오세요 환영합니다!");
+            System.out.println(userInfo.getString("userID"));
+            System.out.println(userInfo.getString("userPassword"));
+            System.out.println(userInfo.getString("userName"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.accumulate("user_id", userID);
                     jsonObject.accumulate("user_password", userPassword);
-                    new JSONTask(jsonObject).execute();
+                    new JSONTask(jsonObject, "login").execute();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
