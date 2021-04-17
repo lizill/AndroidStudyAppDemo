@@ -15,8 +15,13 @@
         android:theme="@style/Theme.StudyApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.group.MakeGroup"
+            android:parentActivityName=".HomeActivity"
+            >
+        </activity>
+        <activity
             android:name=".ui.group.ChatActivity"
-            android:parentActivityName=".GroupActivity"/>
+            android:parentActivityName=".GroupActivity" />
         <activity android:name=".HomeActivity" />
         <activity
             android:name=".UserNameActivity"
@@ -28,7 +33,8 @@
         <activity
             android:name=".RegisterActivity"
             android:parentActivityName=".FirstActivity" />
-        <activity android:name=".FirstActivity"
+        <activity
+            android:name=".FirstActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,6 +42,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         <activity android:name=".ui.group.GroupPage"
             android:parentActivityName=".HomeActivity"
             >
@@ -46,6 +53,14 @@
         </activity>
         <activity android:name=".ui.plan.PlanSetPage"
             android:parentActivityName=".HomeActivity"/>
+=======
+        <activity
+            android:name=".ui.group.GroupPage"
+            android:parentActivityName=".HomeActivity"></activity>
+        <activity
+            android:name=".ui.group.SearchGroupPage"
+            android:parentActivityName=".HomeActivity"></activity>
+>>>>>>> c69a02a1de31fc0f7b4872183d0f56ed36dcd036
     </application>
 
 </manifest>

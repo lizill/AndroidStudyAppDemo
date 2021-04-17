@@ -40,7 +40,22 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
     implementation 'androidx.recyclerview:recyclerview:1.2.0-rc01'
+<<<<<<< HEAD
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+=======
+
+
+    // Study information fragment implementation
+    //timeline
+    implementation 'com.github.vipulasri:timelineview:1.1.5'
+    //chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    //viewPager2
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    //Calendar
+    implementation "com.prolificinteractive:material-calendarview:1.4.3"
+
+>>>>>>> c69a02a1de31fc0f7b4872183d0f56ed36dcd036
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

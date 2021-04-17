@@ -29,7 +29,7 @@ public class Group {
     }
 
     public String getPeopleCount() {
-        return "멤버 수: " + peopleCount + "명";
+        return peopleCount + "명";
     }
 
     public void setContents(String contents) {

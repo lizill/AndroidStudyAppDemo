@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:layout_marginTop="10dp"
     android:padding="5dp"
+    android:background="@drawable/listview_background"
 
     >
     <LinearLayout
