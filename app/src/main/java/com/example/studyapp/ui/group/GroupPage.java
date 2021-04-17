@@ -86,10 +86,6 @@ public class GroupPage extends AppCompatActivity {
         LeaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-<<<<<<< HEAD
-                
-                leaveGroup();
-=======
                 AlertDialog.Builder builder = new AlertDialog.Builder(GroupPage.this);
                 builder.setTitle(group).setMessage("정말로 그룹을 탈퇴하시겠습니까?");
                 builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
@@ -127,7 +123,6 @@ public class GroupPage extends AppCompatActivity {
                 });
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
->>>>>>> c69a02a1de31fc0f7b4872183d0f56ed36dcd036
             }
         });
     }
@@ -152,36 +147,7 @@ public class GroupPage extends AppCompatActivity {
         queue.add(peopleCountDecreaseRequest);
     }
 
-<<<<<<< HEAD
-    private void leaveGroup(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(group).setMessage("정말로 그룹을 탈퇴하시겠습니까?");
-        builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try{
-                            JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if (success) {
-                                Log.d("성공",":::");
-                                peopleCountDecrease();
-//                                GroupPage.super.onBackPressed();
-                                Intent intent = new Intent(GroupPage.this, HomeActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                LeaveGroupRequest LeaveGroupRequest = new LeaveGroupRequest(userID, group, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(GroupPage.this);
-                queue.add(LeaveGroupRequest);
-=======
+
     class BackgroundTask extends AsyncTask<Void, Void, String> {
 
         @Override
@@ -207,7 +173,6 @@ public class GroupPage extends AppCompatActivity {
                 return stringBuilder.toString().trim();
             } catch(Exception e){
                 e.printStackTrace();
->>>>>>> c69a02a1de31fc0f7b4872183d0f56ed36dcd036
             }
             return null;
         }

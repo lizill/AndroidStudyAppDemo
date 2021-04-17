@@ -42,7 +42,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<<<<<<< HEAD
         <activity android:name=".ui.group.GroupPage"
             android:parentActivityName=".HomeActivity"
             >
@@ -53,14 +52,6 @@
         </activity>
         <activity android:name=".ui.plan.PlanSetPage"
             android:parentActivityName=".HomeActivity"/>
-=======
-        <activity
-            android:name=".ui.group.GroupPage"
-            android:parentActivityName=".HomeActivity"></activity>
-        <activity
-            android:name=".ui.group.SearchGroupPage"
-            android:parentActivityName=".HomeActivity"></activity>
->>>>>>> c69a02a1de31fc0f7b4872183d0f56ed36dcd036
     </application>
 
 </manifest>
