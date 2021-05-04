@@ -87,19 +87,13 @@ public class JSONTask extends AsyncTask<String, String, String> {
         super.onPostExecute(result);
         System.out.println(result);
         try {
-            JSONArray jsonArray = new JSONArray(result);
-            JSONObject userInfo = null;
-            for(int i=0; i<jsonArray.length(); i++) {
-                userInfo = jsonArray.getJSONObject(i);
+            JSONObject jsonObject = new JSONObject(result);
+            String resultNum = jsonObject.get("result").toString();
+            if(resultNum.equals("1")) {
+                System.out.println("로그인 성공");
+            } else {
+                System.out.println("로그인 실패");
             }
-            if(userInfo == null) {
-                System.out.println("없는 아이디이거나 비밀번호가 틀렸습니다.");
-                return;
-            }
-            System.out.println("어서오세요 환영합니다!");
-            System.out.println(userInfo.getString("userID"));
-            System.out.println(userInfo.getString("userPassword"));
-            System.out.println(userInfo.getString("userName"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

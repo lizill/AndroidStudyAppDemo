@@ -12,10 +12,16 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private EditText idET, passwordET;
     private Button loginButton;
+    private RequestQueue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         idET = (EditText) findViewById(R.id.idET);
         passwordET = (EditText) findViewById(R.id.passwordET);
 
+        queue = Volley.newRequestQueue(this);
         loginButton = (Button) findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +66,9 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.accumulate("user_id", userID);
                     jsonObject.accumulate("user_password", userPassword);
-                    new JSONTask(jsonObject, "login").execute();
+
+                    JSONTask jsonTask = new JSONTask(jsonObject, "login");
+                    jsonTask.execute();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
