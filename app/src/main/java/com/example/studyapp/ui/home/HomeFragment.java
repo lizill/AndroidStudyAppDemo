@@ -1,5 +1,6 @@
 package com.example.studyapp.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,14 +26,10 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private ArrayList<HomeData> arrayList;
-    private HomeAdapter homeAdapter;
-    private RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
-
-
-
     private HomeViewModel homeViewModel;
+
+    private Button sub1;
+    private TextView tv_data;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,14 +41,19 @@ public class HomeFragment extends Fragment {
         TextView textView = root.findViewById(R.id.text_home);
         */
 
-        recyclerView = (RecyclerView) root.findViewById(R.id.rv_home);
-        linearLayoutManager = new LinearLayoutManager(root.getContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        arrayList = new ArrayList<>();
-        homeAdapter = new HomeAdapter(arrayList);
-        recyclerView.setAdapter(homeAdapter);
+        sub1 = (Button) root.findViewById(R.id.sub1);
+        tv_data = (TextView) root.findViewById(R.id.tv_data);
 
+        sub1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //누른 과목 정보 보내주기
+                Intent intent = new Intent(getActivity(), StopwatchActivity.class);
+                intent.putExtra("subject", sub1.getText());
+                startActivity(intent);
 
+            }
+        });
 
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -60,15 +62,7 @@ public class HomeFragment extends Fragment {
                 /*
                 onChnaged= 뷰를 눌러서 실행했을때 실행시킬 이벤트 삽입
                  */
-                Button btn_add = (Button) root.findViewById(R.id.btn_add_home);
-                btn_add.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        HomeData homeData = new HomeData(R.mipmap.ic_launcher, "홍드로이드", "리사이클러뷰");
-                        arrayList.add(homeData);
-                        homeAdapter.notifyDataSetChanged();
-                    }
-                });
+
             }
         });
         return root;

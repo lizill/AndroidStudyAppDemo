@@ -14,15 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyApp"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.home.StopwatchActivity"></activity>
         <activity
             android:name=".ui.group.MakeGroup"
-            android:parentActivityName=".HomeActivity"
-            >
-        </activity>
+            android:parentActivityName=".HomeActivity"></activity>
         <activity
             android:name=".ui.group.ChatActivity"
             android:parentActivityName=".GroupActivity" />
-        <activity android:name=".HomeActivity" />
+        <activity android:name=".HomeActivity"></activity>
         <activity
             android:name=".UserNameActivity"
             android:parentActivityName=".LoginActivity" />
@@ -44,10 +43,10 @@
         </activity>
         <activity
             android:name=".ui.group.GroupPage"
-            android:parentActivityName=".HomeActivity"></activity>
+            android:parentActivityName=".HomeActivity" />
         <activity
             android:name=".ui.group.SearchGroupPage"
-            android:parentActivityName=".HomeActivity"></activity>
+            android:parentActivityName=".HomeActivity" />
     </application>
 
 </manifest>
