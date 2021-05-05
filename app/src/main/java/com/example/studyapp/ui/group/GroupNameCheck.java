@@ -7,11 +7,11 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MakeGroupCheck extends StringRequest {
-    final static private String URL = "https://www.dong0110.com/chatphp/LeaveGroup.php";
+public class GroupNameCheck extends StringRequest {
+    final static private String URL = "https://www.dong0110.com/chatphp/GroupNameCheck.php";
     private Map<String, String> parameters;
 
-    public MakeGroupCheck(String groupName, Response.Listener<String> listener){
+    public GroupNameCheck(String groupName, Response.Listener<String> listener){
         super(Request.Method.POST, URL, listener, null);
         parameters = new HashMap<>();
         parameters.put("groupName", groupName);

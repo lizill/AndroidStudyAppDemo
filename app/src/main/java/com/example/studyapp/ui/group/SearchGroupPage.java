@@ -10,15 +10,12 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.studyapp.HomeActivity;
 import com.example.studyapp.R;
 
 import org.json.JSONArray;
@@ -46,10 +43,6 @@ public class SearchGroupPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_group_page);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Search new group");
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
         userID = userInfo.getString(USER_ID,null);
 
@@ -87,16 +80,17 @@ public class SearchGroupPage extends AppCompatActivity {
                                     if (success) {
                                         Log.d("성공",":::");
                                         peopleCountIncrease(group);
-                                        Intent intent = new Intent(SearchGroupPage.this, HomeActivity.class);
-                                        startActivity(intent);
-                                        finish();
+//                                        Intent intent = new Intent(SearchGroupPage.this, HomeActivity.class);
+//                                        startActivity(intent);
+//                                        finish();
+                                        SearchGroupPage.super.onBackPressed();
                                     }
                                 } catch (Exception e){
                                     e.printStackTrace();
                                 }
                             }
                         };
-                        joinGroupRequest joinGroupRequest = new joinGroupRequest(userID, group, responseListener);
+                        JoinGroupRequest joinGroupRequest = new JoinGroupRequest(userID, group, responseListener);
                         RequestQueue queue = Volley.newRequestQueue(SearchGroupPage.this);
                         queue.add(joinGroupRequest);
                     }
@@ -177,13 +171,16 @@ public class SearchGroupPage extends AppCompatActivity {
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
                 if(jsonArray.length() == 0) return;
                 int count = 0;
-                String groupName, contents, peopleCount;
+                String groupName, contents, peopleCount, category, goalTime, master;
                 while(count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     groupName = object.getString("groupName");
                     contents = object.getString("contents");
                     peopleCount = object.getString("count");
-                    Group group = new Group(groupName, contents, peopleCount);
+                    category = object.getString("category");
+                    goalTime = object.getString("goalTime");
+                    master = object.getString("master");
+                    Group group = new Group(groupName, contents, peopleCount, category, goalTime, master);
                     groupList.add(group);
                     adapter.notifyDataSetChanged();
                     count++;

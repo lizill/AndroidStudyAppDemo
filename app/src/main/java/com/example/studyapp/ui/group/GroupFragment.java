@@ -73,10 +73,8 @@ public class GroupFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String group = (String)((TextView)view.findViewById(R.id.groupText)).getText();
-                        String contents = (String)((TextView)view.findViewById(R.id.contentsText)).getText();
                         Intent intent = new Intent(getActivity(), GroupPage.class);
                         intent.putExtra("group", group);
-                        intent.putExtra("contents", contents);
                         startActivity(intent);
                     }
                 });
@@ -127,13 +125,16 @@ public class GroupFragment extends Fragment {
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
                 if(jsonArray.length() == 0) return;
                 int count = 0;
-                String groupName, contents, peopleCount;
+                String groupName, contents, peopleCount, category, goalTime, master;
                 while(count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     groupName = object.getString("groupName");
                     contents = object.getString("contents");
                     peopleCount = object.getString("count");
-                    Group group = new Group(groupName, contents, peopleCount);
+                    category = object.getString("category");
+                    goalTime = object.getString("goalTime");
+                    master = object.getString("master");
+                    Group group = new Group(groupName, contents, peopleCount, category, goalTime, master);
                     groupList.add(group);
                     adapter.notifyDataSetChanged();
                     count++;

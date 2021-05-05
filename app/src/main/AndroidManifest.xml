@@ -43,11 +43,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.group.GroupPage"
-            android:parentActivityName=".HomeActivity"></activity>
+            android:name=".ui.group.GroupPage"></activity>
         <activity
-            android:name=".ui.group.SearchGroupPage"
-            android:parentActivityName=".HomeActivity"></activity>
+            android:name=".ui.group.SearchGroupPage"></activity>
     </application>
 
 </manifest>

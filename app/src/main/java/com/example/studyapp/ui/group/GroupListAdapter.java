@@ -41,11 +41,17 @@ public class GroupListAdapter extends BaseAdapter {
         View v = View.inflate(context, R.layout.group, null);
         TextView groupText = (TextView)v.findViewById(R.id.groupText);
         TextView contentsText = (TextView)v.findViewById(R.id.contentsText);
-        TextView peopleCountText = (TextView)v.findViewById(R.id.peopleCount);
+        TextView peopleCountText = (TextView)v.findViewById(R.id.peopleCountText);
+        TextView categoryText = (TextView)v.findViewById(R.id.categoryText);
+        TextView goalTimeText = (TextView)v.findViewById(R.id.goalTimeText);
+        TextView masterText = (TextView)v.findViewById(R.id.masterText);
 
         groupText.setText(groupList.get(position).getGroup());
         contentsText.setText(groupList.get(position).getContents());
         peopleCountText.setText(groupList.get(position).getPeopleCount());
+        categoryText.setText(groupList.get(position).getCategory());
+        goalTimeText.setText(groupList.get(position).getGoalTime());
+        masterText.setText(groupList.get(position).getMaster());
 
         v.setTag(groupList.get(position).getGroup());
         return v;
