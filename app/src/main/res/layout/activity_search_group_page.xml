@@ -9,14 +9,13 @@
     android:padding="10dp"
     >
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:id="@+id/groupListView"
-        android:dividerHeight="5dp"
-        android:divider="@color/white"
+        android:id="@+id/searchGroupRecyclerView"
+        android:scrollbars="vertical"
         >
-    </ListView>
+    </androidx.recyclerview.widget.RecyclerView>
     <Button
         android:layout_marginTop="10dp"
         android:layout_width="130dp"
