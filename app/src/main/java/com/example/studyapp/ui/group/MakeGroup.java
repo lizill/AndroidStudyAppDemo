@@ -154,9 +154,6 @@ public class MakeGroup extends AppCompatActivity {
                                             boolean success = jsonResponse.getBoolean("success");
                                             if(success) {
                                                 Log.d("결과", "만들기 성공");
-//                                                Intent intent = new Intent(RegisterActivity.this, FirstActivity.class);
-//                                                RegisterActivity.this.startActivity(intent);
-//                                                finish();
                                                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                                                     @Override
                                                     public void onResponse(String response) {

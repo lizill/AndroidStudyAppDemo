@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -33,9 +35,9 @@ import static com.example.studyapp.FirstActivity.USER_ID;
 import static com.example.studyapp.FirstActivity.userInfo;
 
 public class SearchGroupPage extends AppCompatActivity {
-    private ListView groupListView;
-    private GroupListAdapter adapter;
-    private List<Group> groupList;
+    private RecyclerView groupRecyclerView;
+    private SearchGroupRecyclerAdapter adapter;
+    private ArrayList<Group> groupList;
     private String userID;
     private Button makeGroupButton;
 
@@ -45,12 +47,11 @@ public class SearchGroupPage extends AppCompatActivity {
         setContentView(R.layout.activity_search_group_page);
 
         userID = userInfo.getString(USER_ID,null);
-
-        groupListView = (ListView)findViewById(R.id.groupListView);
         groupList = new ArrayList<Group>();
-
-        adapter = new GroupListAdapter(getApplicationContext(), groupList);
-        groupListView.setAdapter(adapter);
+        groupRecyclerView = findViewById(R.id.searchGroupRecyclerView);
+        groupRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new SearchGroupRecyclerAdapter(this, getApplicationContext(), groupList);
+        groupRecyclerView.setAdapter(adapter);
 
         makeGroupButton = findViewById(R.id.makeGroupButton);
         makeGroupButton.setOnClickListener(new View.OnClickListener() {
@@ -61,73 +62,51 @@ public class SearchGroupPage extends AppCompatActivity {
             }
         });
 
-        groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String group = (String)((TextView)view.findViewById(R.id.groupText)).getText();
-                Log.d("?????: ", group);
-                AlertDialog.Builder builder = new AlertDialog.Builder(SearchGroupPage.this);
-                builder.setTitle(group).setMessage("그룹에 가입하시겠습니까?");
-                builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Response.Listener<String> responseListener = new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try{
-                                    JSONObject jsonResponse = new JSONObject(response);
-                                    boolean success = jsonResponse.getBoolean("success");
-                                    if (success) {
-                                        Log.d("성공",":::");
-                                        peopleCountIncrease(group);
-//                                        Intent intent = new Intent(SearchGroupPage.this, HomeActivity.class);
-//                                        startActivity(intent);
-//                                        finish();
-                                        SearchGroupPage.super.onBackPressed();
-                                    }
-                                } catch (Exception e){
-                                    e.printStackTrace();
-                                }
-                            }
-                        };
-                        JoinGroupRequest joinGroupRequest = new JoinGroupRequest(userID, group, responseListener);
-                        RequestQueue queue = Volley.newRequestQueue(SearchGroupPage.this);
-                        queue.add(joinGroupRequest);
-                    }
+//        groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String group = (String)((TextView)view.findViewById(R.id.groupText)).getText();
+//                Log.d("?????: ", group);
+//                AlertDialog.Builder builder = new AlertDialog.Builder(SearchGroupPage.this);
+//                builder.setTitle(group).setMessage("그룹에 가입하시겠습니까?");
+//                builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Response.Listener<String> responseListener = new Response.Listener<String>() {
+//                            @Override
+//                            public void onResponse(String response) {
+//                                try{
+//                                    JSONObject jsonResponse = new JSONObject(response);
+//                                    boolean success = jsonResponse.getBoolean("success");
+//                                    if (success) {
+//                                        Log.d("성공",":::");
+//                                        peopleCountIncrease(group);
+//                                        SearchGroupPage.super.onBackPressed();
+//                                    }
+//                                } catch (Exception e){
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        };
+//                        JoinGroupRequest joinGroupRequest = new JoinGroupRequest(userID, group, responseListener);
+//                        RequestQueue queue = Volley.newRequestQueue(SearchGroupPage.this);
+//                        queue.add(joinGroupRequest);
+//                    }
+//
+//                });
 
-                });
-
-                builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
-        });
+//                builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                });
+//                AlertDialog alertDialog = builder.create();
+//                alertDialog.show();
+//            }
+//        });
 
         new BackgroundTask().execute();
-    }
-    private void peopleCountIncrease(String group) {
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject jsonResponse = new JSONObject(response);
-                    boolean success = jsonResponse.getBoolean("success");
-                    if (success) {
-                        Log.d("성공",":::");
-                    }
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        PeopleCountIncreaseRequest peopleCountIncreaseRequest = new PeopleCountIncreaseRequest(group, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(SearchGroupPage.this);
-        queue.add(peopleCountIncreaseRequest);
     }
 
     class BackgroundTask extends AsyncTask<Void, Void, String> {
@@ -169,9 +148,10 @@ public class SearchGroupPage extends AppCompatActivity {
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
+                Log.d("응답", ""+jsonArray.length());
                 if(jsonArray.length() == 0) return;
                 int count = 0;
-                String groupName, contents, peopleCount, category, goalTime, master;
+                String groupName, contents, peopleCount, category, goalTime, master, startDate;
                 while(count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     groupName = object.getString("groupName");
@@ -180,7 +160,9 @@ public class SearchGroupPage extends AppCompatActivity {
                     category = object.getString("category");
                     goalTime = object.getString("goalTime");
                     master = object.getString("master");
-                    Group group = new Group(groupName, contents, peopleCount, category, goalTime, master);
+                    startDate = object.getString("startDate");
+                    Group group = new Group(groupName, contents, peopleCount, category, goalTime, master, startDate);
+                    Log.d("불러오나", groupName +contents + peopleCount + category + goalTime + master + startDate);
                     groupList.add(group);
                     adapter.notifyDataSetChanged();
                     count++;

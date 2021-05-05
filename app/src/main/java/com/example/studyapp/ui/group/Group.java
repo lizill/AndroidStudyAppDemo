@@ -8,15 +8,26 @@ public class Group {
     String category;
     String goalTime;
     String master;
+    String startDate;
 
-    public Group(String group, String contents, String peopleCount, String category, String goalTime, String master) {
+    public Group(String group, String contents, String peopleCount, String category, String goalTime, String master, String startDate) {
         this.group = group;
         this.contents = contents;
         this.peopleCount = peopleCount;
         this.category = category;
         this.goalTime = goalTime;
         this.master = master;
+        this.startDate = startDate;
     }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
 
     public String getCategory() {
         return category;

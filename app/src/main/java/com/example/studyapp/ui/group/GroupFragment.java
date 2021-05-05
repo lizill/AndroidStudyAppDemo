@@ -17,6 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.studyapp.R;
 
@@ -35,9 +37,9 @@ import static com.example.studyapp.FirstActivity.USER_ID;
 import static com.example.studyapp.FirstActivity.userInfo;
 
 public class GroupFragment extends Fragment {
-    private ListView groupListView;
-    private GroupListAdapter adapter;
-    private List<Group> groupList;
+    private RecyclerView groupRecyclerView;
+    private GroupRecyclerAdapter adapter;
+    private ArrayList<Group> groupList;
     private String userID;
     private Button searchGroupButton;
 
@@ -52,11 +54,11 @@ public class GroupFragment extends Fragment {
         groupViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-
-                groupListView = (ListView)root.findViewById(R.id.groupListView);
                 groupList = new ArrayList<Group>();
-                adapter = new GroupListAdapter(root.getContext(), groupList);
-                groupListView.setAdapter(adapter);
+                groupRecyclerView = root.findViewById(R.id.groupRecyclerView);
+                groupRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                adapter = new GroupRecyclerAdapter(getContext(), groupList);
+                groupRecyclerView.setAdapter(adapter);
 
                 userID = userInfo.getString(USER_ID,null);
 
@@ -65,16 +67,6 @@ public class GroupFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), SearchGroupPage.class);
-                        startActivity(intent);
-                    }
-                });
-
-                groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String group = (String)((TextView)view.findViewById(R.id.groupText)).getText();
-                        Intent intent = new Intent(getActivity(), GroupPage.class);
-                        intent.putExtra("group", group);
                         startActivity(intent);
                     }
                 });
@@ -125,7 +117,7 @@ public class GroupFragment extends Fragment {
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
                 if(jsonArray.length() == 0) return;
                 int count = 0;
-                String groupName, contents, peopleCount, category, goalTime, master;
+                String groupName, contents, peopleCount, category, goalTime, master, startDate;
                 while(count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     groupName = object.getString("groupName");
@@ -134,7 +126,8 @@ public class GroupFragment extends Fragment {
                     category = object.getString("category");
                     goalTime = object.getString("goalTime");
                     master = object.getString("master");
-                    Group group = new Group(groupName, contents, peopleCount, category, goalTime, master);
+                    startDate = object.getString("startDate");
+                    Group group = new Group(groupName, contents, peopleCount, category, goalTime, master, startDate);
                     groupList.add(group);
                     adapter.notifyDataSetChanged();
                     count++;
