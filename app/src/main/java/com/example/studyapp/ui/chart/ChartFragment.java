@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.studyapp.FirstActivity;
 import com.example.studyapp.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -43,12 +44,14 @@ public class ChartFragment extends Fragment {
     private ArrayList<String> studyTimes = new ArrayList<>();
     private ArrayList<String> studyDates = new ArrayList<>();
     private MaterialCalendarView materialCalendarView;
-
+    private String userID;
     private ViewPager2 viewPager2;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         chartViewModel = new ViewModelProvider(this).get(ChartViewModel.class);
         View root = inflater.inflate(R.layout.activity_chart, container, false);
+
+        userID = FirstActivity.userInfo.getString("userId", null);
 
         //Volley Queue  & request json
         requestQueue = Volley.newRequestQueue(getContext());
@@ -114,7 +117,7 @@ public class ChartFragment extends Fragment {
     }
     // _GET request json
     private void parseJson(){
-        String url = String.format(Env.url,Env.userID);
+        String url = String.format(Env.daysTotalurl,userID);
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>(){
                     @Override
@@ -130,8 +133,8 @@ public class ChartFragment extends Fragment {
 
                                 // {time : ? , date : ? } ......
                                 JSONObject studyObject = jsonArray.getJSONObject(i);
-                                String time = studyObject.getString("studyTime");
-                                String date = studyObject.getString("studyDate");
+                                String date = studyObject.getString("study_date");
+                                String time = studyObject.getString("study_time");
                                 studyTimes.add(time);
                                 studyDates.add(date);
                                 materialCalendarView.addDecorator(new StudyDate(getActivity(), time, date));
