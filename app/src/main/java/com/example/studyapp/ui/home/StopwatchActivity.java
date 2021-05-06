@@ -3,7 +3,9 @@ package com.example.studyapp.ui.home;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -27,21 +29,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Time;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
+import com.example.studyapp.FirstActivity;
 
 public class StopwatchActivity extends AppCompatActivity {
 
-    TextView textView ;
-    Button back_btn;
-    long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
-    Handler handler;
-    int Seconds, Minutes, MilliSeconds, Hours ;
-    String subject,today;
-
-    boolean isFirst = false;
+    private TextView textView ;
+    private Button back_btn;
+    private long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
+    private Handler handler;
+    private int Seconds, Minutes, MilliSeconds, Hours ;
+    private String subject,today,userID;
+    private boolean isFirst = false;
 
     private RequestQueue requestQueue;
     @Override
@@ -49,11 +55,17 @@ public class StopwatchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stopwatch);textView = (TextView)findViewById(R.id.textView);
 
+        userID = FirstActivity.userInfo.getString("userId", null);
+
         //현재 날짜 불러오기
-        long now = System.currentTimeMillis();
-        Date date = new Date(now);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        today = sdf.format(date);
+        TimeZone tz;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        tz = TimeZone.getTimeZone("Asia/Seoul");
+        dateFormat.setTimeZone(tz);
+        Date date = new Date();
+        today = dateFormat.format(date);
+
+        System.out.println("asdfasdfasdfdsaf" + "@@@@@@@@@@" + today);
 
         //과목정보 불러오기
         Intent intent = getIntent();
@@ -62,7 +74,7 @@ public class StopwatchActivity extends AppCompatActivity {
 
         //Volley Queue  & request json
         requestQueue = Volley.newRequestQueue(getApplication());
-        parseJson();
+        searchStudyTimeToday();
 
         back_btn = (Button)findViewById(R.id.back_btn);
 
@@ -111,7 +123,7 @@ public class StopwatchActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 String time = textView.getText().toString().replace(":","");
                 Map<String,String> params = new HashMap<>();
-                params.put("userID", Env.userID);
+                params.put("userID", userID);
                 params.put("study_date", today);
                 params.put("study_subject", subject);
                 params.put("study_time", time);
@@ -145,9 +157,9 @@ public class StopwatchActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 String time = textView.getText().toString().replace(":","");
-                System.out.println(Env.userID + " " + today + " " + subject + " " + time);
+                System.out.println(userID + " " + today + " " + subject + " " + time);
                 Map<String,String> params = new HashMap<>();
-                params.put("userID", Env.userID);
+                params.put("userID", userID);
                 params.put("study_date", today);
                 params.put("study_subject", subject);
                 params.put("study_time", time);
@@ -159,8 +171,8 @@ public class StopwatchActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
 
-    private void parseJson(){
-        String url = String.format(Env.fetchURL,Env.userID,today,subject);
+    private void searchStudyTimeToday(){
+        String url = String.format(Env.fetchURL, userID,today,subject);
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>(){
                     @Override
@@ -178,7 +190,7 @@ public class StopwatchActivity extends AppCompatActivity {
                             System.out.println("study time :  " + studyTime);
 
                             if(!studyTime.equals("null")){
-                                toTime(studyTime);
+                                convertToTime(studyTime);
                             }else{
                                 isFirst = true;
                             }
@@ -196,7 +208,7 @@ public class StopwatchActivity extends AppCompatActivity {
         request.setShouldCache(false);
         requestQueue.add(request);
     }
-    private void toTime(String studyTime){
+    private void convertToTime(String studyTime){
         String [] time = studyTime.split(":");
         Hours = Integer.parseInt(time[0]);
         Minutes = Integer.parseInt(time[1]);
