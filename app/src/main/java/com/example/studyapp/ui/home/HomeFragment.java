@@ -50,6 +50,7 @@ public class HomeFragment extends Fragment {
     private TextView tv_data;
     private RequestQueue requestQueue;
     private String today,userID;
+    public static String TOTAL_STUDY_TIME;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -117,13 +118,12 @@ public class HomeFragment extends Fragment {
                             JSONObject studyObject = jsonArray.getJSONObject(0);
                             String studyTime = studyObject.getString("study_time");
 
-                            System.out.println("*******************");
-                            System.out.println("study time :  " + studyTime);
-
-
-                            tv_data.setText(makeSortTime(studyTime));
-
-
+                            if(studyTime.equals("null")){
+                                tv_data.setText("00:00:00");
+                            }else{
+                                TOTAL_STUDY_TIME = makeSortTime(studyTime);
+                                tv_data.setText(TOTAL_STUDY_TIME);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
