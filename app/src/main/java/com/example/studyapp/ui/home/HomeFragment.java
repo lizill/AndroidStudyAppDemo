@@ -120,7 +120,8 @@ public class HomeFragment extends Fragment {
                             System.out.println("*******************");
                             System.out.println("study time :  " + studyTime);
 
-                            tv_data.setText(makeVisibleTime(studyTime));
+
+                            tv_data.setText(makeSortTime(studyTime));
 
 
                         } catch (JSONException e) {
@@ -135,6 +136,34 @@ public class HomeFragment extends Fragment {
         });
         request.setShouldCache(false);
         requestQueue.add(request);
+    }
+    private String makeSortTime(String studyTime){
+        String [] ar = makeVisibleTime(studyTime).split(":");
+        int s = Integer.parseInt(ar[2]);
+        int m = Integer.parseInt(ar[1]);
+        int h = Integer.parseInt(ar[0]);
+        System.out.println(s + " " + m + " " + h);
+        if(s >= 60){
+            m += 1;
+            s %= 60;
+        }
+        if(m >= 60){
+            h += 1;
+            h %= 60;
+        }
+        ar[0] = String.valueOf(h);
+        ar[1] = String.valueOf(m);
+        ar[2] = String.valueOf(s);
+
+        for(int i = 0; i < ar.length; i++){
+            if(ar[i].length() < 2){
+                while(ar[i].length() != 2){
+                    ar[i] = "0" + ar[i];
+                }
+            }
+        }
+
+        return ar[0]+":"+ar[1]+":"+ar[2];
     }
     private String makeVisibleTime(String study){
         String [] ar = {"0","0","0","0","0","0"};
