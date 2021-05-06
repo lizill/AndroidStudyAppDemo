@@ -45,7 +45,7 @@ public class StopwatchActivity extends AppCompatActivity {
     private Button back_btn;
     private long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     private Handler handler;
-    private int Seconds, Minutes, MilliSeconds, Hours ;
+    private int Seconds, Minutes, MilliSeconds, Hours, tmp, t, hour, min, sec ;
     private String subject,today,userID;
     private boolean isFirst = false;
 
@@ -64,8 +64,6 @@ public class StopwatchActivity extends AppCompatActivity {
         dateFormat.setTimeZone(tz);
         Date date = new Date();
         today = dateFormat.format(date);
-
-        System.out.println("asdfasdfasdfdsaf" + "@@@@@@@@@@" + today);
 
         //과목정보 불러오기
         Intent intent = getIntent();
@@ -163,7 +161,6 @@ public class StopwatchActivity extends AppCompatActivity {
                 params.put("study_date", today);
                 params.put("study_subject", subject);
                 params.put("study_time", time);
-                System.out.println("업데이트 하러 왔습니다.");
                 return params;
             }
         };
@@ -185,9 +182,6 @@ public class StopwatchActivity extends AppCompatActivity {
                             JSONArray jsonArray = jsonObject.getJSONArray("response");
                             JSONObject studyObject = jsonArray.getJSONObject(0);
                             String studyTime = studyObject.getString("study_time");
-
-                            System.out.println("*******************");
-                            System.out.println("study time :  " + studyTime);
 
                             if(!studyTime.equals("null")){
                                 convertToTime(studyTime);
@@ -221,22 +215,20 @@ public class StopwatchActivity extends AppCompatActivity {
             UpdateTime = TimeBuff + MillisecondTime;
 
             //시간의 흐름
-            if((int)(UpdateTime / 1000) >= 1){
-                Seconds += 1;
 
-                Minutes += Seconds / 60;
-                Seconds = Seconds % 60;
-                Minutes = Minutes % 60;
-                Hours += Minutes / 60;
+            tmp = (int)(UpdateTime / 1000);
+            t = Seconds + tmp;
+            hour = Hours + t / 3600;
+            t %= 3600;
+            min = Minutes + t / 60;
+            t %= 60;
+            sec = t;
 
-                System.out.println("Hours : " + Hours + "  Minutes : " + Minutes + "  Seconds : " + Seconds);
-            }
-            System.out.println("러닝중");
             MilliSeconds = (int) (UpdateTime % 1000);
 
 
             //String format을 통한 시간 대입
-            textView.setText(String.format("%02d", Hours) + ":" + String.format("%02d", Minutes) + ":" + String.format("%02d", Seconds));
+            textView.setText(String.format("%02d", hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec));
             handler.postDelayed(this, 0);
         }
     };
