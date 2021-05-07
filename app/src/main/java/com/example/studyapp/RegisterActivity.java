@@ -1,6 +1,7 @@
 package com.example.studyapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -65,56 +66,16 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 progressBar.setVisibility(View.VISIBLE);
 
-                // 아이디 중복 체크
-                Response.Listener<String> responseLister = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if(!success) {
-                                // 중복된 아이디가 없을 경우 회원가입 리퀘스트
-                                Response.Listener<String> responseListener = new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        try {
-                                            JSONObject jsonResponse = new JSONObject(response);
-                                            boolean success = jsonResponse.getBoolean("success");
-                                            if(success) {
-                                                // 회원가입 완료 후 로그인 페이지로 이동, 페이지 닫기
-                                                Toast.makeText(RegisterActivity.this, "Success Sign Up !! Please Login", Toast.LENGTH_LONG).show();
-                                                progressBar.setVisibility(View.GONE);
-                                                Intent intent = new Intent(RegisterActivity.this, FirstActivity.class);
-                                                RegisterActivity.this.startActivity(intent);
-                                                finish();
-                                            }
-                                            else {
-                                                negativeBuilder("Failed Sign Up", "Retry");
-                                                progressBar.setVisibility(View.GONE);
-                                            }
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                            progressBar.setVisibility(View.GONE);
-                                        }
-                                    }
-                                };
-                                RegisterRequest registerRequest = new RegisterRequest(userID, userPassword, responseListener);
-                                RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
-                                queue.add(registerRequest);
-                            }
-                            else {
-                                negativeBuilder("Duplicate Email", "Retry");
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                };
-                RegisterCheck registerCheck = new RegisterCheck(userID, responseLister);
-                RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
-                queue.add(registerCheck);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.accumulate("user_id", userID);
+                    jsonObject.accumulate("user_password", userPassword);
+
+                    RegisterTask loginTask = new RegisterTask(jsonObject, "register", "POST");
+                    loginTask.execute();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -125,5 +86,42 @@ public class RegisterActivity extends AppCompatActivity {
                 .setNegativeButton(text, null)
                 .create()
                 .show();
+    }
+
+
+    class RegisterTask extends JSONTask {
+
+        public RegisterTask(JSONObject jsonObject, String urlPath, String method) {
+            super(jsonObject, urlPath, method);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            System.out.println(result);
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                String resultNum = jsonObject.get("result").toString();
+                System.out.println(resultNum);
+
+                String userID = idET.getText().toString();
+                String userPassword = passwordET.getText().toString();
+
+                if(resultNum.equals("0")) { // duplicated id
+                    negativeBuilder("Duplicated id!","Retry");
+                    progressBar.setVisibility(View.GONE);
+                }
+                else {
+                    // 회원가입 완료 후 로그인 페이지로 이동, 페이지 닫기
+                    Toast.makeText(RegisterActivity.this, "Success Sign Up !! Please Login", Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
+                    Intent intent = new Intent(RegisterActivity.this, FirstActivity.class);
+                    RegisterActivity.this.startActivity(intent);
+                    finish();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

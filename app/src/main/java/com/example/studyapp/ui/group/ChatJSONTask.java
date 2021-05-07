@@ -8,8 +8,8 @@ import org.json.JSONObject;
 
 public class ChatJSONTask extends JSONTask {
 
-    public ChatJSONTask(JSONObject jsonObject, String urlPath) {
-        super(jsonObject, urlPath);
+    public ChatJSONTask(JSONObject jsonObject, String urlPath, String method) {
+        super(jsonObject, urlPath, method);
     }
 
 }

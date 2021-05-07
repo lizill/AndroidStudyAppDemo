@@ -20,11 +20,13 @@ import java.net.URL;
 public class JSONTask extends AsyncTask<String, String, String> {
 
     private JSONObject jsonObject;
-    private String urlPath = "";
+    private String Path = "";
+    private String method = "";
 
-    public JSONTask(JSONObject jsonObject, String urlPath) {
+    public JSONTask(JSONObject jsonObject, String Path, String method) {
         this.jsonObject = jsonObject;
-        this.urlPath = urlPath;
+        this.Path = Path;
+        this.method = method;
     }
 
     @Override
@@ -34,26 +36,30 @@ public class JSONTask extends AsyncTask<String, String, String> {
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("http://132.226.20.103:3000/" + urlPath);
+                URL url = new URL("http://127.0.0.1:3000/" + Path);
                 con = (HttpURLConnection) url.openConnection();
 
-                con.setRequestMethod("POST");
+                con.setRequestMethod(method);
                 con.setRequestProperty("Cache-Control", "no-cache");
                 con.setRequestProperty("Content-Type", "application/json");
                 con.setRequestProperty("Accept", "text/html");
 
-                con.setDoOutput(true);
+                if(method.equals("POST")) {
+                    con.setDoOutput(true);
+                }
                 con.setDoInput(true);
 
                 con.connect();
 
-                OutputStream outputStream = con.getOutputStream();
+                if(method.equals("POST")) {
+                    OutputStream outputStream = con.getOutputStream();
 
-                // 서버로 데이터를 보내기 위한 버퍼
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-                writer.write(jsonObject.toString());
-                writer.flush();
-                writer.close();
+                    // 서버로 데이터를 보내기 위한 버퍼
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+                    writer.write(jsonObject.toString());
+                    writer.flush();
+                    writer.close();
+                }
 
                 // 서버로부터 데이터를 받기 위한 버퍼
                 InputStream inputStream = con.getInputStream();
@@ -85,17 +91,5 @@ public class JSONTask extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        System.out.println(result);
-        try {
-            JSONObject jsonObject = new JSONObject(result);
-            String resultNum = jsonObject.get("result").toString();
-            if(resultNum.equals("1")) {
-                System.out.println("로그인 성공");
-            } else {
-                System.out.println("로그인 실패");
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 }
