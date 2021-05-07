@@ -1,10 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.StudyApp" parent="Theme.AppCompat.Light">
+<!--    <style name="Theme.StudyApp" parent="Theme.AppCompat.Light">-->
+    <style name="Theme.StudyApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/maincolor</item> <!-- 액션바 -->
         <item name="colorPrimaryVariant">@color/maincolor</item>  <!-- 상태바 -->
         <item name="colorOnPrimary">@color/white</item>
+
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/maincolor</item>
         <item name="colorSecondaryVariant">@color/maincolor</item>

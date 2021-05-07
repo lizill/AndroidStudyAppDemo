@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ToolbarTitleText"
+        parent="@android:style/Theme.Holo.Light">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="ToolbarSubTitleText"
+        parent="@android:style/Theme.Holo.Light">
+
+        <item name="android:textColor">#ffffff</item>
+    </style>
+</resources>

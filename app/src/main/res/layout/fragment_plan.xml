@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/planbg"
     android:backgroundTint="@color/planbg"
+    android:theme="@style/Theme.AppCompat.Light"
     tools:context=".ui.plan.PlanFragment">
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,6 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_weight="1"
                     android:layout_height="50dp"
+                    android:textColor="@color/maincolor"
                     android:background="@drawable/click_blue"
                     android:text="추가" />
 
@@ -48,6 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_weight="1"
                     android:layout_height="50dp"
+                    android:textColor="@color/maincolor"
                     android:background="@drawable/click_blue"
                     android:text="빼기" />
             </LinearLayout>
@@ -1718,7 +1721,7 @@
                             android:layout_weight="6"
                             android:background="@drawable/cell_chape"
                             android:gravity="center"
-                            android:text="20시"
+                            android:text="23시"
                             android:textColor="@color/maincolor"
                             android:textStyle="bold" />
 
