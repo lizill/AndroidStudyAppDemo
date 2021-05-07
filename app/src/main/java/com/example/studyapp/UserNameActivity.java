@@ -92,4 +92,18 @@ public class UserNameActivity extends AppCompatActivity {
                 .create()
                 .show();
     }
+
+    class NameTask extends JSONTask {
+
+        public NameTask(JSONObject jsonObject, String Path, String method) {
+            super(jsonObject, Path, method);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+
+        }
+    }
 }

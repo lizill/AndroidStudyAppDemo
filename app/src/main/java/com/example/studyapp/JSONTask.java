@@ -36,7 +36,7 @@ public class JSONTask extends AsyncTask<String, String, String> {
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("http://127.0.0.1:3000/" + Path);
+                URL url = new URL("http://132.226.20.103:3000/" + Path);
                 con = (HttpURLConnection) url.openConnection();
 
                 con.setRequestMethod(method);

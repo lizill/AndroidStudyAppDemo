@@ -90,7 +90,6 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            super.onPostExecute(result);
             System.out.println(result);
             try {
                 JSONObject jsonObject = new JSONObject(result);
