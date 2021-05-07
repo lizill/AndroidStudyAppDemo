@@ -20,7 +20,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
         super();
     }
 
+
     private ArrayList<HomeData> arrayList;
+
 
     public HomeAdapter(ArrayList<HomeData> arrayList) {
         this.arrayList = arrayList;
@@ -28,26 +30,27 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
 
     @NonNull
     @Override
+
     public HomeAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_list, parent, false);
         CustomViewHolder holder = new CustomViewHolder(view);
-
 
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final HomeAdapter.CustomViewHolder holder, int position) {
+        System.out.print(position);
         holder.iv_profile.setImageResource(arrayList.get(position).getIv_profile());
         holder.tv_name.setText(arrayList.get(position).getTv_name());
-        holder.tv_content.setText(arrayList.get(position).getTv_content());
+//        holder.tv_content.setText(arrayList.get(position).getTv_content());
 
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String curName = holder.tv_name.getText().toString();
+                String  curName = holder.tv_name.getText().toString();
                 Toast.makeText(v.getContext(), curName, Toast.LENGTH_SHORT).show();
             }
         });
@@ -80,13 +83,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
 
         protected ImageView iv_profile;
         protected TextView tv_name;
-        protected TextView tv_content;
+//        protected TextView tv_content;
 
         public CustomViewHolder(View itemView) {
             super(itemView);
             this.iv_profile = (ImageView) itemView.findViewById(R.id.iv_home_profile);
+
             this.tv_name = (TextView) itemView.findViewById(R.id.tv_home_name);
-            this.tv_content = (TextView) itemView.findViewById(R.id.tv_home_content);
+
+//            this.tv_content = (TextView) itemView.findViewById(R.id.tv_home_content);
         }
     }
 }

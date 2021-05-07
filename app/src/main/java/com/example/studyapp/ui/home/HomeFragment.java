@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,7 +30,7 @@ public class HomeFragment extends Fragment {
     private HomeAdapter homeAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
-
+    private EditText editTextTextPersonName;
 
 
     private HomeViewModel homeViewModel;
@@ -43,7 +44,7 @@ public class HomeFragment extends Fragment {
         view 생성 선언 등등...
         TextView textView = root.findViewById(R.id.text_home);
         */
-
+        editTextTextPersonName = (EditText)root.findViewById(R.id.editTextTextPersonName);
         recyclerView = (RecyclerView) root.findViewById(R.id.rv_home);
         linearLayoutManager = new LinearLayoutManager(root.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -58,14 +59,15 @@ public class HomeFragment extends Fragment {
             public void onChanged(@Nullable String s) {
 
                 /*
-                onChnaged= 뷰를 눌러서 실행했을때 실행시킬 이벤트 삽입
+                onChanged= 뷰를 눌러서 실행했을때 실행시킬 이벤트 삽입
                  */
                 Button btn_add = (Button) root.findViewById(R.id.btn_add_home);
                 btn_add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        HomeData homeData = new HomeData(R.mipmap.ic_launcher, "홍드로이드", "리사이클러뷰");
-                        arrayList.add(homeData);
+                        HomeData homeData = null;
+                        homeData = new HomeData(R.mipmap.ic_launcher, editTextTextPersonName.getText());
+                            arrayList.add(homeData);
                         homeAdapter.notifyDataSetChanged();
                     }
                 });

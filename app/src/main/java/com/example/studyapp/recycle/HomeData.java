@@ -1,39 +1,39 @@
 package com.example.studyapp.recycle;
 
+import android.text.Editable;
+
 public class HomeData {
     private int iv_profile;
-    private String tv_name;
+    private Editable tv_name;
     private String tv_content;
 
 
-    public HomeData(int iv_profile, String tv_name, String tv_content) {
+    public HomeData(int iv_profile, Editable tv_name) {
         this.iv_profile = iv_profile;
         this.tv_name = tv_name;
-        this.tv_content = tv_content;
-    }
 
+    }
+// 이 클래스가, 리사이클러뷰에 활용될 xml파일의
+    /*
+        id를 가져와서 저장할 클래스쯤?
+     */
 
     public int getIv_profile() {
         return iv_profile;
     }
 
+    public Editable getTv_name() {
+        return tv_name;
+    }
+
+
     public void setIv_profile(int iv_profile) {
         this.iv_profile = iv_profile;
     }
 
-    public String getTv_name() {
-        return tv_name;
-    }
-
-    public void setTv_name(String tv_name) {
+    public void setTv_name(Editable tv_name) {
         this.tv_name = tv_name;
     }
 
-    public String getTv_content() {
-        return tv_content;
-    }
 
-    public void setTv_content(String tv_content) {
-        this.tv_content = tv_content;
-    }
 }
