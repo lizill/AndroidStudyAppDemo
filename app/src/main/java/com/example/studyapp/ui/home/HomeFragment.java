@@ -29,20 +29,6 @@ import com.example.studyapp.recycle.HomeAdapter;
 import com.example.studyapp.recycle.HomeData;
 import com.example.studyapp.ui.chart.Env;
 
-<<<<<<< HEAD
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Timer;
-
-public class HomeFragment extends Fragment {
-
-    private ArrayList<HomeData> arrayList;
-    private HomeAdapter homeAdapter;
-    private RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
-
-=======
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,7 +43,6 @@ import java.util.TimeZone;
 
 public class HomeFragment extends Fragment {
 
->>>>>>> master
     private HomeViewModel homeViewModel;
 
     private Button sub1;
@@ -82,9 +67,6 @@ public class HomeFragment extends Fragment {
         Date date = new Date();
         today = dateFormat.format(date);
 
-
-<<<<<<< HEAD
-=======
         //Volley Queue  & request json
         requestQueue = Volley.newRequestQueue(getContext());
         totalStudyTime();
@@ -103,7 +85,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
->>>>>>> master
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {

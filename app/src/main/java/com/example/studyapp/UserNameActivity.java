@@ -51,6 +51,7 @@ public class UserNameActivity extends AppCompatActivity {
 
                 try {
                     JSONObject jsonObject = new JSONObject();
+                    jsonObject.accumulate("user_id", userID);
                     jsonObject.accumulate("user_name", userName);
 
                     NameTask nameTask = new NameTask(jsonObject, "name", "POST");
