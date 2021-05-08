@@ -7,24 +7,37 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.example.studyapp.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import static com.example.studyapp.FirstActivity.USER_ID;
+import static com.example.studyapp.FirstActivity.USER_NAME;
 import static com.example.studyapp.FirstActivity.userInfo;
 
 public class MakeGroup extends AppCompatActivity {
     private String userID;
+    private EditText groupNameEditText;
     private EditText categorySelect;
-    final String[] categoryArr = {"초등학교", "중학교", "고등학교", "대학교"};
+    private EditText contentsEditText;
+    public final String[] categoryArr = {"초등학교", "중학교", "고등학교", "대학교"};
     private EditText goalTimeSelect;
-    final String[] goalTimeArr = new String[12];
+    public final String[] goalTimeArr = new String[12];
     private int goalTime = 0;
     private EditText personCountSelect;
-    final String[] personCountArr = new String[49];
+    public final String[] personCountArr = new String[49];
     private int personCount = 0;
+    private Button makeGroupButton;
+    private String userName;
 
 
     @Override
@@ -33,6 +46,10 @@ public class MakeGroup extends AppCompatActivity {
         setContentView(R.layout.activity_make_group);
 
         userID = userInfo.getString(USER_ID,null);
+        userName = userInfo.getString(USER_NAME, null);
+
+        groupNameEditText = findViewById(R.id.groupName);
+        contentsEditText = findViewById(R.id.contents);
 
         categorySelect = findViewById(R.id.category);
         categorySelect.setOnClickListener(new View.OnClickListener() {
@@ -92,5 +109,123 @@ public class MakeGroup extends AppCompatActivity {
                 builder.show();
             }
         });
+        makeGroupButton = findViewById(R.id.makeGroupButton);
+        makeGroupButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String groupName = groupNameEditText.getText().toString();
+                String category = categorySelect.getText().toString();
+                String contents = contentsEditText.getText().toString();
+                if(groupName.isEmpty()) {
+                    negativeBuilder("그룹 이름을 입력해 주세요", "close");
+                    return;
+                }
+                if(category.isEmpty()) {
+                    negativeBuilder("카테고리를 선택해 주세요", "close");
+                    return;
+                }
+                if(goalTime == 0) {
+                    negativeBuilder("목표 시간을 선택해 주세요", "close");
+                    return;
+                }
+                if(personCount == 0) {
+                    negativeBuilder("모집 인원을 선택해 주세요", "close");
+                    return;
+                }
+                if(contents.isEmpty()) {
+                    negativeBuilder("그룹 설명을 적어 주세요", "close");
+                    return;
+                }
+
+                Response.Listener<String> responseLister = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean success = jsonResponse.getBoolean("success");
+                            Log.d("success", ""+success);
+                            if(!success) {
+                                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        try {
+                                            JSONObject jsonResponse = new JSONObject(response);
+                                            boolean success = jsonResponse.getBoolean("success");
+                                            if(success) {
+                                                Log.d("결과", "만들기 성공");
+                                                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                                    @Override
+                                                    public void onResponse(String response) {
+                                                        try{
+                                                            JSONObject jsonResponse = new JSONObject(response);
+                                                            boolean success = jsonResponse.getBoolean("success");
+                                                            if (success) {
+                                                                Log.d("성공",":::");
+                                                                peopleCountIncrease(groupName);
+                                                                MakeGroup.super.onBackPressed();
+                                                            }
+                                                        } catch (Exception e){
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                };
+                                                JoinGroupRequest joinGroupRequest = new JoinGroupRequest(userID, groupName, responseListener);
+                                                RequestQueue queue = Volley.newRequestQueue(MakeGroup.this);
+                                                queue.add(joinGroupRequest);
+                                            }
+                                            else {
+                                                negativeBuilder("만들기 실패", "Retry");
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                };
+                                MakeGroupRequest makeGroupRequest = new MakeGroupRequest(groupName, contents, category, goalTime, userName, responseListener);
+                                RequestQueue queue = Volley.newRequestQueue(MakeGroup.this);
+                                queue.add(makeGroupRequest);
+                            }
+                            else {
+                                negativeBuilder("이미 존재하는 이름입니다.", "Retry");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                GroupNameCheck groupNameCheck = new GroupNameCheck(groupName, responseLister);
+                RequestQueue queue = Volley.newRequestQueue(MakeGroup.this);
+                queue.add(groupNameCheck);
+            }
+        });
+    }
+
+    private void peopleCountIncrease(String group) {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    if (success) {
+                        Log.d("성공",":::");
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        PeopleCountIncreaseRequest peopleCountIncreaseRequest = new PeopleCountIncreaseRequest(group, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(MakeGroup.this);
+        queue.add(peopleCountIncreaseRequest);
+    }
+
+    private void negativeBuilder(String msg, String text) {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(MakeGroup.this);
+        builder.setMessage(msg)
+                .setNegativeButton(text, null)
+                .create()
+                .show();
     }
 }

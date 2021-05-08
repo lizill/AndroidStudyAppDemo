@@ -30,6 +30,24 @@ class StudyDate implements DayViewDecorator {
 
         System.out.println(date.getYear() + "-" + date.getMonth() + "," + date.getDay() + "," + date.getDay());
     }
+    //그냥 숫자로 오기때문에 그걸 hh:mm:ss 단위로 만듦
+    private String makeVisibleTime(String study){
+        String [] ar = {"0","0","0","0","0","0"};
+        int idx = ar.length -1;
+        for(int i = study.length()-1; i >= 0; i--){
+            char c = study.charAt(i);
+            ar[idx--] = String.valueOf(c);
+        }
+        String time = "";
+        for(int i = 0; i < ar.length; i++){
+            time += ar[i];
+
+            if(i == 1 || i == 3){
+                time += ":";
+            }
+        }
+        return time;
+    }
     // set year month day
     public CalendarDay setDays(String [] s){
         int year = Integer.valueOf(s[0]);
@@ -45,12 +63,6 @@ class StudyDate implements DayViewDecorator {
         }
         return s;
     }
-    // time -> second 로 구성 되어있음 / time ->  hour 로 바꿈
-    public double getHour(String t){
-        double time = Integer.valueOf(t);
-        if(time == 0) return 0;
-        return time / 3600;
-    }
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
@@ -58,7 +70,12 @@ class StudyDate implements DayViewDecorator {
     }
     @Override
     public void decorate(DayViewFacade view) {
-        double tmp = getHour(studyTime);
+        String [] t = makeVisibleTime(studyTime).split(":");
+        System.out.println("****************************");
+        System.out.println(t[0]);
+        System.out.println("****************************");
+        int tmp = Integer.parseInt(t[0]);
+        System.out.println(tmp);
         //공부시간에 따라서 색깔 변화 준다.
         if(tmp > 0 && tmp < 2){
             view.setSelectionDrawable(drawables.get(0));

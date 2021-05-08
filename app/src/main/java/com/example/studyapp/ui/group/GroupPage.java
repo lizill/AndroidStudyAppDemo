@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.studyapp.GroupActivity;
 import com.example.studyapp.HomeActivity;
 import com.example.studyapp.R;
 
@@ -94,9 +93,8 @@ public class GroupPage extends AppCompatActivity {
                                     if (success) {
                                         Log.d("성공",":::");
                                         peopleCountDecrease();
-                                        Intent intent = new Intent(GroupPage.this, HomeActivity.class);
-                                        startActivity(intent);
-                                        finish();
+                                        GroupPage.super.onBackPressed();
+
                                     }
                                 } catch (Exception e){
                                     e.printStackTrace();
