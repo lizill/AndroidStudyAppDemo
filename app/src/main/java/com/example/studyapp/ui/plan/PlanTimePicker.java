@@ -22,7 +22,7 @@ public class PlanTimePicker extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener{
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        System.out.println(hourCal(hourOfDay, minute, PlanSetPage.touch));
+        // System.out.println(hourCal(hourOfDay, minute, PlanSetPage.touch));
         if(PlanSetPage.touch){
             PlanSetPage.st_btn.setText(hourCal(hourOfDay, minute, true));
         }else{
@@ -68,7 +68,19 @@ public class PlanTimePicker extends DialogFragment
             hour -=12;
         }
         result = who?" 부터":" 까지";
-
+//        if(who){
+//            if(hour<10){
+//                PlanSetPage.st_btn_text = "0"+hour+":"+min;
+//            }else{
+//                PlanSetPage.st_btn_text = hour+":"+min;
+//            }
+//        }else{
+//            if(hour<10){
+//                PlanSetPage.en_btn_text = "0"+hour+":"+min;
+//            }else{
+//                PlanSetPage.en_btn_text = hour+":"+min;
+//            }
+//        }
         result = noon+" "+hour+" : "+min+result;
 
         return result;

@@ -84,65 +84,66 @@ public class PlanFragment extends Fragment {
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), PlanSetPage.class);
                         startActivity(intent);
-
-//                        if(arrayList.size()<=20){
-//                            PlanData planData=new PlanData(R.drawable.p0, "test", "view","#003080ff");
-//                            switch(arrayList.size()){
-//                                case 0:
-//                                    planData = new PlanData(R.drawable.p0, "test", "view","#003080ff");
-//                                    break;
-//                                case 1:
-//                                    planData = new PlanData(R.drawable.p1, "test", "view","#113080ff");
-//                                    break;
-//                                case 2:
-//                                    planData = new PlanData(R.drawable.p2, "test", "view","#223080ff");
-//                                    break;
-//                                case 3:
-//                                    planData = new PlanData(R.drawable.p0, "test", "view","#333080ff");
-//                                    break;
-//                                case 4:
-//                                    planData = new PlanData(R.drawable.p1, "test", "view","#443080ff");
-//                                    break;
-//                                case 5:
-//                                    planData = new PlanData(R.drawable.p2, "test", "view","#553080ff");
-//                                    break;
-//                                case 6:
-//                                    planData = new PlanData(R.drawable.p0, "test", "view","#663080ff");
-//                                    break;
-//                                case 7:
-//                                    planData = new PlanData(R.drawable.p1, "test", "view","#773080ff");
-//                                    break;
-//                                case 8:
-//                                    planData = new PlanData(R.drawable.p2, "test", "view","#883080ff");
-//                                    break;
-//                                case 9:
-//                                    planData = new PlanData(R.drawable.p0, "test", "view","#993080ff");
-//                                    break;
-//                                case 10:
-//                                    planData = new PlanData(R.drawable.p1, "test", "view","#aa3080ff");
-//                                    break;
-//                                case 11:
-//                                    planData = new PlanData(R.drawable.p2, "test", "view","#bb3080ff");
-//                                    break;
-//                                case 12:
-//                                    planData = new PlanData(R.drawable.p0, "test", "view","#cc3080ff");
-//                                    break;
-//                                case 13:
-//                                    planData = new PlanData(R.drawable.p1, "test", "view","#dd3080ff");
-//                                    break;
-//                                case 14:
-//                                    planData = new PlanData(R.drawable.p2, "test", "view","#ee3080ff");
-//                                    break;
-//                                default:
-//                                    planData = new PlanData(R.drawable.p1, "test", "view","#ff3080ff");
-//                                    break;
-//                            }
-////                            PlanData planData = new PlanData(R.drawable.rp, "test", "view","ffffff");
-//                            arrayList.add(planData);
-//                            planAdapter.notifyDataSetChanged();
-//                        }else{
-//                            showToast(root.getContext(),"플랜을 너무 많이 생성하셨습니다");
-//                        }
+                        /*
+                        if(arrayList.size()<=20){
+                            PlanData planData=new PlanData(R.drawable.p0, "test", "view","#003080ff");
+                            switch(arrayList.size()){
+                                case 0:
+                                    planData = new PlanData(R.drawable.p0, "test", "5485","#003080ff");
+                                    break;
+                                case 1:
+                                    planData = new PlanData(R.drawable.p1, "asdf", "62fdn","#113080ff");
+                                    break;
+                                case 2:
+                                    planData = new PlanData(R.drawable.p2, "zxcv", "346gfhs","#223080ff");
+                                    break;
+                                case 3:
+                                    planData = new PlanData(R.drawable.p0, "ghl", "df5yw","#333080ff");
+                                    break;
+                                case 4:
+                                    planData = new PlanData(R.drawable.p1, "re", "67iiyt","#443080ff");
+                                    break;
+                                case 5:
+                                    planData = new PlanData(R.drawable.p2, "test", "view","#553080ff");
+                                    break;
+                                case 6:
+                                    planData = new PlanData(R.drawable.p0, "test", "view","#663080ff");
+                                    break;
+                                case 7:
+                                    planData = new PlanData(R.drawable.p1, "test", "view","#773080ff");
+                                    break;
+                                case 8:
+                                    planData = new PlanData(R.drawable.p2, "test", "view","#883080ff");
+                                    break;
+                                case 9:
+                                    planData = new PlanData(R.drawable.p0, "test", "view","#993080ff");
+                                    break;
+                                case 10:
+                                    planData = new PlanData(R.drawable.p1, "test", "view","#aa3080ff");
+                                    break;
+                                case 11:
+                                    planData = new PlanData(R.drawable.p2, "test", "view","#bb3080ff");
+                                    break;
+                                case 12:
+                                    planData = new PlanData(R.drawable.p0, "test", "view","#cc3080ff");
+                                    break;
+                                case 13:
+                                    planData = new PlanData(R.drawable.p1, "test", "view","#dd3080ff");
+                                    break;
+                                case 14:
+                                    planData = new PlanData(R.drawable.p2, "test", "view","#ee3080ff");
+                                    break;
+                                default:
+                                    planData = new PlanData(R.drawable.p1, "test", "view","#ff3080ff");
+                                    break;
+                            }
+//                            PlanData planData = new PlanData(R.drawable.rp, "test", "view","ffffff");
+                            arrayList.add(planData);
+                            planAdapter.notifyDataSetChanged();
+                        }else{
+                            showToast(root.getContext(),"플랜을 너무 많이 생성하셨습니다");
+                        }
+                        */
 
                     }
                 });
