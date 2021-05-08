@@ -49,37 +49,47 @@ public class UserNameActivity extends AppCompatActivity {
                 }
                 progressBar.setVisibility(View.VISIBLE);
 
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if(success) {
-                                // Save user Name
-                                SharedPreferences.Editor autoLogin = FirstActivity.userInfo.edit();
-                                autoLogin.putString(FirstActivity.USER_NAME, userName);
-                                autoLogin.commit();
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.accumulate("user_name", userName);
 
-                                Toast.makeText(UserNameActivity.this, "Welcome " + userName + " !!", Toast.LENGTH_LONG).show();
-                                progressBar.setVisibility(View.GONE);
-                                Intent intent = new Intent(UserNameActivity.this, HomeActivity.class);
-                                UserNameActivity.this.startActivity(intent);
-                                finish();
-                            }
-                            else {
-                                negativeBuilder("Failed Sign Up", "Retry");
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                };
-                UserNameRequest userNameRequest = new UserNameRequest(userName, userID, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(UserNameActivity.this);
-                queue.add(userNameRequest);
+                    NameTask nameTask = new NameTask(jsonObject, "name", "POST");
+                    nameTask.execute();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+//                Response.Listener<String> responseListener = new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        try {
+//                            JSONObject jsonResponse = new JSONObject(response);
+//                            boolean success = jsonResponse.getBoolean("success");
+//                            if(success) {
+//                                // Save user Name
+//                                SharedPreferences.Editor autoLogin = FirstActivity.userInfo.edit();
+//                                autoLogin.putString(FirstActivity.USER_NAME, userName);
+//                                autoLogin.commit();
+//
+//                                Toast.makeText(UserNameActivity.this, "Welcome " + userName + " !!", Toast.LENGTH_LONG).show();
+//                                progressBar.setVisibility(View.GONE);
+//                                Intent intent = new Intent(UserNameActivity.this, HomeActivity.class);
+//                                UserNameActivity.this.startActivity(intent);
+//                                finish();
+//                            }
+//                            else {
+//                                negativeBuilder("Failed Sign Up", "Retry");
+//                                progressBar.setVisibility(View.GONE);
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                            progressBar.setVisibility(View.GONE);
+//                        }
+//                    }
+//                };
+//                UserNameRequest userNameRequest = new UserNameRequest(userName, userID, responseListener);
+//                RequestQueue queue = Volley.newRequestQueue(UserNameActivity.this);
+//                queue.add(userNameRequest);
             }
         });
 
@@ -101,9 +111,31 @@ public class UserNameActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            super.onPostExecute(result);
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                String resultNum = jsonObject.get("result").toString();
 
+                String userName = userNameET.getText().toString();
 
+                if(resultNum.equals("1")) {
+                    SharedPreferences.Editor autoLogin = FirstActivity.userInfo.edit();
+                    autoLogin.putString(FirstActivity.USER_NAME, userName);
+                    autoLogin.commit();
+
+                    Toast.makeText(UserNameActivity.this, "Welcome " + userName + " !!", Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
+                    Intent intent = new Intent(UserNameActivity.this, HomeActivity.class);
+                    UserNameActivity.this.startActivity(intent);
+                    finish();
+                }
+                else {
+                    negativeBuilder("Failed Sign In", "Retry");
+                    progressBar.setVisibility(View.GONE);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

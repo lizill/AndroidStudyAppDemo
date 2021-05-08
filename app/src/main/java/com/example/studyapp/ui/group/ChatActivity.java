@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,8 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 
 public class ChatActivity extends AppCompatActivity {
+    SharedPreferences chatData;
+    SharedPreferences.Editor putChatData = chatData.edit();
 
     private Socket mSocket;
     private Gson gson = new Gson();
@@ -72,6 +75,7 @@ public class ChatActivity extends AppCompatActivity {
         mSocket.on("update", args -> {
             MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
             addChat(data);
+
         });
 
         sendButton = (Button) findViewById(R.id.send_btn);
@@ -90,7 +94,9 @@ public class ChatActivity extends AppCompatActivity {
     private void sendMessage() {
         String content = sendText.getText().toString();
         if(!content.equals("")) {
-            mSocket.emit("newMessage", gson.toJson(new MessageData("MESSAGE",
+            mSocket.emit("newMessage", gson.toJson(new MessageData(
+                    roomName,
+                    "MESSAGE",
                     userID,
                     roomName,
                     content,
