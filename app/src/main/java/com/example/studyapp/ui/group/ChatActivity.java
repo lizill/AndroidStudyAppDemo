@@ -25,8 +25,8 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 
 public class ChatActivity extends AppCompatActivity {
-    SharedPreferences chatData;
-    SharedPreferences.Editor putChatData = chatData.edit();
+//    SharedPreferences chatData;
+//    SharedPreferences.Editor putChatData = chatData.edit();
 
     private Socket mSocket;
     private Gson gson = new Gson();
