@@ -7,5 +7,10 @@ public class Env {
     public static String fetchURL = "https://dong0110.com/chatphp/timer/FetchTime.php?userID=%s&study_date=%s&study_subject=%s";
     public static String ReSaveURL = "https://dong0110.com/chatphp/timer/ReSaveTime.php";
     public static String SaveURL = "https://dong0110.com/chatphp/timer/SaveTime.php";
+    public static String BeginEndURL = "https://dong0110.com/chatphp/timer/BeginEndTime.php";
     public static String totalURL = "https://dong0110.com/chatphp/timer/TotalTime.php?userID=%s&study_date=%s";
+    public static String BarchartURL = "https://dong0110.com/chatphp/chart/RequireBarchart.php?userID=%s&study_date=%s";
+    public static String TimelineURL = "https://dong0110.com/chatphp/chart/RequireTimeline.php?userID=%s&study_date=%s";
+    public static String InfoURL = "https://dong0110.com/chatphp/chart/RequireInfo.php?userID=%s&study_date=%s";
+
 }

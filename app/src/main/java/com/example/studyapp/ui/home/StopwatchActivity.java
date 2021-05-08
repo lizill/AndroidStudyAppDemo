@@ -45,9 +45,14 @@ public class StopwatchActivity extends AppCompatActivity {
     private Button back_btn;
     private long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     private Handler handler;
-    private int Seconds, Minutes, MilliSeconds, Hours, tmp, t, hour, min, sec ;
-    private String subject,today,userID;
+    private int Seconds, Minutes, MilliSeconds, Hours, tmp, t, hour, min, sec;
+    private String subject,today,userID,start,end;
     private boolean isFirst = false;
+
+    //현재 날짜 불러오기
+    private TimeZone tz = TimeZone.getTimeZone("Asia/Seoul");
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+    DateFormat timeFormat = new SimpleDateFormat("HH mm ss", Locale.KOREA);
 
     private RequestQueue requestQueue;
     @Override
@@ -57,13 +62,13 @@ public class StopwatchActivity extends AppCompatActivity {
 
         userID = FirstActivity.userInfo.getString("userId", null);
 
-        //현재 날짜 불러오기
-        TimeZone tz;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-        tz = TimeZone.getTimeZone("Asia/Seoul");
         dateFormat.setTimeZone(tz);
-        Date date = new Date();
-        today = dateFormat.format(date);
+        timeFormat.setTimeZone(tz);
+
+        today = dateFormat.format(new Date());
+
+        start = timeFormat.format(new Date());
+        System.out.println(start);
 
         //과목정보 불러오기
         Intent intent = getIntent();
@@ -92,12 +97,16 @@ public class StopwatchActivity extends AppCompatActivity {
                     UpdateData();
                 }
                 handler.removeCallbacks(runnable);
+
+                end = timeFormat.format(new Date());
+                System.out.println(end);
+
+                BeginEndData();
             }
         });
     }
-
-    private void InsertData(){
-        String url = Env.SaveURL;
+    private void BeginEndData(){
+        String url = Env.BeginEndURL;
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -105,9 +114,46 @@ public class StopwatchActivity extends AppCompatActivity {
                     //json object >> {response:[{key : value}, {.....
                     JSONObject jsonObject = new JSONObject(response);
                     String res = jsonObject.getString("success");
-                    Toast.makeText(StopwatchActivity.this, res, Toast.LENGTH_SHORT).show();
+                    System.out.println("BeginEndData save");
 
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        })  {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String,String> params = new HashMap<>();
+                params.put("userID", userID);
+                params.put("study_date", today);
+                params.put("study_subject", subject);
+                params.put("study_start", start.replace(" ", ":"));
+                params.put("study_end", end.replace(" ", ":"));
+
+                System.out.println(userID + " " + today + " " + subject + " " + start.replace(" ", ":") + end.replace(" ", ":"));
+                return params;
+            }
+        };
+        request.setShouldCache(false);
+        requestQueue.add(request);
+    }
+    private void InsertData(){
+        String url = Env.SaveURL;
+        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                    try {
+                        //json object >> {response:[{key : value}, {.....
+                        JSONObject jsonObject = new JSONObject(response);
+                        String res = jsonObject.getString("success");
+                        Toast.makeText(StopwatchActivity.this, res, Toast.LENGTH_SHORT).show();
+
+                    } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -202,7 +248,7 @@ public class StopwatchActivity extends AppCompatActivity {
         request.setShouldCache(false);
         requestQueue.add(request);
     }
-    private void convertToTime(String studyTime){
+    public void convertToTime(String studyTime){
         String [] time = studyTime.split(":");
         Hours = Integer.parseInt(time[0]);
         Minutes = Integer.parseInt(time[1]);
@@ -215,7 +261,6 @@ public class StopwatchActivity extends AppCompatActivity {
             UpdateTime = TimeBuff + MillisecondTime;
 
             //시간의 흐름
-
             tmp = (int)(UpdateTime / 1000);
             t = Seconds + tmp;
             hour = Hours + t / 3600;
@@ -225,7 +270,6 @@ public class StopwatchActivity extends AppCompatActivity {
             sec = t;
 
             MilliSeconds = (int) (UpdateTime % 1000);
-
 
             //String format을 통한 시간 대입
             textView.setText(String.format("%02d", hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec));

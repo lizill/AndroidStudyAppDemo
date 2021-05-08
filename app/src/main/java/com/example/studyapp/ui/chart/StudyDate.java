@@ -27,8 +27,6 @@ class StudyDate implements DayViewDecorator {
         this.studyDate = studyDate;
 
         date = setDays(divDate(studyDate));
-
-        System.out.println(date.getYear() + "-" + date.getMonth() + "," + date.getDay() + "," + date.getDay());
     }
     //그냥 숫자로 오기때문에 그걸 hh:mm:ss 단위로 만듦
     private String makeVisibleTime(String study){
@@ -71,11 +69,8 @@ class StudyDate implements DayViewDecorator {
     @Override
     public void decorate(DayViewFacade view) {
         String [] t = makeVisibleTime(studyTime).split(":");
-        System.out.println("****************************");
-        System.out.println(t[0]);
-        System.out.println("****************************");
         int tmp = Integer.parseInt(t[0]);
-        System.out.println(tmp);
+
         //공부시간에 따라서 색깔 변화 준다.
         if(tmp > 0 && tmp < 2){
             view.setSelectionDrawable(drawables.get(0));

@@ -1,5 +1,7 @@
 package com.example.studyapp.ui.chart;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -38,7 +40,7 @@ import java.util.Calendar;
 import java.util.Collections;
 
 public class ChartFragment extends Fragment {
-
+    private Activity activity;
     private ChartViewModel chartViewModel;
     private RequestQueue requestQueue;
     private ArrayList<String> studyTimes = new ArrayList<>();
@@ -55,7 +57,7 @@ public class ChartFragment extends Fragment {
 
         //Volley Queue  & request json
         requestQueue = Volley.newRequestQueue(getContext());
-        parseJson();
+        parseCalendarInfo();
 
         OneDayDecorator oneDayDecorator = new OneDayDecorator();
 
@@ -116,7 +118,7 @@ public class ChartFragment extends Fragment {
         return root;
     }
     // _GET request json
-    private void parseJson(){
+    private void parseCalendarInfo(){
         String url = String.format(Env.daysTotalurl,userID);
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>(){
@@ -137,7 +139,7 @@ public class ChartFragment extends Fragment {
                                 String time = studyObject.getString("study_time");
                                 studyTimes.add(time);
                                 studyDates.add(date);
-                                materialCalendarView.addDecorator(new StudyDate(getActivity(), time, date));
+                                materialCalendarView.addDecorator(new StudyDate(activity, time, date));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -150,5 +152,14 @@ public class ChartFragment extends Fragment {
             }
         });
         requestQueue.add(request);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if(context instanceof Activity)
+            activity = (Activity) context;
+
     }
 }

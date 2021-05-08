@@ -119,11 +119,13 @@ public class HomeFragment extends Fragment {
                             String studyTime = studyObject.getString("study_time");
 
                             if(studyTime.equals("null")){
-                                tv_data.setText("00:00:00");
+                                TOTAL_STUDY_TIME = "00:00:00";
+                                tv_data.setText(TOTAL_STUDY_TIME);
                             }else{
-                                TOTAL_STUDY_TIME = makeSortTime(studyTime);
+                                TOTAL_STUDY_TIME = studyTime;
                                 tv_data.setText(TOTAL_STUDY_TIME);
                             }
+                            System.out.println(TOTAL_STUDY_TIME);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -136,50 +138,5 @@ public class HomeFragment extends Fragment {
         });
         request.setShouldCache(false);
         requestQueue.add(request);
-    }
-    private String makeSortTime(String studyTime){
-        String [] ar = makeVisibleTime(studyTime).split(":");
-        int s = Integer.parseInt(ar[2]);
-        int m = Integer.parseInt(ar[1]);
-        int h = Integer.parseInt(ar[0]);
-        System.out.println(s + " " + m + " " + h);
-        if(s >= 60){
-            m += 1;
-            s %= 60;
-        }
-        if(m >= 60){
-            h += 1;
-            h %= 60;
-        }
-        ar[0] = String.valueOf(h);
-        ar[1] = String.valueOf(m);
-        ar[2] = String.valueOf(s);
-
-        for(int i = 0; i < ar.length; i++){
-            if(ar[i].length() < 2){
-                while(ar[i].length() != 2){
-                    ar[i] = "0" + ar[i];
-                }
-            }
-        }
-
-        return ar[0]+":"+ar[1]+":"+ar[2];
-    }
-    private String makeVisibleTime(String study){
-        String [] ar = {"0","0","0","0","0","0"};
-        int idx = ar.length -1;
-        for(int i = study.length()-1; i >= 0; i--){
-            char c = study.charAt(i);
-            ar[idx--] = String.valueOf(c);
-        }
-        String time = "";
-        for(int i = 0; i < ar.length; i++){
-            time += ar[i];
-
-            if(i == 1 || i == 3){
-                time += ":";
-            }
-        }
-        return time;
     }
 }
