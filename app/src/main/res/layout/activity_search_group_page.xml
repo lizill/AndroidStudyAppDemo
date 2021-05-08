@@ -7,6 +7,7 @@
     tools:context=".ui.group.SearchGroupPage"
     android:orientation="vertical"
     android:padding="10dp"
+    android:background="#F5F5F5"
     >
 
     <androidx.recyclerview.widget.RecyclerView

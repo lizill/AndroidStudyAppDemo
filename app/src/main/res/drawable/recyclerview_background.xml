@@ -9,10 +9,6 @@
                 android:topLeftRadius="12dp"
                 android:topRightRadius="12dp">
             </corners>
-            <stroke
-                android:width="1dp"
-                android:color="#3080ff">
-            </stroke>
         </shape>
     </item>
 </selector>

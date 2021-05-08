@@ -39,17 +39,17 @@
         android:weightSum="10"
         >
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="그룹장"
             android:padding="1dp"
             android:layout_gravity="center"
             android:textSize="15dp"
-            android:layout_weight="0.3"
+            android:layout_weight="2"
             >
         </TextView>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="그룹장"
             android:padding="1dp"
@@ -57,7 +57,7 @@
             android:id="@+id/search_masterText"
             android:layout_gravity="center"
             android:textSize="15dp"
-            android:layout_weight="4"
+            android:layout_weight="8"
             >
         </TextView>
     </LinearLayout>
@@ -68,17 +68,17 @@
         android:weightSum="10"
         >
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="목표"
             android:padding="1dp"
             android:layout_gravity="center"
             android:textSize="15dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             >
         </TextView>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="목표시간"
             android:padding="1dp"
@@ -86,21 +86,21 @@
             android:id="@+id/search_goalTimeText"
             android:layout_gravity="center"
             android:textSize="15dp"
-            android:layout_weight="4"
+            android:layout_weight="3"
             >
         </TextView>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="인원"
             android:padding="1dp"
             android:layout_gravity="center"
             android:textSize="15dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             >
         </TextView>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="멤버수"
             android:padding="1dp"
@@ -108,7 +108,7 @@
             android:id="@+id/search_peopleCountText"
             android:layout_gravity="center"
             android:textSize="15dp"
-            android:layout_weight="4"
+            android:layout_weight="3"
             >
         </TextView>
     </LinearLayout>
@@ -120,17 +120,17 @@
         android:weightSum="10"
         >
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="시작일"
             android:padding="1dp"
             android:layout_gravity="center"
             android:textSize="15dp"
-            android:layout_weight="0.3"
+            android:layout_weight="2"
             >
         </TextView>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="시작날짜"
             android:padding="1dp"
@@ -138,11 +138,18 @@
             android:id="@+id/search_start_date"
             android:layout_gravity="center"
             android:textSize="15dp"
-            android:layout_weight="4"
+            android:layout_weight="8"
             >
         </TextView>
     </LinearLayout>
-
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0.3dp"
+        android:background="#4682B4"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        >
+    </View>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
