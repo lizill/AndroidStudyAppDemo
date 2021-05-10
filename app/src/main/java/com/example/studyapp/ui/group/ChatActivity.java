@@ -25,8 +25,6 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 
 public class ChatActivity extends AppCompatActivity {
-//    SharedPreferences chatData;
-//    SharedPreferences.Editor putChatData = chatData.edit();
 
     private Socket mSocket;
     private Gson gson = new Gson();
@@ -39,6 +37,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private String userID;
     private String roomName;
+
+    private DbOpenHelper mDbOpenHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,10 @@ public class ChatActivity extends AppCompatActivity {
 
         sendText = findViewById(R.id.send_text);
 
+        mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+        mDbOpenHelper.create();
+
         try {
             mSocket = IO.socket("http://132.226.20.103:9876");
             Log.d("SOCKET", "Connection success : " + mSocket.id());
@@ -75,7 +79,6 @@ public class ChatActivity extends AppCompatActivity {
         mSocket.on("update", args -> {
             MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
             addChat(data);
-
         });
 
         sendButton = (Button) findViewById(R.id.send_btn);
@@ -92,17 +95,18 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessage() {
-        String content = sendText.getText().toString();
+        String content = sendText.getText().toString().trim();
         if(!content.equals("")) {
+            long currentTime = System.currentTimeMillis();
             mSocket.emit("newMessage", gson.toJson(new MessageData(
                     roomName,
                     "MESSAGE",
                     userID,
                     roomName,
                     content,
-                    System.currentTimeMillis()
+                    currentTime
             )));
-            adapter.addItem(new ChatItem(userID, content, toDate(System.currentTimeMillis()), ChatType.RIGHT_MESSAGE));
+            adapter.addItem(new ChatItem(userID, content, toDate(currentTime), ChatType.RIGHT_MESSAGE));
             adapter.notifyDataSetChanged();
             recyclerView.scrollToPosition(adapter.getItemCount() - 1);
             sendText.setText("");
