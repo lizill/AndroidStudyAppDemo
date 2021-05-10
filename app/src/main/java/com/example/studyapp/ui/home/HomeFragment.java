@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,16 @@ import java.util.TimeZone;
 
 public class HomeFragment extends Fragment {
 
+<<<<<<< HEAD
+=======
+    private ArrayList<HomeData> arrayList;
+    private HomeAdapter homeAdapter;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
+    private EditText editTextTextPersonName;
+
+
+>>>>>>> 54875beb91e5165b1a4417ccf3d112ca8c0aac10
     private HomeViewModel homeViewModel;
 
     private Button sub1;
@@ -61,6 +72,7 @@ public class HomeFragment extends Fragment {
         view 생성 선언 등등...
         TextView textView = root.findViewById(R.id.text_home);
         */
+<<<<<<< HEAD
 
         userID = FirstActivity.userInfo.getString("userId", null);
 
@@ -71,6 +83,15 @@ public class HomeFragment extends Fragment {
         dateFormat.setTimeZone(tz);
         Date date = new Date();
         today = dateFormat.format(date);
+=======
+        editTextTextPersonName = (EditText)root.findViewById(R.id.editTextTextPersonName);
+        recyclerView = (RecyclerView) root.findViewById(R.id.rv_home);
+        linearLayoutManager = new LinearLayoutManager(root.getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        arrayList = new ArrayList<>();
+        homeAdapter = new HomeAdapter(arrayList);
+        recyclerView.setAdapter(homeAdapter);
+>>>>>>> 54875beb91e5165b1a4417ccf3d112ca8c0aac10
 
 
         //Volley Queue  & request json
@@ -96,7 +117,7 @@ public class HomeFragment extends Fragment {
             public void onChanged(@Nullable String s) {
 
                 /*
-                onChnaged= 뷰를 눌러서 실행했을때 실행시킬 이벤트 삽입
+                onChanged= 뷰를 눌러서 실행했을때 실행시킬 이벤트 삽입
                  */
 
             }
@@ -108,6 +129,7 @@ public class HomeFragment extends Fragment {
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
+<<<<<<< HEAD
                     public void onResponse(String response) {
                         try {
                             //json object >> {response:[{key : value}, {.....
@@ -129,6 +151,13 @@ public class HomeFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+=======
+                    public void onClick(View v) {
+                        HomeData homeData = null;
+                        homeData = new HomeData(R.mipmap.ic_launcher, editTextTextPersonName.getText());
+                            arrayList.add(homeData);
+                        homeAdapter.notifyDataSetChanged();
+>>>>>>> 54875beb91e5165b1a4417ccf3d112ca8c0aac10
                     }
                 }, new Response.ErrorListener() {
             @Override

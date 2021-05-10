@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +15,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
 
-            android:src="@drawable/rp" />
+            android:src="@drawable/white" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,13 +27,17 @@
                 android:id="@+id/tv_home_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="testdroid" />
+                android:height="100dp"
+                android:textSize="40dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:text="" />
 
-            <TextView
-                android:id="@+id/tv_home_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="recyclerview" />
+<!--            <TextView-->
+<!--                android:id="@+id/tv_home_content"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="recyclerview" />-->
 
 
         </LinearLayout>
