@@ -53,13 +53,37 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         ArrayList<ChatItem> list = new ArrayList<>();
-        adapter = new ChatAdapter(list);
 
         mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
         mDbOpenHelper.create();
 
+        Cursor iCursor = mDbOpenHelper.selectColumns(roomName);
+        while(iCursor.moveToNext()) {
+            String roomName = iCursor.getString(iCursor.getColumnIndex("room_name"));
+            String type = iCursor.getString(iCursor.getColumnIndex("type"));
+            String from = iCursor.getString(iCursor.getColumnIndex("f_rom"));
+            String to = iCursor.getString(iCursor.getColumnIndex("t_o"));
+            String content = iCursor.getString(iCursor.getColumnIndex("content"));
+            String sendTime = iCursor.getString(iCursor.getColumnIndex("sendTime"));
+            MessageData data = new MessageData(roomName, type, from, to, content, Long.valueOf(sendTime));
+
+            System.out.println(data);
+
+            if (type.equals("ENTER") || type.equals("LEFT")) {
+                list.add(new ChatItem(from, content, toDate(Long.valueOf(sendTime)), ChatType.CENTER_MESSAGE));
+            }
+            else if (!userID.equals(from)) {
+                list.add(new ChatItem(from, content, toDate(Long.valueOf(sendTime)), ChatType.LEFT_MESSAGE));
+            } else {
+                list.add(new ChatItem(from, content, toDate(Long.valueOf(sendTime)), ChatType.RIGHT_MESSAGE));
+            }
+        }
+
+        adapter = new ChatAdapter(list);
+
         recyclerView.setAdapter(adapter);
+        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
 
         sendText = findViewById(R.id.send_text);
 
@@ -91,32 +115,6 @@ public class ChatActivity extends AppCompatActivity {
                 sendMessage();
             }
         });
-
-        getData();
-    }
-
-    private void getData() {
-        Cursor iCursor = mDbOpenHelper.selectColumns(roomName);
-        while(iCursor.moveToNext()) {
-            String roomName = iCursor.getString(iCursor.getColumnIndex("room_name"));
-            String type = iCursor.getString(iCursor.getColumnIndex("type"));
-            String from = iCursor.getString(iCursor.getColumnIndex("f_rom"));
-            String to = iCursor.getString(iCursor.getColumnIndex("t_o"));
-            String content = iCursor.getString(iCursor.getColumnIndex("content"));
-            String sendTime = iCursor.getString(iCursor.getColumnIndex("sendTime"));
-            MessageData data = new MessageData(roomName, type, from, to, content, Long.valueOf(sendTime));
-
-            System.out.println(data);
-
-            if (type.equals("ENTER") || type.equals("LEFT")) {
-                adapter.addItem(new ChatItem(from, content, toDate(Long.valueOf(sendTime)), ChatType.CENTER_MESSAGE));
-            }
-            else if (!userID.equals(from)) {
-                adapter.addItem(new ChatItem(from, content, toDate(Long.valueOf(sendTime)), ChatType.LEFT_MESSAGE));
-            }
-        }
-        adapter.notifyDataSetChanged();
-        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     private String toDate(long currentMillis) {

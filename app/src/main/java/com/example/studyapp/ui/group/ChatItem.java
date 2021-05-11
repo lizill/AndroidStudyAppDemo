@@ -6,6 +6,16 @@ public class ChatItem {
     private String sendTime;
     private int viewType;
 
+    @Override
+    public String toString() {
+        return "ChatItem{" +
+                "name='" + name + '\'' +
+                ", content='" + content + '\'' +
+                ", sendTime='" + sendTime + '\'' +
+                ", viewType=" + viewType +
+                '}';
+    }
+
     public ChatItem(String name, String content, String sendTime, int viewType) {
         this.name = name;
         this.content = content;
