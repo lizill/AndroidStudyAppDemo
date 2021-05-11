@@ -25,12 +25,18 @@ public class DbOpenHelper {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-
+            db.execSQL(Database.CreateDB._CREATE0);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        }
+
+        @Override
+        public void onConfigure(SQLiteDatabase db) {
+            super.onConfigure(db);
+            db.disableWriteAheadLogging();
         }
     }
 
@@ -52,7 +58,7 @@ public class DbOpenHelper {
         mDB.close();
     }
 
-    public long insertColumn(String room_name, String type, String from, String to, String content, long send_time) {
+    public long insertColumn(String room_name, String type, String from, String to, String content, String send_time) {
         ContentValues values = new ContentValues();
         values.put(Database.CreateDB.ROOM_NAME, room_name);
         values.put(Database.CreateDB.TYPE, type);
@@ -63,8 +69,9 @@ public class DbOpenHelper {
         return mDB.insert(Database.CreateDB._TABLENAME0, null, values);
     }
 
-    public Cursor selectColumns() {
-        return mDB.query(Database.CreateDB._TABLENAME0, null, null, null, null, null, null);
+    public Cursor selectColumns(String where) {
+        Cursor c = mDB.rawQuery( "SELECT * FROM chat_table WHERE room_name = '" + where + "';", null);
+        return c;
     }
 
 }

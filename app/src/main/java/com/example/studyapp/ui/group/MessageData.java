@@ -5,6 +5,7 @@ public class MessageData {
     private String type;
     private String from;
     private String to;
+
     private String content;
     private long sendTime;
 
@@ -63,5 +64,17 @@ public class MessageData {
 
     public void setSendTime(long sendTime) {
         this.sendTime = sendTime;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageData{" +
+                "roomName='" + roomName + '\'' +
+                ", type='" + type + '\'' +
+                ", from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                ", content='" + content + '\'' +
+                ", sendTime=" + sendTime +
+                '}';
     }
 }

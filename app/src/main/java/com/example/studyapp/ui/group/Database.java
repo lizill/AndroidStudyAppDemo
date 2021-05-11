@@ -6,8 +6,8 @@ public final class Database {
     public static final class CreateDB implements BaseColumns {
         public static final String ROOM_NAME = "room_name";
         public static final String TYPE = "type";
-        public static final String FROM = "from";
-        public static final String TO = "to";
+        public static final String FROM = "f_rom";
+        public static final String TO = "t_o";
         public static final String CONTENT = "content";
         public static final String SEND_TIME = "sendTime";
         public static final String _TABLENAME0 = "chat_table";
@@ -18,6 +18,6 @@ public final class Database {
                 + FROM + " text not null , "
                 + TO + " text not null, "
                 + CONTENT + " text not null , "
-                + SEND_TIME + " long not null );";
+                + SEND_TIME + " text not null );";
     }
 }

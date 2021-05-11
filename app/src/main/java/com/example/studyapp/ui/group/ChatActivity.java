@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -53,15 +53,15 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         ArrayList<ChatItem> list = new ArrayList<>();
-
         adapter = new ChatAdapter(list);
-        recyclerView.setAdapter(adapter);
-
-        sendText = findViewById(R.id.send_text);
 
         mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
         mDbOpenHelper.create();
+
+        recyclerView.setAdapter(adapter);
+
+        sendText = findViewById(R.id.send_text);
 
         try {
             mSocket = IO.socket("http://132.226.20.103:9876");
@@ -79,6 +79,9 @@ public class ChatActivity extends AppCompatActivity {
         mSocket.on("update", args -> {
             MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
             addChat(data);
+
+            // 내부 데이터베이스에 저장
+            mDbOpenHelper.insertColumn(data.getRoomName(), data.getType(), data.getFrom(), data.getTo(), data.getContent(), String.valueOf(data.getSendTime()));
         });
 
         sendButton = (Button) findViewById(R.id.send_btn);
@@ -88,6 +91,32 @@ public class ChatActivity extends AppCompatActivity {
                 sendMessage();
             }
         });
+
+        getData();
+    }
+
+    private void getData() {
+        Cursor iCursor = mDbOpenHelper.selectColumns(roomName);
+        while(iCursor.moveToNext()) {
+            String roomName = iCursor.getString(iCursor.getColumnIndex("room_name"));
+            String type = iCursor.getString(iCursor.getColumnIndex("type"));
+            String from = iCursor.getString(iCursor.getColumnIndex("f_rom"));
+            String to = iCursor.getString(iCursor.getColumnIndex("t_o"));
+            String content = iCursor.getString(iCursor.getColumnIndex("content"));
+            String sendTime = iCursor.getString(iCursor.getColumnIndex("sendTime"));
+            MessageData data = new MessageData(roomName, type, from, to, content, Long.valueOf(sendTime));
+
+            System.out.println(data);
+
+            if (type.equals("ENTER") || type.equals("LEFT")) {
+                adapter.addItem(new ChatItem(from, content, toDate(Long.valueOf(sendTime)), ChatType.CENTER_MESSAGE));
+            }
+            else if (!userID.equals(from)) {
+                adapter.addItem(new ChatItem(from, content, toDate(Long.valueOf(sendTime)), ChatType.LEFT_MESSAGE));
+            }
+        }
+        adapter.notifyDataSetChanged();
+        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     private String toDate(long currentMillis) {
@@ -117,14 +146,12 @@ public class ChatActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             if (data.getType().equals("ENTER") || data.getType().equals("LEFT")) {
                 adapter.addItem(new ChatItem(data.getFrom(), data.getContent(), toDate(data.getSendTime()), ChatType.CENTER_MESSAGE));
-                adapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(adapter.getItemCount() - 1);
             }
             else if (!userID.equals(data.getFrom())) {
                 adapter.addItem(new ChatItem(data.getFrom(), data.getContent(), toDate(data.getSendTime()), ChatType.LEFT_MESSAGE));
-                adapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(adapter.getItemCount() - 1);
             }
+            adapter.notifyDataSetChanged();
+            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
         });
     }
 
