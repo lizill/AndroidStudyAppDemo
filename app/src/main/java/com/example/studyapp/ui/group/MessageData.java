@@ -1,18 +1,28 @@
 package com.example.studyapp.ui.group;
 
 public class MessageData {
+    private String roomName;
     private String type;
     private String from;
     private String to;
     private String content;
     private long sendTime;
 
-    public MessageData(String type, String from, String to, String content, long sendTime) {
+    public MessageData(String roomName, String type, String from, String to, String content, long sendTime) {
+        this.roomName = roomName;
         this.type = type;
         this.from = from;
         this.to = to;
         this.content = content;
         this.sendTime = sendTime;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
     public String getType() {

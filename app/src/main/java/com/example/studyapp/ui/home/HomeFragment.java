@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,10 +56,6 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        /*
-        view 생성 선언 등등...
-        TextView textView = root.findViewById(R.id.text_home);
-        */
 
         userID = FirstActivity.userInfo.getString("userId", null);
 
@@ -71,7 +66,6 @@ public class HomeFragment extends Fragment {
         dateFormat.setTimeZone(tz);
         Date date = new Date();
         today = dateFormat.format(date);
-
 
         //Volley Queue  & request json
         requestQueue = Volley.newRequestQueue(getContext());
@@ -94,7 +88,6 @@ public class HomeFragment extends Fragment {
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-
                 /*
                 onChnaged= 뷰를 눌러서 실행했을때 실행시킬 이벤트 삽입
                  */

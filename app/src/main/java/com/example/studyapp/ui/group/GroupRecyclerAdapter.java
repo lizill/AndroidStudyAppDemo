@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.studyapp.R;
 
 import java.util.ArrayList;
+
+import static com.example.studyapp.FirstActivity.USER_ID;
+import static com.example.studyapp.FirstActivity.userInfo;
 
 public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdapter.ViewHolder> {
 
@@ -30,6 +35,7 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         TextView categoryText;
         TextView goalTimeText;
         TextView masterText;
+        ImageButton chatButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -39,9 +45,9 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
             categoryText = (TextView)itemView.findViewById(R.id.categoryText);
             goalTimeText = (TextView)itemView.findViewById(R.id.goalTimeText);
             masterText = (TextView)itemView.findViewById(R.id.masterText);
-
+            chatButton = (ImageButton) itemView.findViewById(R.id.chatButton);
+            
             itemView.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     String group = (String)((TextView)v.findViewById(R.id.groupText)).getText();
@@ -72,6 +78,17 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         holder.categoryText.setText(groupList.get(position).getCategory());
         holder.goalTimeText.setText(groupList.get(position).getGoalTime());
         holder.masterText.setText(groupList.get(position).getMaster());
+
+        holder.chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("클릭" + groupList.get(position).getGroup());
+                Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                intent.putExtra("userID", userInfo.getString(USER_ID,null));
+                intent.putExtra("group", groupList.get(position).getGroup());
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
