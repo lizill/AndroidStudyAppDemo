@@ -44,19 +44,15 @@ public class RegisterActivity extends AppCompatActivity {
                 String userPasswordCheck = passwordCheckET.getText().toString();
 
                 if(userID.isEmpty()) {
-                    negativeBuilder("Please insert Email", "close");
+                    negativeBuilder("아이디를 입력해 주세요.", "확인");
                     return;
                 }
-                if(userPassword.isEmpty()) {
-                    negativeBuilder("Please insert Password", "close");
+                else if(userPassword.isEmpty()) {
+                    negativeBuilder("비밀번호를 입력해 주세요.", "확인");
                     return;
                 }
-                if(userPasswordCheck.isEmpty()) {
-                    negativeBuilder("Please insert Password Check", "close");
-                    return;
-                }
-                if(!userPassword.equals(userPasswordCheck)) {
-                    negativeBuilder("It doesn't match Password And Password Check", "close");
+                else if(userPasswordCheck.isEmpty() || !userPassword.equals(userPasswordCheck)) {
+                    negativeBuilder("두개의 비밀번호가 일치하지 않습니다.", "확인");
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
@@ -83,7 +79,6 @@ public class RegisterActivity extends AppCompatActivity {
                 .show();
     }
 
-
     class RegisterTask extends JSONTask {
 
         public RegisterTask(JSONObject jsonObject, String urlPath, String method) {
@@ -97,23 +92,18 @@ public class RegisterActivity extends AppCompatActivity {
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 String resultNum = jsonObject.get("result").toString();
-                System.out.println(resultNum);
-
-                String userID = idET.getText().toString();
-                String userPassword = passwordET.getText().toString();
 
                 if(resultNum.equals("0")) { // duplicated id
-                    negativeBuilder("Duplicated id!","Retry");
-                    progressBar.setVisibility(View.GONE);
+                    negativeBuilder("중복된 아이디 입니다.","확인");
                 }
                 else {
                     // 회원가입 완료 후 로그인 페이지로 이동, 페이지 닫기
-                    Toast.makeText(RegisterActivity.this, "Success Sign Up !! Please Login", Toast.LENGTH_LONG).show();
-                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(RegisterActivity.this, "회원가입이 완료되었습니다.", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(RegisterActivity.this, FirstActivity.class);
                     RegisterActivity.this.startActivity(intent);
                     finish();
                 }
+                progressBar.setVisibility(View.GONE);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

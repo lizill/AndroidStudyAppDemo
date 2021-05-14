@@ -2,7 +2,7 @@ package com.example.studyapp.ui.group;
 
 import android.provider.BaseColumns;
 
-public final class Database {
+public final class InnerDatabase {
     public static final class CreateDB implements BaseColumns {
         public static final String ROOM_NAME = "room_name";
         public static final String TYPE = "type";

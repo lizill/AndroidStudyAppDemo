@@ -25,7 +25,7 @@ public class DbOpenHelper {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(Database.CreateDB._CREATE0);
+            db.execSQL(InnerDatabase.CreateDB._CREATE0);
         }
 
         @Override
@@ -58,15 +58,15 @@ public class DbOpenHelper {
         mDB.close();
     }
 
-    public long insertColumn(String room_name, String type, String from, String to, String content, String send_time) {
+    public long insertColumn(MessageData data) {
         ContentValues values = new ContentValues();
-        values.put(Database.CreateDB.ROOM_NAME, room_name);
-        values.put(Database.CreateDB.TYPE, type);
-        values.put(Database.CreateDB.FROM, from);
-        values.put(Database.CreateDB.TO, to);
-        values.put(Database.CreateDB.CONTENT, content);
-        values.put(Database.CreateDB.SEND_TIME, send_time);
-        return mDB.insert(Database.CreateDB._TABLENAME0, null, values);
+        values.put(InnerDatabase.CreateDB.ROOM_NAME, data.getRoomName());
+        values.put(InnerDatabase.CreateDB.TYPE, data.getType());
+        values.put(InnerDatabase.CreateDB.FROM, data.getFrom());
+        values.put(InnerDatabase.CreateDB.TO, data.getTo());
+        values.put(InnerDatabase.CreateDB.CONTENT, data.getContent());
+        values.put(InnerDatabase.CreateDB.SEND_TIME, String.valueOf(data.getSendTime()));
+        return mDB.insert(InnerDatabase.CreateDB._TABLENAME0, null, values);
     }
 
     public Cursor selectColumns(String where) {
