@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="시간을 잡은 타이머"
+        android:text="시간을 잡는 타이머"
         android:textStyle="bold"
         android:textSize="24dp"
         android:id="@+id/titleTV"

@@ -44,15 +44,15 @@ public class RegisterActivity extends AppCompatActivity {
                 String userPasswordCheck = passwordCheckET.getText().toString();
 
                 if(userID.isEmpty()) {
-                    negativeBuilder("아이디를 입력해 주세요.", "확인");
+                    negativeBuilder("아이디를 입력해 주세요.");
                     return;
                 }
                 else if(userPassword.isEmpty()) {
-                    negativeBuilder("비밀번호를 입력해 주세요.", "확인");
+                    negativeBuilder("비밀번호를 입력해 주세요.");
                     return;
                 }
                 else if(userPasswordCheck.isEmpty() || !userPassword.equals(userPasswordCheck)) {
-                    negativeBuilder("두개의 비밀번호가 일치하지 않습니다.", "확인");
+                    negativeBuilder("두개의 비밀번호가 일치하지 않습니다.");
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
@@ -71,10 +71,10 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void negativeBuilder(String msg, String text) {
+    private void negativeBuilder(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
         builder.setMessage(msg)
-                .setNegativeButton(text, null)
+                .setNegativeButton("확인", null)
                 .create()
                 .show();
     }
@@ -94,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String resultNum = jsonObject.get("result").toString();
 
                 if(resultNum.equals("0")) { // duplicated id
-                    negativeBuilder("중복된 아이디 입니다.","확인");
+                    negativeBuilder("중복된 아이디 입니다.");
                 }
                 else {
                     // 회원가입 완료 후 로그인 페이지로 이동, 페이지 닫기

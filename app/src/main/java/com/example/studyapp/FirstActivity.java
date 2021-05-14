@@ -22,6 +22,9 @@ import org.json.JSONObject;
 
 public class FirstActivity extends AppCompatActivity {
 
+    // ------------------------------------------------------------------------------------
+    // 유저 정보 변수
+    // ------------------------------------------------------------------------------------
     public static SharedPreferences userInfo;
     public static final String USER_INFO = "userInfo";
     public static final String USER_ID = "userId";
@@ -100,7 +103,7 @@ public class FirstActivity extends AppCompatActivity {
     private void negativeBuilder(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(FirstActivity.this);
         builder.setMessage(msg)
-                .setNegativeButton("close", null)
+                .setNegativeButton("확인", null)
                 .create()
                 .show();
     }
@@ -117,7 +120,7 @@ public class FirstActivity extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject(result);
                 String resultNum = jsonObject.get("result").toString();
 
-                if (resultNum.equals("1")) { // resultNum = 1 : 로그인 성공
+                if (resultNum.equals("1")) { // 1 : 로그인 성공
                     progressBar.setVisibility(View.GONE);
                     if(userName != null) {
                         Intent intent = new Intent(FirstActivity.this, HomeActivity.class);
@@ -128,7 +131,7 @@ public class FirstActivity extends AppCompatActivity {
                     }
                     finish();
                 } else {
-                    negativeBuilder("로그인 정보를 확인해 주세요");
+                    negativeBuilder("로그인 정보를 확인해 주세요.");
                     progressBar.setVisibility(View.GONE);
                 }
             } catch (JSONException e) {
