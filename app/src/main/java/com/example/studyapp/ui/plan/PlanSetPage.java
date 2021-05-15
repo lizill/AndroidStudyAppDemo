@@ -4,7 +4,9 @@ import android.Manifest;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.KeyEvent;
@@ -23,21 +25,28 @@ import java.io.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.NavGraph;
-import androidx.navigation.NavInflater;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.studyapp.FirstActivity;
+import com.example.studyapp.JSONTask;
+import com.example.studyapp.LoginActivity;
 import com.example.studyapp.R;
-import com.example.studyapp.ui.group.Group;
-import com.example.studyapp.ui.group.GroupListAdapter;
-import com.example.studyapp.ui.group.GroupPage;
-import com.google.android.material.navigation.NavigationView;
+import com.example.studyapp.UserNameActivity;
+import com.example.studyapp.recycle.PlanData;
 
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.Buffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,13 +55,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static java.sql.DriverManager.println;
+
 public class PlanSetPage extends AppCompatActivity {
-    private ListView groupListView;
-    private GroupListAdapter adapter;
-    private List<Group> groupList;
-    private String userID;
-    private TimePickerDialog.OnTimeSetListener callbackMethod;
     private final int PERMISSIONS_REQUEST_RESULT = 1;
+
+    private String userID;
+    private String userPassword;
+
+    private EditText editText;
 
     public static Button st_btn;
     public static Button en_btn;
@@ -63,11 +74,14 @@ public class PlanSetPage extends AppCompatActivity {
     static int en_hour;
     static int en_min;
     static boolean touch=true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.plan_set_page);
-        
+        userID = FirstActivity.userInfo.getString(FirstActivity.USER_ID,null);
+        userPassword = FirstActivity.userInfo.getString(FirstActivity.USER_PASSWORD,null);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 //권한을 거절하면 재 요청을 하는 함수
@@ -75,8 +89,8 @@ public class PlanSetPage extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_RESULT);
             }
         }//권한 요청
-        
-        EditText editText = findViewById(R.id.plan_subject);
+
+        editText = findViewById(R.id.plan_subject);
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -124,77 +138,42 @@ public class PlanSetPage extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-
-//        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);  // Hostfragment
-//        NavController navController = navHostFragment.getNavController();
-//        NavInflater inflater = navHostFragment.getNavController().getNavInflater();
-//        NavGraph graph = inflater.inflate(R.navigation.mobile_navigation);
-//
-//
-//        graph.setStartDestination(R.id.navigation_plan);
-//
-//        navController.setGraph(graph);
-//
-//
-//
-//        NavigationView navigationView = findViewById(R.id.navigation_plan);
-//        NavigationUI.setupWithNavController(navigationView, navHostFragment.getNavController());
-        String response = "{\"response\":[{\"START\":\"14:22:13\",\"END\":\"16:20:18\",\"focusOn\":\"01:29:55\",\"TERM\":\"01:58:05\"}]}";
-        try{
-            JSONObject jsonObject = new JSONObject(response);
-        }catch(JSONException e){
-
+        String str = editText.getText().toString().replaceAll(" ","");
+        if(str == null||str.equals(null)||str.equals("")){
+            PlanFragment.showToast(this,"과목명을 입력 해주세요.");
+            return true;
         }
-        ArrayList<String> list = new ArrayList<>();
-        try {
-            writeFile("PlanTime.txt", "Going To Distance For Better Than Yesterday\n", list);
-            writeFile("PlanTime.txt", response, list);
-            writeFile("PlanTime.txt", response, list);
-            list = readFile("PlanTime.txt", list);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(str.length()>10){
+            PlanFragment.showToast(this,"과목이름이 너무 깁니다.");
+            return true;
         }
-        System.out.println(list);
-        /*
-        String pathname = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+"/PlanTime";
-        File file = new File(pathname);
-        if(!file.exists())
-            file.mkdir();
-        try{
-            file = new File(pathname+"/Time.txt");
-            FileWriter fw = new FileWriter(pathname+"/Time.txt",true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            if(!file.exists()) {
-                file.createNewFile();
-                bw.write("Going To Distance For Better Than Yesterday");
+        if(findDuplication(st_hour, st_min, en_hour,en_min).equals("0")){
+            System.out.println("중복 없음");
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("position",PlanFragment.recycleArrayList.size()+1);
+                jsonObject.accumulate("user_id", userID);
+                jsonObject.accumulate("user_password", userPassword);
+                jsonObject.accumulate("subject",str);
+                jsonObject.accumulate("start",st_hour+":"+st_min+":00");
+                jsonObject.accumulate("end",en_hour+":"+en_min+":00");
+
+                PlanTask planTask = new PlanTask(jsonObject, "planInsert", "POST");
+                planTask.execute();
+                planTask = new PlanTask(jsonObject, "plan", "POST");
+                planTask.execute();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            bw.write(response);
-            bw.flush();
-            bw.close();
+            PlanFragment.showToast(this,"추가되었습니다.");
 
-//            System.out.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS));
-//            System.out.println(pathname);
-//            System.out.println(Environment.getExternalStoragePublicDirectory(Environment.getExternalStorageState()));
-            InputStream is = openFileInput("mytest.txt");
-
-            if(is!=null){
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader br = new BufferedReader(isr);
-                String str;
-                StringBuffer sb = new StringBuffer();
-                while((str=br.readLine())!=null) {
-                    System.out.println(str);
-                    sb.append(str);
-                }
-                is.close();
-                String sc = sb.toString();
-            }
-        }catch(IOException e){
-
-        }finally{
-
-        }*/
+            PlanFragment.planAdapter.notifyDataSetChanged();
+            onBackPressed();
+        }else if(findDuplication(st_hour, st_min, en_hour,en_min).equals("2")){
+            PlanFragment.showToast(this,"공부시간은 1분 이상이어야 합니다.");
+        }else{
+            PlanFragment.showToast(this,"기존 기록과 시간이 중복됩니다.");
+        }
 
         switch(item.getItemId()){
             case R.id.plan_action_btn:
@@ -207,9 +186,9 @@ public class PlanSetPage extends AppCompatActivity {
                 break;
         }
 
-        onBackPressed();
-//        Intent intent = new Intent(this, GroupPage.class);
-//        startActivity(intent);
+
+
+
         return true;
     }
     @Override
@@ -225,62 +204,59 @@ public class PlanSetPage extends AppCompatActivity {
         }
     }
 
+    public String findDuplication(int st_hour, int st_min, int en_hour, int en_min){
+        int st_time = st_hour*60+st_min;
+        int en_time = en_hour*60+en_min;
+        if(st_time == en_time) return "2";
+        for(int i = 0;i<PlanFragment.recycleArrayList.size();i++){
+            String timeStr = PlanFragment.recycleArrayList.get(i).getTv_content();
+            int st_bTime=PlanTask.timeCal(timeStr);
+            int en_bTime=PlanTask.timeCal(timeStr.substring(12));
 
-    private <T> void writeFile(String fileName, String msg, ArrayList<T> list) {
-//        try {
-//            OutputStreamWriter oStreamWriter = new OutputStreamWriter(openFileOutput(fileName,
-//                    Context.MODE_PRIVATE));
-//            list = readFile("PlanTime.txt", list);
-//            for(int i = 0;i<list.size();i++){
-//                oStreamWriter.write((String)list.get(i));
-//            }
-//            oStreamWriter.write(msg);
-//            oStreamWriter.write("yaho");
-//            oStreamWriter.close();
-//        } catch(FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        FileOutputStream fos = null;
-        DataOutputStream dos = null;
-        try{
-            fos = openFileOutput(fileName,MODE_PRIVATE);
-            dos = new DataOutputStream(fos);
-            dos.writeUTF(msg);
-            dos.flush();
-            dos.close();
-        }catch(IOException e){
 
+//            int st_bTime = Integer.parseInt(timeStr.substring(0,2))*60+Integer.parseInt(timeStr.substring(3,5));
+//            int en_bTime = Integer.parseInt(timeStr.substring(8,10))*60+Integer.parseInt(timeStr.substring(11,13));
+            if(     st_time==st_bTime||
+                    st_time==en_bTime||
+                    en_time==st_bTime||
+                    en_time==en_bTime)
+                return "1";
+            if(st_time<en_time){
+                if(st_bTime<en_bTime){
+                    if(st_time<st_bTime&&en_time>st_bTime){
+                        return "1";
+                    }else if(st_time>st_bTime&&st_time<en_bTime){
+//                        false;
+                        return "1";
+                    }else if(st_time>en_bTime){
+//                        true;
+                    }
+                }else{
+                    if(st_time<en_bTime){
+//                        false;
+                        return "1";
+                    }else if(en_time>st_bTime){
+//                        false;
+                        return "1";
+                    }
+                }
+            }else{
+                //st_time>en_time
+                if(st_bTime<en_bTime){
+                    if(en_time>st_bTime||st_time<en_bTime)
+                        return "1";
+                }else{
+//                    false;
+                    return "1";
+                }
+            }
         }
+
+        return "0";
     }
 
-    private <T> ArrayList<T> readFile(String fileName, ArrayList<T> list) throws IOException {
-//        try {
-//            InputStream iStream = openFileInput(fileName);
-//            if(iStream != null) {
-//                InputStreamReader iStreamReader = new InputStreamReader(iStream);
-//                BufferedReader bufferedReader = new BufferedReader(iStreamReader);
-//                String str = "";
-//                StringBuffer sBuffer = new StringBuffer();
-//                while((str = bufferedReader.readLine()) != null) {
-//                    sBuffer.append(str);
-//                    list.add((T)sBuffer.toString());
-//                }
-//                iStream.close();
-//            }
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
 
-        FileInputStream fis = openFileInput(fileName);
-        DataInputStream dis = new DataInputStream(fis);
 
-        String data2 = dis.readUTF();
-        dis.close();
-        System.out.println(data2);
-        list.add((T)data2);
-        return list;
-    }
+
 
 }

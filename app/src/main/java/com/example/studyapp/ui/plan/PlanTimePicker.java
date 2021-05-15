@@ -46,16 +46,16 @@ public class PlanTimePicker extends DialogFragment
     public static String hourCal(int hour, int min, boolean who){
         String noon ="";
         String result = "";
+        if (min>=60){
+            hour ++;
+            min -=60;
+        }
         if(who){
             PlanSetPage.st_hour=hour;
             PlanSetPage.st_min=min;
         }else{
             PlanSetPage.en_hour=hour;
             PlanSetPage.en_min=min;
-        }
-        if (min>=60){
-            hour ++;
-            min -=60;
         }
         if(hour>=12)
             noon = "오후";

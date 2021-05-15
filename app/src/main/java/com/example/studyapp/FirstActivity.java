@@ -13,10 +13,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
-
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class FirstActivity extends AppCompatActivity {
@@ -49,71 +46,7 @@ public class FirstActivity extends AppCompatActivity {
         userPassword = userInfo.getString(USER_PASSWORD,null);
         userName = userInfo.getString(USER_NAME, null);
 
-        if(userId != null && userPassword != null && userName != null) {
-            progressBar.setVisibility(View.VISIBLE);
-            Response.Listener<String> responseLister = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response);
-                        boolean success = jsonResponse.getBoolean("success");
-                        if(success) { // 아이디 비번 닉네임이 정해지면 홈화면으로 자동 로그인
-                            progressBar.setVisibility(View.GONE);
-                            Intent intent = new Intent(FirstActivity.this, HomeActivity.class);
-                            FirstActivity.this.startActivity(intent);
-                            finish();
-                        }
-                        else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(FirstActivity.this);
-                            builder.setMessage("Failed Sign In")
-                                    .setNegativeButton("Retry", null)
-                                    .create()
-                                    .show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        progressBar.setVisibility(View.GONE);
-                    }
-                }
-            };
-            LoginRequest loginRequest = new LoginRequest(userId, userPassword, responseLister);
-            RequestQueue queue = Volley.newRequestQueue(FirstActivity.this);
-            queue.add(loginRequest);
-        }
-        else if (userId != null && userPassword != null && userName == null) {
-            progressBar.setVisibility(View.VISIBLE);
-            Response.Listener<String> responseLister = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response);
-                        boolean success = jsonResponse.getBoolean("success");
-                        if(success) { // 닉네임이 아직 널값일경우 userName으로 이동
-                            progressBar.setVisibility(View.GONE);
-                            Intent intent = new Intent(FirstActivity.this, UserNameActivity.class);
-                            FirstActivity.this.startActivity(intent);
-                            finish();
-                        }
-                        else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(FirstActivity.this);
-                            builder.setMessage("Failed Sign In")
-                                    .setNegativeButton("Retry", null)
-                                    .create()
-                                    .show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        progressBar.setVisibility(View.GONE);
-                    }
-                }
-            };
-            LoginRequest loginRequest = new LoginRequest(userId, userPassword, responseLister);
-            RequestQueue queue = Volley.newRequestQueue(FirstActivity.this);
-            queue.add(loginRequest);
-        }
-        else {
+        if(userId == null && userPassword == null) {
             signInButton = (Button) findViewById(R.id.signInButton);
             signInButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -131,6 +64,74 @@ public class FirstActivity extends AppCompatActivity {
                     FirstActivity.this.startActivity(intent);
                 }
             });
+        } else {
+            progressBar.setVisibility(View.VISIBLE);
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("user_id", userId);
+                jsonObject.accumulate("user_password", userPassword);
+
+                FirstTask loginTask = new FirstTask(jsonObject, "login", "POST");
+                loginTask.execute();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private void negativeBuilder(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(FirstActivity.this);
+        builder.setMessage(msg)
+                .setNegativeButton("close", null)
+                .create()
+                .show();
+    }
+
+    class FirstTask extends JSONTask {
+
+        public FirstTask(JSONObject jsonObject, String urlPath, String method) {
+            super(jsonObject, urlPath, method);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if(userName != null) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String resultNum = jsonObject.get("result").toString();
+
+                    if (resultNum.equals("1")) {
+                        progressBar.setVisibility(View.GONE);
+                        Intent intent = new Intent(FirstActivity.this, HomeActivity.class);
+                        FirstActivity.this.startActivity(intent);
+                        finish();
+                    } else {
+                        negativeBuilder("Failed Sign In");
+                        progressBar.setVisibility(View.GONE);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String resultNum = jsonObject.get("result").toString();
+
+                    if (resultNum.equals("1")) {
+                        progressBar.setVisibility(View.GONE);
+                        Intent intent = new Intent(FirstActivity.this, UserNameActivity.class);
+                        FirstActivity.this.startActivity(intent);
+                        finish();
+                    } else {
+                        negativeBuilder("Failed Sign In");
+                        progressBar.setVisibility(View.GONE);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
