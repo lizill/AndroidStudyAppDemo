@@ -2,6 +2,7 @@ package com.example.studyapp.ui.plan;
 
 import android.graphics.Color;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,9 +68,9 @@ public class PlanTask extends JSONTask {
                 }
                 PlanFragment.fillTable();
                 PlanFragment.planAdapter.notifyDataSetChanged();
+                PlanFragment.progressBar.setVisibility(View.GONE);
             }else {
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -87,12 +88,11 @@ public class PlanTask extends JSONTask {
 //        time[][]
 //        int startTime = startHour*60+startMin;
 //        int endTime = endHour*60+endMin;
-        int totalTime = (endHour*60+endMin)-(startHour*60+startMin);
+        int totalTime = (endHour*60+endMin+1)-(startHour*60+startMin);
         if(totalTime>0){
-
             timeSetCalculator(startHour,startMin,endHour,totalTime);
         }else{
-            int startTotal = 23*60+59-(startHour*60+startMin);
+            int startTotal = 24*60-(startHour*60+startMin);
             int endTotal = endHour*60+endMin;
             timeSetCalculator(0,0,endHour,endTotal);
             timeSetCalculator(startHour,startMin,23,startTotal);
@@ -103,9 +103,9 @@ public class PlanTask extends JSONTask {
             for(;startMin/10<PlanFragment.time[startHour].length;){
                 if(totalTime==0)return;
                 if(totalTime<10){
-                    totalTime-=totalTime;
                     PlanFragment.time[startHour][startMin/10]+=totalTime;
                     startMin+=totalTime;
+                    totalTime-=totalTime;
                 }else{
                     totalTime-=10-startMin%10;
                     PlanFragment.time[startHour][startMin/10]+=10-startMin%10;

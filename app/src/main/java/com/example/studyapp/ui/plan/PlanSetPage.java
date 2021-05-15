@@ -108,7 +108,7 @@ public class PlanSetPage extends AppCompatActivity {
         en_txt = findViewById(R.id.end_time);
         st_btn.setText(PlanTimePicker.hourCal(st_hour, st_min,true));
         en_hour = st_hour;
-        en_min = st_min+30;
+        en_min = st_min+29;
         en_btn.setText(PlanTimePicker.hourCal(en_hour, en_min,false));
 
         PlanTimePicker planTimePicker = new PlanTimePicker();
@@ -175,16 +175,16 @@ public class PlanSetPage extends AppCompatActivity {
             PlanFragment.showToast(this,"기존 기록과 시간이 중복됩니다.");
         }
 
-        switch(item.getItemId()){
-            case R.id.plan_action_btn:
-                System.out.println(st_hour+":"+st_min);
-                System.out.println(en_hour+":"+en_min);
-                String startTime = "{"+st_hour+":"+st_min+"}";
-                String endTime = "{"+st_hour+":"+st_min+"}";
-                break;
-            default:
-                break;
-        }
+//        switch(item.getItemId()){
+//            case R.id.plan_action_btn:
+//                System.out.println(st_hour+":"+st_min);
+//                System.out.println(en_hour+":"+en_min);
+//                String startTime = "{"+st_hour+":"+st_min+"}";
+//                String endTime = "{"+st_hour+":"+st_min+"}";
+//                break;
+//            default:
+//                break;
+//        }
 
 
 

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,13 +51,14 @@ public class PlanFragment extends Fragment {
 
     private String userID = FirstActivity.userInfo.getString(FirstActivity.USER_ID,null);
     private String userPassword = FirstActivity.userInfo.getString(FirstActivity.USER_PASSWORD,null);
-    private boolean find = true;
+    static ProgressBar progressBar;
 
     static ViewGroup container;
     static LayoutInflater inflater;
     static PlanFragment planFragment;
     static int[][] time = new int[24][6];
     static int[][] viewID = new int[24][6];
+    static TextView[][] tvs = new TextView[24][6];
     /*
     view 생성 선언 등등...
     TextView textView = root.findViewById(R.id.text_home);
@@ -72,6 +74,7 @@ public class PlanFragment extends Fragment {
         this.inflater = inflater;
         this.planFragment = this;
 
+
         planViewModel =
                 new ViewModelProvider(this).get(PlanViewModel.class);
         View root = inflater.inflate(R.layout.fragment_plan, container, false);
@@ -79,21 +82,18 @@ public class PlanFragment extends Fragment {
         view 생성 선언 등등...
         TextView textView = root.findViewById(R.id.text_home);
         */
+        progressBar = (ProgressBar) root.findViewById(R.id.progressBar);
 
         recyclerView = (RecyclerView) root.findViewById(R.id.rv_plan);
         linearLayoutManager = new LinearLayoutManager(root.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-
         recycleArrayList = new ArrayList<>();
         planAdapter = new PlanAdapter(recycleArrayList);
-
-
 
         /*
         arrayListBtn
         planBtnAdapter
-
         */
 
         recyclerView.setAdapter(planAdapter);
@@ -101,6 +101,18 @@ public class PlanFragment extends Fragment {
         planViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
+
+                progressBar.setVisibility(View.VISIBLE);
+
+                for(int i = 0;i<tvs.length;i++){
+                    for(int j = 0;j<tvs[i].length;j++){
+                        String id = "hr";
+                        id += (i<10)?"0"+i+j:""+i+j;
+                        tvs[i][j] = (TextView)root.findViewById(root.getResources().getIdentifier(id,"id", PlanFragment.planFragment.getActivity().getPackageName()));
+//                        tvs[i][j].setBackgroundColor(Color.parseColor("#3080ff"));
+                    }
+                }
+
                 try {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.accumulate("user_id", userID);
@@ -148,11 +160,6 @@ public class PlanFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         if(recycleArrayList.size()>0){
-
-                            TextView tv = (TextView)root.findViewById(viewID[5][1]);
-
-                            tv.setBackgroundColor(Color.parseColor("#3080ff"));
-
 
 
                             alter.setTitle("계획을 지우시겠습니까?").setMessage("공부 한 내역은 사라지지 않습니다.");
@@ -217,26 +224,19 @@ public class PlanFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_plan, PlanFragment.container, false);
         for(int i = 0;i<time.length;i++){
             for(int j=0;j<time[i].length;j++){
-//                time[i][j];
-                String id = "hr";
-                id += (i<10)?"0"+i+j:""+i+j;
-                try{
-                    int resID = root.getResources().getIdentifier(id,"id", PlanFragment.planFragment.getActivity().getPackageName());
-                    viewID[i][j] = resID;
-                    TextView tv = (TextView)root.findViewById(resID);
-//                    tv.setBackground(R.drawable.);
-                    String color = Integer.toHexString(255*time[i][j]/10);
-                    color =(color.length()==1)?"0"+color:color;
-
-//                    System.out.println(Integer.toHexString((255*time[i][j]/10)));
-                    System.out.println(resID+"/"+color);
-                    tv.setBackgroundColor(Color.parseColor("#"+color+"3080ff"));
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+//                String id = "hr";
+//                id += (i<10)?"0"+i+j:""+i+j;
+//                int resID = root.getResources().getIdentifier(id,"id", PlanFragment.planFragment.getActivity().getPackageName());
+//                viewID[i][j] = resID;
+//                TextView tv = (TextView)root.findViewById(resID);
+                TextView tv = tvs[i][j];
+                String color = Integer.toHexString(255*time[i][j]/10);
+                color =(color.length()==1)?"0"+color:color;
+                tv.setBackgroundColor(Color.parseColor("#"+color+"3080ff"));
 
             }
         }
+
     }
 
     public static void listRemove(){
