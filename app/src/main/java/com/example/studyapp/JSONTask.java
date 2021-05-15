@@ -1,8 +1,6 @@
-package com.example.studyapp.ui.plan;
+package com.example.studyapp;
 
 import android.os.AsyncTask;
-
-import com.example.studyapp.FirstActivity;
 
 import org.json.JSONObject;
 
@@ -17,42 +15,49 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class JSONTask extends AsyncTask <String, String, String>{
+public class JSONTask extends AsyncTask<String, String, String> {
+
     private JSONObject jsonObject;
-    String userID = FirstActivity.userInfo.getString(FirstActivity.USER_ID,null);
-    String userPassword =FirstActivity.userInfo.getString(FirstActivity.USER_PASSWORD,null);
-    public JSONTask(JSONObject jsonObject) {
+    private String Path = "";
+    private String method = "";
+
+    public JSONTask(JSONObject jsonObject, String Path, String method) {
         this.jsonObject = jsonObject;
+        this.Path = Path;
+        this.method = method;
     }
 
     @Override
-    protected String doInBackground(String... urls)  {
+    protected String doInBackground(String... urls) {
         try {
             HttpURLConnection con = null;
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("http://132.226.20.103:3000/plan");
+                URL url = new URL("http://132.226.20.103:3000/" + Path);
                 con = (HttpURLConnection) url.openConnection();
 
-                con.setRequestMethod("POST");
-                System.out.println(userID);
-                System.out.println(userPassword);
-                jsonObject.accumulate("user_id", userID);
-                jsonObject.accumulate("user_password", userPassword);
+                con.setRequestMethod(method);
+                con.setRequestProperty("Cache-Control", "no-cache");
+                con.setRequestProperty("Content-Type", "application/json");
+                con.setRequestProperty("Accept", "text/html");
 
-                con.setDoOutput(true);
+                if(method.equals("POST")) {
+                    con.setDoOutput(true);
+                }
                 con.setDoInput(true);
 
                 con.connect();
 
-                OutputStream outputStream = con.getOutputStream();
-                System.out.println(jsonObject.toString());
-                // 서버로 데이터를 보내기 위한 버퍼
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-                writer.write(jsonObject.toString());
-                writer.flush();
-                writer.close();
+                if(method.equals("POST")) {
+                    OutputStream outputStream = con.getOutputStream();
+
+                    // 서버로 데이터를 보내기 위한 버퍼
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+                    writer.write(jsonObject.toString());
+                    writer.flush();
+                    writer.close();
+                }
 
                 // 서버로부터 데이터를 받기 위한 버퍼
                 InputStream inputStream = con.getInputStream();
@@ -69,7 +74,11 @@ public class JSONTask extends AsyncTask <String, String, String>{
                 e.printStackTrace();
             } finally {
                 if(con != null) con.disconnect();
-                if(reader != null) reader.close();
+                try {
+                    if(reader != null) reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,6 +89,5 @@ public class JSONTask extends AsyncTask <String, String, String>{
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        System.out.println(result);
     }
 }

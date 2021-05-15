@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,7 +34,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.studyapp.FirstActivity;
+import com.example.studyapp.JSONTask;
+import com.example.studyapp.LoginActivity;
 import com.example.studyapp.R;
+import com.example.studyapp.UserNameActivity;
+import com.example.studyapp.recycle.PlanData;
 
 
 import org.json.JSONArray;
@@ -53,8 +58,12 @@ import java.util.List;
 import static java.sql.DriverManager.println;
 
 public class PlanSetPage extends AppCompatActivity {
-    private String userID;
     private final int PERMISSIONS_REQUEST_RESULT = 1;
+
+    private String userID;
+    private String userPassword;
+
+    private EditText editText;
 
     public static Button st_btn;
     public static Button en_btn;
@@ -65,11 +74,14 @@ public class PlanSetPage extends AppCompatActivity {
     static int en_hour;
     static int en_min;
     static boolean touch=true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.plan_set_page);
-        userID= FirstActivity.USER_ID;
+        userID = FirstActivity.userInfo.getString(FirstActivity.USER_ID,null);
+        userPassword = FirstActivity.userInfo.getString(FirstActivity.USER_PASSWORD,null);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 //권한을 거절하면 재 요청을 하는 함수
@@ -77,8 +89,8 @@ public class PlanSetPage extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_RESULT);
             }
         }//권한 요청
-        
-        EditText editText = findViewById(R.id.plan_subject);
+
+        editText = findViewById(R.id.plan_subject);
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -126,21 +138,41 @@ public class PlanSetPage extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        String str = editText.getText().toString().replaceAll(" ","");
+        if(str == null||str.equals(null)||str.equals("")){
+            PlanFragment.showToast(this,"과목명을 입력 해주세요.");
+            return true;
+        }
+        if(str.length()>10){
+            PlanFragment.showToast(this,"과목이름이 너무 깁니다.");
+            return true;
+        }
+        if(findDuplication(st_hour, st_min, en_hour,en_min).equals("0")){
+            System.out.println("중복 없음");
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("position",PlanFragment.recycleArrayList.size()+1);
+                jsonObject.accumulate("user_id", userID);
+                jsonObject.accumulate("user_password", userPassword);
+                jsonObject.accumulate("subject",str);
+                jsonObject.accumulate("start",st_hour+":"+st_min+":00");
+                jsonObject.accumulate("end",en_hour+":"+en_min+":00");
 
+                PlanTask planTask = new PlanTask(jsonObject, "planInsert", "POST");
+                planTask.execute();
+                planTask = new PlanTask(jsonObject, "plan", "POST");
+                planTask.execute();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            PlanFragment.showToast(this,"추가되었습니다.");
 
-        ArrayList<String> list = new ArrayList<>();
-//        new PlanTask("https://dong0110.com/plan").execute();
-//        new PlanTask("https://dong0110.com/planInsert").execute();
-//        parseJson("https://dong0110.com/plan",st_hour+":"+st_min,en_hour+":"+en_min);
-//        parseJson("https://dong0110.com/planInsert",st_hour+":"+st_min,en_hour+":"+en_min);
-
-        try {
-            JSONObject jsonObject = new JSONObject();
-            new JSONTask(jsonObject).execute();
-//            jsonObject.accumulate("user_id", userID);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+            PlanFragment.planAdapter.notifyDataSetChanged();
+            onBackPressed();
+        }else if(findDuplication(st_hour, st_min, en_hour,en_min).equals("2")){
+            PlanFragment.showToast(this,"공부시간은 1분 이상이어야 합니다.");
+        }else{
+            PlanFragment.showToast(this,"기존 기록과 시간이 중복됩니다.");
         }
 
         switch(item.getItemId()){
@@ -156,10 +188,7 @@ public class PlanSetPage extends AppCompatActivity {
 
 
 
-//        onBackPressed();
 
-//        Intent intent = new Intent(this, GroupPage.class);
-//        startActivity(intent);
         return true;
     }
     @Override
@@ -175,75 +204,59 @@ public class PlanSetPage extends AppCompatActivity {
         }
     }
 
+    public String findDuplication(int st_hour, int st_min, int en_hour, int en_min){
+        int st_time = st_hour*60+st_min;
+        int en_time = en_hour*60+en_min;
+        if(st_time == en_time) return "2";
+        for(int i = 0;i<PlanFragment.recycleArrayList.size();i++){
+            String timeStr = PlanFragment.recycleArrayList.get(i).getTv_content();
+            int st_bTime=PlanTask.timeCal(timeStr);
+            int en_bTime=PlanTask.timeCal(timeStr.substring(12));
 
-    /*private <T> void writeFile(String fileName, String msg, ArrayList<T> list) {
-        File file = new File("/data/data/com.example.studyapp/files/PlanTime.txt");
-        boolean find = file.exists();
 
-
-//        FileOutputStream fos = null;
-//        DataOutputStream dos = null;
-//        try{
-//            fos = openFileOutput(fileName,MODE_APPEND);
-//            dos = new DataOutputStream(fos);
-//            if(!find)
-//                dos.writeUTF("Going To Distance For Better Than Yesterday\n");
-//            dos.writeUTF(msg);
-//            dos.flush();
-//            dos.close();
-//        }catch(IOException e){
-//
-//        }
-        FileWriter fw = null;
-        BufferedWriter bw = null;
-        try{
-            fw = new FileWriter(file, true);
-            bw = new BufferedWriter(fw);
-            if(!find){
-                file.createNewFile();
-                bw.write("Going To Distance For Better Than Yesterday\n");
-                bw.write(msg);
+//            int st_bTime = Integer.parseInt(timeStr.substring(0,2))*60+Integer.parseInt(timeStr.substring(3,5));
+//            int en_bTime = Integer.parseInt(timeStr.substring(8,10))*60+Integer.parseInt(timeStr.substring(11,13));
+            if(     st_time==st_bTime||
+                    st_time==en_bTime||
+                    en_time==st_bTime||
+                    en_time==en_bTime)
+                return "1";
+            if(st_time<en_time){
+                if(st_bTime<en_bTime){
+                    if(st_time<st_bTime&&en_time>st_bTime){
+                        return "1";
+                    }else if(st_time>st_bTime&&st_time<en_bTime){
+//                        false;
+                        return "1";
+                    }else if(st_time>en_bTime){
+//                        true;
+                    }
+                }else{
+                    if(st_time<en_bTime){
+//                        false;
+                        return "1";
+                    }else if(en_time>st_bTime){
+//                        false;
+                        return "1";
+                    }
+                }
             }else{
-                bw.write(","+msg);
+                //st_time>en_time
+                if(st_bTime<en_bTime){
+                    if(en_time>st_bTime||st_time<en_bTime)
+                        return "1";
+                }else{
+//                    false;
+                    return "1";
+                }
             }
-
-            bw.flush();
-            bw.close();
-        }catch(IOException e){
-
-        }
-    }*/
-
-    /*private <T> ArrayList<T> readFile(String fileName, ArrayList<T> list) throws IOException {
-
-//        FileInputStream fis = openFileInput(fileName);
-//        DataInputStream dis = new DataInputStream(fis);
-//
-//        String str = dis.readUTF();
-//        dis.close();
-//        while(str!=null){
-//            list.add((T)str);
-//            str = dis.readUTF();
-//        }
-
-        File file = new File("/data/data/com.example.studyapp/files/PlanTime.txt");
-        FileReader fr = null ;
-        BufferedReader br = null;
-        String str = "";
-        try {
-            // open file.
-            fr = new FileReader(file) ;
-            br = new BufferedReader(fr);
-            while((str=br.readLine())!=null){
-                list.add((T)str);
-            }
-
-            fr.close() ;
-        } catch (Exception e) {
-            e.printStackTrace() ;
         }
 
-        return list;
-    }*/
+        return "0";
+    }
+
+
+
+
 
 }

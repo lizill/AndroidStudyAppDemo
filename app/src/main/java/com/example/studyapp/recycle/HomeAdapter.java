@@ -33,7 +33,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_list, parent, false);
         CustomViewHolder holder = new CustomViewHolder(view);
 
-
         return holder;
     }
 

@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".DayFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<!--    tools:context=".DayFragment"-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,10 +12,11 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_date"
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="4월 9일, 금요일"
+            android:text="DAY"
             android:textSize="30sp"
             android:layout_gravity="center"/>
 
@@ -48,19 +49,21 @@
                 android:textColor="#ff9100"/>
 
             <TextView
+                android:id="@+id/tv_totalTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="00:02:40"
+                android:text="time"
                 android:layout_row="1"
                 android:layout_column="0"
                 android:layout_gravity="center"/>
             <TextView
+                android:id="@+id/tv_longTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_marginLeft="40dp"
-                android:text="00:02:40"
+                android:text="time"
                 android:layout_row="1"
                 android:layout_column="1"
                 android:layout_gravity="center"/>
@@ -69,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="총 공부시간"
+                android:text="시작 시간"
                 android:layout_row="2"
                 android:layout_column="0"
                 android:layout_gravity="center"
@@ -79,25 +82,27 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_marginLeft="40dp"
-                android:text="최대 집중 시간"
+                android:text="종료 시간"
                 android:layout_row="2"
                 android:layout_column="1"
                 android:layout_gravity="center"
                 android:textColor="#ff9100"/>
             <TextView
+                android:id="@+id/tv_startTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="00:02:40"
+                android:text="time"
                 android:layout_row="3"
                 android:layout_column="0"
                 android:layout_gravity="center"/>
             <TextView
+                android:id="@+id/tv_endTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_marginLeft="40dp"
-                android:text="00:02:40"
+                android:text="time"
                 android:layout_row="3"
                 android:layout_column="1"
                 android:layout_gravity="center"/>

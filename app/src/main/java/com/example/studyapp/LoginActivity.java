@@ -12,10 +12,17 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
@@ -53,39 +60,16 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 progressBar.setVisibility(View.VISIBLE);
 
-                Response.Listener<String> responseLister = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if(success) {
-                                // Save user info
-                                SharedPreferences.Editor autoLogin = FirstActivity.userInfo.edit();
-                                autoLogin.putString(FirstActivity.USER_ID, userID);
-                                autoLogin.putString(FirstActivity.USER_PASSWORD, userPassword);
-                                autoLogin.commit();
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.accumulate("user_id", userID);
+                    jsonObject.accumulate("user_password", userPassword);
 
-                                progressBar.setVisibility(View.GONE);
-
-                                // Next Screen
-                                Intent intent = new Intent(LoginActivity.this, UserNameActivity.class);
-                                LoginActivity.this.startActivity(intent);
-                                finish();
-                            }
-                            else {
-                                negativeBuilder("Failed Sign In");
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                };
-                LoginRequest loginRequest = new LoginRequest(userID, userPassword, responseLister);
-                RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-                queue.add(loginRequest);
+                    LoginTask loginTask = new LoginTask(jsonObject, "login", "POST");
+                    loginTask.execute();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -96,5 +80,45 @@ public class LoginActivity extends AppCompatActivity {
                 .setNegativeButton("close", null)
                 .create()
                 .show();
+    }
+
+    class LoginTask extends JSONTask {
+
+        public LoginTask(JSONObject jsonObject, String urlPath, String method) {
+            super(jsonObject, urlPath, method);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                String resultNum = jsonObject.get("result").toString();
+
+                String userID = idET.getText().toString();
+                String userPassword = passwordET.getText().toString();
+
+                if(resultNum.equals("1")) {
+                    // Save user info
+                    SharedPreferences.Editor autoLogin = FirstActivity.userInfo.edit();
+                    autoLogin.putString(FirstActivity.USER_ID, userID);
+                    autoLogin.putString(FirstActivity.USER_PASSWORD, userPassword);
+                    autoLogin.commit();
+
+                    progressBar.setVisibility(View.GONE);
+
+                    // Next Screen
+                    Intent intent = new Intent(LoginActivity.this, UserNameActivity.class);
+                    LoginActivity.this.startActivity(intent);
+                    finish();
+                }
+                else {
+                    negativeBuilder("Failed Sign In");
+                    progressBar.setVisibility(View.GONE);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
