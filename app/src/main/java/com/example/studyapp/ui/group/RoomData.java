@@ -4,10 +4,12 @@ public class RoomData {
 
     private String userID;
     private String roomName;
+    private long sendTime;
 
-    public RoomData(String userID, String roomName) {
+    public RoomData(String userID, String roomName, long sendTime) {
         this.userID = userID;
         this.roomName = roomName;
+        this.sendTime = sendTime;
     }
 
     public String getUserId() {
