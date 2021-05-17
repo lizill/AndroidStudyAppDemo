@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.studyapp.R;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
                 public void onClick(View v) {
                     String group = (String)((TextView)v.findViewById(R.id.search_groupText)).getText();
                     Log.d("?????: ", group);
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setTitle(group).setMessage("그룹에 가입하시겠습니까?");
                     builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
@@ -75,24 +77,58 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
                                 @Override
                                 public void onResponse(String response) {
                                     try{
-                                        JSONObject jsonResponse = new JSONObject(response);
-                                        boolean success = jsonResponse.getBoolean("success");
-                                        if (success) {
-                                            Log.d("성공",":::");
-                                            peopleCountIncrease(group);
-                                            String group = (String)((TextView)v.findViewById(R.id.groupText)).getText();
-                                            Intent intent = new Intent(v.getContext(),  GroupPage.class);
-                                            intent.putExtra("group", group);
-                                            mContext.startActivity(intent);
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        JSONArray jsonArray = jsonObject.getJSONArray("response");
+                                        jsonObject = jsonArray.getJSONObject(0);
+                                        String memberCount = jsonObject.getString("count");
+                                        Log.d("아아아아", memberCount);
+                                        String memberLimit = "";
+                                        int pos = getAdapterPosition();
+                                        if (pos != RecyclerView.NO_POSITION) {
+                                            memberLimit = groupList.get(pos).getMemberLimit();
+                                        }
+                                        Log.d(""+(Integer.parseInt(memberCount) >= Integer.parseInt(memberLimit)), memberCount + ":" + memberLimit);
+                                        if (Integer.parseInt(memberCount) >= Integer.parseInt(memberLimit) ) {
+                                            Log.d("크거나 같음","불가능");
+                                            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(activity);
+                                            builder.setMessage("정원이 모두 찼습니다")
+                                                    .setNegativeButton("확인", null)
+                                                    .create()
+                                                    .show();
+                                        } else {
+                                            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try{
+                                                        JSONObject jsonResponse = new JSONObject(response);
+                                                        boolean success = jsonResponse.getBoolean("success");
+                                                        if (success) {
+                                                            Log.d("성공",":::");
+                                                            peopleCountIncrease(group);
+                                                            Intent intent = new Intent(activity,  GroupPage.class);
+                                                            intent.putExtra("group", group);
+                                                            activity.startActivity(intent);
+                                                        }
+                                                    } catch (Exception e){
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            };
+                                            JoinGroupRequest joinGroupRequest = new JoinGroupRequest(userID, group, responseListener);
+                                            RequestQueue queue = Volley.newRequestQueue(mContext);
+                                            queue.add(joinGroupRequest);
                                         }
                                     } catch (Exception e){
                                         e.printStackTrace();
                                     }
                                 }
                             };
-                            JoinGroupRequest joinGroupRequest = new JoinGroupRequest(userID, group, responseListener);
+                            MemberCountCheck memberCountCheck = new MemberCountCheck(group, responseListener);
                             RequestQueue queue = Volley.newRequestQueue(mContext);
-                            queue.add(joinGroupRequest);
+                            queue.add(memberCountCheck);
+
+
+
                         }
 
                     });
@@ -126,7 +162,7 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
     public void onBindViewHolder(SearchGroupRecyclerAdapter.ViewHolder holder, int position) {
         holder.groupText.setText(groupList.get(position).getGroup());
         holder.contentsText.setText(groupList.get(position).getContents());
-        holder.peopleCountText.setText(groupList.get(position).getPeopleCount());
+        holder.peopleCountText.setText(groupList.get(position).getPeopleCount() + "/" + groupList.get(position).getMemberLimit() + "명");
         holder.categoryText.setText(groupList.get(position).getCategory());
         holder.goalTimeText.setText(groupList.get(position).getGoalTime());
         holder.masterText.setText(groupList.get(position).getMaster());
