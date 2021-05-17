@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.group.SearchGroupPage"
-    android:orientation="vertical"
     android:padding="10dp"
     android:background="#F5F5F5"
     >
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="match_parent"
         android:id="@+id/searchGroupRecyclerView"
         android:scrollbars="vertical"
         >
     </androidx.recyclerview.widget.RecyclerView>
     <Button
-        android:layout_marginTop="10dp"
-        android:layout_width="130dp"
-        android:layout_height="40dp"
-        android:text="그룹 만들기"
-        android:background="@color/purple_500"
-        android:layout_gravity="right"
         android:id="@+id/makeGroupButton"
+        android:gravity="center"
+        android:layout_gravity="right | bottom"
+        android:text="+"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/button_shape"
+        android:shadowColor="#A8A8A8"
+        android:shadowRadius="5"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         >
     </Button>
-
-
-</LinearLayout>
+</FrameLayout>
