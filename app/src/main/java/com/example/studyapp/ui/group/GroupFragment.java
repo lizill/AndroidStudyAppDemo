@@ -117,7 +117,7 @@ public class GroupFragment extends Fragment {
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
                 if(jsonArray.length() == 0) return;
                 int count = 0;
-                String groupName, contents, peopleCount, category, goalTime, master, startDate;
+                String groupName, contents, peopleCount, category, goalTime, master, startDate, memberLimit;
                 while(count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     groupName = object.getString("groupName");
@@ -127,7 +127,8 @@ public class GroupFragment extends Fragment {
                     goalTime = object.getString("goalTime");
                     master = object.getString("master");
                     startDate = object.getString("startDate");
-                    Group group = new Group(groupName, contents, peopleCount, category, goalTime, master, startDate);
+                    memberLimit = object.getString("peopleLimit");
+                    Group group = new Group(groupName, contents, peopleCount, category, goalTime, master, startDate, memberLimit);
                     groupList.add(group);
                     adapter.notifyDataSetChanged();
                     count++;

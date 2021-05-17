@@ -74,7 +74,7 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
     @Override
     public void onBindViewHolder(GroupRecyclerAdapter.ViewHolder holder, int position) {
         holder.groupText.setText(groupList.get(position).getGroup());
-        holder.peopleCountText.setText(groupList.get(position).getPeopleCount());
+        holder.peopleCountText.setText(groupList.get(position).getPeopleCount() + "/" + groupList.get(position).getMemberLimit() + "명");
         holder.categoryText.setText(groupList.get(position).getCategory());
         holder.goalTimeText.setText(groupList.get(position).getGoalTime());
         holder.masterText.setText(groupList.get(position).getMaster());
