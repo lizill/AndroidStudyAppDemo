@@ -43,8 +43,6 @@ public class ChartFragment extends Fragment {
     private Activity activity;
     private ChartViewModel chartViewModel;
     private RequestQueue requestQueue;
-    private ArrayList<String> studyTimes = new ArrayList<>();
-    private ArrayList<String> studyDates = new ArrayList<>();
     private MaterialCalendarView materialCalendarView;
     private String userID;
     private ViewPager2 viewPager2;
@@ -119,7 +117,7 @@ public class ChartFragment extends Fragment {
     }
     // _GET request json
     private void parseCalendarInfo(){
-        String url = String.format(Env.daysTotalurl,userID);
+        String url = String.format(Env.allDaysInfoURL,userID);
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>(){
                     @Override
@@ -137,8 +135,6 @@ public class ChartFragment extends Fragment {
                                 JSONObject studyObject = jsonArray.getJSONObject(i);
                                 String date = studyObject.getString("study_date");
                                 String time = studyObject.getString("study_time");
-                                studyTimes.add(time);
-                                studyDates.add(date);
                                 materialCalendarView.addDecorator(new StudyDate(activity, time, date));
                             }
                         } catch (JSONException e) {
