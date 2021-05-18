@@ -1,11 +1,11 @@
 package com.example.studyapp.recycle;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,34 +14,43 @@ import com.example.studyapp.R;
 
 import java.util.ArrayList;
 
-public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHolder> {
+public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.CustomViewHolder> {
 
-    public HomeAdapter() {
+    public PlanAdapter() {
         super();
     }
 
-    private ArrayList<HomeData> arrayList;
+    private ArrayList<PlanData> arrayList;
 
-    public HomeAdapter(ArrayList<HomeData> arrayList) {
+    public PlanAdapter(ArrayList<PlanData> arrayList) {
         this.arrayList = arrayList;
     }
 
     @NonNull
     @Override
-    public HomeAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PlanAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_list, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_plan_list, parent, false);
         CustomViewHolder holder = new CustomViewHolder(view);
+
 
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final HomeAdapter.CustomViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final PlanAdapter.CustomViewHolder holder, int position) {
+
+        if(arrayList.size()==position-1){
+            System.out.println(position);
+        }
+
         holder.iv_profile.setImageResource(arrayList.get(position).getIv_profile());
         holder.tv_name.setText(arrayList.get(position).getTv_name());
         holder.tv_content.setText(arrayList.get(position).getTv_content());
-
+//        holder.iv_profile.setBackgroundColor(arrayList.get(position).getTv_content());
+//        holder.iv_profile.setBackgroundColor(Color.parseColor("#dd3080ff"));
+        holder.iv_color.setBackgroundColor(Color.parseColor(arrayList.get(position).getIv_color()));
+//        System.out.println(arrayList.get(position).getIv_color());
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,12 +89,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
         protected ImageView iv_profile;
         protected TextView tv_name;
         protected TextView tv_content;
+        protected ImageView iv_color;
 
         public CustomViewHolder(View itemView) {
             super(itemView);
-            this.iv_profile = (ImageView) itemView.findViewById(R.id.iv_home_profile);
-            this.tv_name = (TextView) itemView.findViewById(R.id.tv_home_name);
-            this.tv_content = (TextView) itemView.findViewById(R.id.tv_home_content);
+            this.iv_profile = (ImageView) itemView.findViewById(R.id.iv_plan_profile);
+            this.tv_name = (TextView) itemView.findViewById(R.id.tv_plan_name);
+            this.tv_content = (TextView) itemView.findViewById(R.id.tv_plan_content);
+            this.iv_color = (ImageView) itemView.findViewById(R.id.iv_color);
         }
     }
+
 }
