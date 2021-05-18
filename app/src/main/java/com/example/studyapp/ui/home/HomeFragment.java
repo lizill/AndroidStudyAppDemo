@@ -58,8 +58,7 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-//        userID = FirstActivity.userInfo.getString("userId", null);
-        userID="gjgjajaj";
+        userID = FirstActivity.userInfo.getString("userId", null);
 
         //현재 날짜 불러오기
         TimeZone tz;

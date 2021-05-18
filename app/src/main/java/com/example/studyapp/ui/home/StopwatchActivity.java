@@ -76,8 +76,7 @@ public class StopwatchActivity extends AppCompatActivity {
         isStart = true;
         setContentView(R.layout.activity_stopwatch);textView = (TextView)findViewById(R.id.textView);
 
-//        userID = FirstActivity.userInfo.getString("userId", null);
-        userID="gjgjajaj";
+        userID = FirstActivity.userInfo.getString("userId", null);
 
         dateFormat.setTimeZone(tz);
         timeFormat.setTimeZone(tz);
