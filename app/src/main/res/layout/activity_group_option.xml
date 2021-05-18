@@ -185,7 +185,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/master_info"
+        android:id="@+id/master_menu"
         >
         <TextView
             android:layout_width="match_parent"
@@ -367,7 +367,9 @@
             android:background="@drawable/custom_ripple_effect_option"
             android:text="그룹 해체"
             android:textColor="#FF0000"
-            android:textSize="20dp">
+            android:textSize="20dp"
+            android:id="@+id/dropGroup"
+            >
         </androidx.appcompat.widget.AppCompatButton>
     </LinearLayout>
 </LinearLayout>
