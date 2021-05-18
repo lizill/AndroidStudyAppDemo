@@ -25,7 +25,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         View view;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
+        
         if (viewType == ChatType.CENTER_MESSAGE) {
             view = inflater.inflate(R.layout.chat_center_item, parent, false);
             return new CenterViewHolder(view);

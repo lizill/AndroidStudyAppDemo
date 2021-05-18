@@ -5,12 +5,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/appicon_white"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/appicon_round"
+        android:roundIcon="@mipmap/appicon_white_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyApp"
         android:usesCleartextTraffic="true">
@@ -42,12 +44,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.group.GroupPage"
-            android:parentActivityName=".HomeActivity" />
-        <activity
-            android:name=".ui.group.SearchGroupPage"
-            android:parentActivityName=".HomeActivity" />
+        <activity android:name=".ui.group.GroupPage"
+            android:parentActivityName=".HomeActivity"
+            >
+        </activity>
+        <activity android:name=".ui.group.SearchGroupPage"
+            android:parentActivityName=".HomeActivity"
+            >
+        </activity>
+        <activity android:name=".ui.plan.PlanSetPage"
+            android:parentActivityName=".HomeActivity"/>
+
     </application>
 
 </manifest>

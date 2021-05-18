@@ -12,6 +12,7 @@ public class Env {
     public static String barchartURL = "https://dong0110.com/chatphp/chart/RequireBarchart.php?userID=%s&study_date=%s";
     public static String timelineURL = "https://dong0110.com/chatphp/chart/RequireTimeline.php?userID=%s&study_date=%s";
     public static String infoURL = "https://dong0110.com/chatphp/chart/RequireInfo.php?userID=%s&study_date=%s";
+    public static String info2URL = "https://dong0110.com/chatphp/chart/RequireInfo2.php?userID=%s&study_date=%s";
     public static String weekInfoURL = "https://dong0110.com/chatphp/chart/RequireWeekInfo.php?userID=%s&study_date=%s";
     public static String monthInfoURL = "https://dong0110.com/chatphp/chart/RequireMonthInfo.php?userID=%s&study_date=%s";
     public static String allDaysInfoURL = "https://dong0110.com/chatphp/chart/DayStudyTime.php?userID=%s";

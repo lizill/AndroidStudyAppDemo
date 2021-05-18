@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,39 +13,39 @@ import com.example.studyapp.R;
 
 import java.util.ArrayList;
 
-public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHolder> {
+public class PlanBtnAdapter extends RecyclerView.Adapter<PlanBtnAdapter.CustomViewHolder> {
 
-    public HomeAdapter() {
+    public PlanBtnAdapter() {
         super();
     }
 
-    private ArrayList<HomeData> arrayList;
+    private ArrayList<PlanBtnData> arrayList;
 
-    public HomeAdapter(ArrayList<HomeData> arrayList) {
+    public PlanBtnAdapter(ArrayList<PlanBtnData> arrayList) {
         this.arrayList = arrayList;
     }
 
     @NonNull
     @Override
-    public HomeAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PlanBtnAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_list, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_plan_btn_list, parent, false);
         CustomViewHolder holder = new CustomViewHolder(view);
+
 
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final HomeAdapter.CustomViewHolder holder, int position) {
-        holder.iv_profile.setImageResource(arrayList.get(position).getIv_profile());
-        holder.tv_name.setText(arrayList.get(position).getTv_name());
-        holder.tv_content.setText(arrayList.get(position).getTv_content());
+    public void onBindViewHolder(@NonNull final PlanBtnAdapter.CustomViewHolder holder, int position) {
+        holder.btnon.setText(arrayList.get(position).getBtnon());
+        holder.btnoff.setText(arrayList.get(position).getBtnoff());
 
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String curName = holder.tv_name.getText().toString();
+                String curName = holder.btnoff.getText().toString();
 
             }
         });
@@ -76,16 +75,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-
-        protected ImageView iv_profile;
-        protected TextView tv_name;
-        protected TextView tv_content;
+        protected TextView btnon;
+        protected TextView btnoff;
 
         public CustomViewHolder(View itemView) {
             super(itemView);
-            this.iv_profile = (ImageView) itemView.findViewById(R.id.iv_home_profile);
-            this.tv_name = (TextView) itemView.findViewById(R.id.tv_home_name);
-            this.tv_content = (TextView) itemView.findViewById(R.id.tv_home_content);
+            this.btnon = (TextView) itemView.findViewById(R.id.btn_add_plan);
+            this.btnoff = (TextView) itemView.findViewById(R.id.btn_min_plan);
         }
     }
+
 }

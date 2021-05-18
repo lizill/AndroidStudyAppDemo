@@ -1,5 +1,6 @@
 package com.example.studyapp.ui.group;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,11 +12,16 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavInflater;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.studyapp.R;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -89,6 +95,7 @@ public class GroupPage extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(GroupPage.this);
         queue.add(peopleCountDecreaseRequest);
     }
+
 
     class BackgroundTask extends AsyncTask<Void, Void, String> {
 
