@@ -4,11 +4,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.KeyguardManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
+import android.view.KeyboardShortcutGroup;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,11 +52,17 @@ public class StopwatchActivity extends AppCompatActivity {
 
     private TextView textView ;
     private Button back_btn;
-    private long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
+    private long MillisecondTime, StartTime, leaveTime, termTime = 0L ;
     private Handler handler;
-    private int Seconds, Minutes, MilliSeconds, Hours, tmp, t, hour, min, sec;
-    private String subject,today,userID,start,end;
-    private boolean isFirst = false;
+    private int Seconds, Minutes, Hours, tmp, t, hour, min, sec,gapOfSecond,gapOfMinute,studyTimeSec;
+    private String today,userID,start,end,confirmToday;
+
+    private boolean isFirst,isTomorrow;
+    private boolean isActiveOn = true;
+
+    static String studyCurrentTime = "";
+    static String subject = "";
+    static boolean isStart;
 
     //현재 날짜 불러오기
     private TimeZone tz = TimeZone.getTimeZone("Asia/Seoul");
@@ -58,6 +73,7 @@ public class StopwatchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isStart = true;
         setContentView(R.layout.activity_stopwatch);textView = (TextView)findViewById(R.id.textView);
 
         userID = FirstActivity.userInfo.getString("userId", null);
@@ -66,9 +82,11 @@ public class StopwatchActivity extends AppCompatActivity {
         timeFormat.setTimeZone(tz);
 
         today = dateFormat.format(new Date());
-
+        confirmToday =today.split("-")[2];
         start = timeFormat.format(new Date());
-        System.out.println(start);
+        gapOfSecond = 60 - Integer.parseInt(start.split(" ")[2]);
+        gapOfMinute = 60 - Integer.parseInt(start.split(" ")[1]) - 1;
+        System.out.println(gapOfMinute + "분   " + gapOfSecond + "초 차이 있습니다.");
 
         //과목정보 불러오기
         Intent intent = getIntent();
@@ -84,10 +102,10 @@ public class StopwatchActivity extends AppCompatActivity {
         handler = new Handler() ;
         StartTime = SystemClock.uptimeMillis();
 
-
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isStart = false;
                 Intent intent = new Intent(StopwatchActivity.this, HomeActivity.class);
                 startActivity(intent);
                 if(isFirst){
@@ -99,14 +117,13 @@ public class StopwatchActivity extends AppCompatActivity {
                 handler.removeCallbacks(runnable);
 
                 end = timeFormat.format(new Date());
-                System.out.println(end);
 
                 BeginEndData();
             }
         });
     }
     private void BeginEndData(){
-        String url = Env.BeginEndURL;
+        String url = Env.beginEndURL;
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -114,7 +131,6 @@ public class StopwatchActivity extends AppCompatActivity {
                     //json object >> {response:[{key : value}, {.....
                     JSONObject jsonObject = new JSONObject(response);
                     String res = jsonObject.getString("success");
-                    System.out.println("BeginEndData save");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -135,7 +151,6 @@ public class StopwatchActivity extends AppCompatActivity {
                 params.put("study_start", start.replace(" ", ":"));
                 params.put("study_end", end.replace(" ", ":"));
 
-                System.out.println(userID + " " + today + " " + subject + " " + start.replace(" ", ":") + end.replace(" ", ":"));
                 return params;
             }
         };
@@ -143,7 +158,7 @@ public class StopwatchActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
     private void InsertData(){
-        String url = Env.SaveURL;
+        String url = Env.saveURL;
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -178,7 +193,7 @@ public class StopwatchActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
     private void UpdateData(){
-        String url = Env.ReSaveURL;
+        String url = Env.reSaveURL;
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -201,7 +216,7 @@ public class StopwatchActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 String time = textView.getText().toString().replace(":","");
-                System.out.println(userID + " " + today + " " + subject + " " + time);
+
                 Map<String,String> params = new HashMap<>();
                 params.put("userID", userID);
                 params.put("study_date", today);
@@ -228,11 +243,14 @@ public class StopwatchActivity extends AppCompatActivity {
                             JSONArray jsonArray = jsonObject.getJSONArray("response");
                             JSONObject studyObject = jsonArray.getJSONObject(0);
                             String studyTime = studyObject.getString("study_time");
+                            String studyTimeSecTmp = studyObject.getString("study_time_sec");
 
                             if(!studyTime.equals("null")){
                                 convertToTime(studyTime);
+                                studyTimeSec = Integer.parseInt(studyTimeSecTmp);
                             }else{
                                 isFirst = true;
+                                studyTimeSec = 0;
                             }
                             handler.postDelayed(runnable, 0);
                         } catch (JSONException e) {
@@ -253,27 +271,134 @@ public class StopwatchActivity extends AppCompatActivity {
         Hours = Integer.parseInt(time[0]);
         Minutes = Integer.parseInt(time[1]);
         Seconds = Integer.parseInt(time[2]);
+
+        if(Seconds + gapOfSecond >= 60){
+            gapOfMinute++;
+            gapOfSecond = Seconds + gapOfSecond - 60;
+        }
+        if(Minutes + gapOfMinute > 60){
+            gapOfMinute = Minutes + gapOfMinute - 60;
+        }
     }
     public Runnable runnable = new Runnable() {
         public void run() {
-            MillisecondTime = SystemClock.uptimeMillis() - StartTime;
-
-            UpdateTime = TimeBuff + MillisecondTime;
+            /*
+            현재 부팅한 시간을 나타낸다 uptimeMiillis, StartTime = 처음 부팅 시간
+            SystemClock.uptimeMillis() - StartTime을 하면 밀리 초가 나오고 그것을 1000으로 나누면 1초다.
+            leaveTime은 중간에 다른 공간으로 가면 시간의 텀을 빼주는 것 이다.
+             */
+            MillisecondTime = SystemClock.uptimeMillis() - StartTime - leaveTime;
 
             //시간의 흐름
-            tmp = (int)(UpdateTime / 1000);
-            t = Seconds + tmp;
-            hour = Hours + t / 3600;
+            tmp = (int)(MillisecondTime / 1000);
+            t = studyTimeSec + tmp;
+            hour = t / 3600;
             t %= 3600;
-            min = Minutes + t / 60;
+            min = t / 60;
             t %= 60;
             sec = t;
+//            t = Seconds + tmp;
+//            hour = Hours + t / 3600;
+//            t %= 3600;
+//            min = Minutes + t / 60;
+//            t %= 60;
+//            sec = t;
 
-            MilliSeconds = (int) (UpdateTime % 1000);
+            //구현해야할것 데이터 insert update 부분
+            //다음날 데이터 초기화 등등 전체적으로 다시 살펴보기
+            if(min == gapOfMinute && sec == gapOfSecond & !isTomorrow){
+                System.out.println("정각입니다.");
+                String tDay = dateFormat.format(new Date()).split("-")[2];
+                if(!tDay.equals(confirmToday)){
+                    isTomorrow = true;
+                    if(isFirst){
+                        InsertData();
+                        isFirst = false;
+                    }else{
+                        UpdateData();
+                    }
+                    end="23:59:59";
+                    BeginEndData();
+                    restart();
+                }
+            }
 
             //String format을 통한 시간 대입
             textView.setText(String.format("%02d", hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec));
+            studyCurrentTime = textView.getText().toString();
             handler.postDelayed(this, 0);
         }
     };
+    private void restart(){
+        textView.setText("00:00:00");
+        today = dateFormat.format(new Date());
+        start="00:00:00";
+        StartTime = SystemClock.uptimeMillis();
+        leaveTime = Seconds = Minutes = Hours = hour = min = sec = 0;
+    }
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        isActiveOn = false;
+        handler.removeCallbacks(runnable);
+        termTime = SystemClock.uptimeMillis();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!isActiveOn){
+            showMessage();
+        }
+    }
+    //dialog 정의
+    private void showMessage(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("공부합시다.");
+        builder.setMessage("공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
+                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
+                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
+                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
+                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
+                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
+                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
+                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
+                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
+                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해" +
+                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
+                "공부 해 공부 해 공부 해 공부 해 "
+        );
+        builder.setPositiveButton("계속", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //정지된 만큼 텀 계산
+                termTime = SystemClock.uptimeMillis() - termTime;
+                leaveTime += termTime;
+                isActiveOn = true;
+                handler.postDelayed(runnable, 0000);
+            }
+        });
+        builder.show();
+    }
+
+    //버튼 누른 효과를 그대로 뒤로가기 버튼누를 때 나타남
+    @Override
+    public void onBackPressed() {
+        isStart = false;
+        Intent intent = new Intent(StopwatchActivity.this, HomeActivity.class);
+        startActivity(intent);
+        if(isFirst){
+            InsertData();
+            isFirst = false;
+        }else{
+            UpdateData();
+        }
+        handler.removeCallbacks(runnable);
+
+        end = timeFormat.format(new Date());
+
+        BeginEndData();
+        super.onBackPressed();
+    }
 }

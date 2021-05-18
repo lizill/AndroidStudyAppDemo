@@ -48,8 +48,9 @@ public class HomeFragment extends Fragment {
     private Button sub1;
     private TextView tv_data;
     private RequestQueue requestQueue;
-    private String today,userID;
+    private String today,userID,todayStudyTime;
     public static String TOTAL_STUDY_TIME;
+    public static boolean isWeekFragment,isMonthFragment;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -97,7 +98,7 @@ public class HomeFragment extends Fragment {
         return root;
     }
     private void totalStudyTime() {
-        String url = String.format(Env.totalURL, userID, today);
+        String url = String.format(Env.total2URL, userID, today);
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -108,17 +109,33 @@ public class HomeFragment extends Fragment {
 
                             //object start name : response  >>>>> array
                             JSONArray jsonArray = jsonObject.getJSONArray("response");
-                            JSONObject studyObject = jsonArray.getJSONObject(0);
-                            String studyTime = studyObject.getString("study_time");
 
-                            if(studyTime.equals("null")){
+                            JSONObject studyObject = jsonArray.getJSONObject(0);
+                            todayStudyTime = studyObject.getString("study_time");
+
+                            JSONObject studyObject2 = jsonArray.getJSONObject(1);
+                            String study_week_time = studyObject2.getString("study_week_time");
+
+                            JSONObject studyObject3 = jsonArray.getJSONObject(2);
+                            String study_month_time = studyObject3.getString("study_month_time");
+
+                            if(!study_week_time.equals("null")) isWeekFragment = true;
+                            if(!study_month_time.equals("null")) isMonthFragment = true;
+
+
+//                            if(todayStudyTime.equals("null")){
+//                                todayStudyTime = "00:00:00";
+//                            }else{
+//                                isDayFragment = true;
+//                            }
+//                            tv_data.setText(todayStudyTime);
+                            if(todayStudyTime.equals("null")){
                                 TOTAL_STUDY_TIME = "00:00:00";
-                                tv_data.setText(TOTAL_STUDY_TIME);
                             }else{
-                                TOTAL_STUDY_TIME = studyTime;
-                                tv_data.setText(TOTAL_STUDY_TIME);
+                                TOTAL_STUDY_TIME = todayStudyTime;
                             }
-                            System.out.println(TOTAL_STUDY_TIME);
+                            tv_data.setText(TOTAL_STUDY_TIME);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
