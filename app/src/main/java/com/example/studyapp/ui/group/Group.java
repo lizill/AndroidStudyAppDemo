@@ -9,8 +9,9 @@ public class Group {
     String goalTime;
     String master;
     String startDate;
+    String memberLimit;
 
-    public Group(String group, String contents, String peopleCount, String category, String goalTime, String master, String startDate) {
+    public Group(String group, String contents, String peopleCount, String category, String goalTime, String master, String startDate, String memberLimit) {
         this.group = group;
         this.contents = contents;
         this.peopleCount = peopleCount;
@@ -18,6 +19,15 @@ public class Group {
         this.goalTime = goalTime;
         this.master = master;
         this.startDate = startDate;
+        this.memberLimit = memberLimit;
+    }
+
+    public String getMemberLimit() {
+        return memberLimit;
+    }
+
+    public void setMemberLimit(String memberLimit) {
+        this.memberLimit = memberLimit;
     }
 
     public String getStartDate() {
@@ -66,7 +76,7 @@ public class Group {
     }
 
     public String getPeopleCount() {
-        return peopleCount + "명";
+        return peopleCount;
     }
 
     public String getMaster() {

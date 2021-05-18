@@ -33,9 +33,9 @@ public class MakeGroup extends AppCompatActivity {
     private EditText goalTimeSelect;
     public final String[] goalTimeArr = new String[12];
     private int goalTime = 0;
-    private EditText personCountSelect;
-    public final String[] personCountArr = new String[49];
-    private int personCount = 0;
+    private EditText memberLimitSelect;
+    public final String[] memberLimitArr = new String[49];
+    private int memberLimit = 0;
     private Button makeGroupButton;
     private String userName;
 
@@ -89,21 +89,21 @@ public class MakeGroup extends AppCompatActivity {
             }
         });
 
-        personCountSelect = findViewById(R.id.personCount);
+        memberLimitSelect = findViewById(R.id.personCount);
         for(int i = 0; i < 49; i++){
-            personCountArr[i] =(i+2) + "명";
+            memberLimitArr[i] =(i+2) + "명";
         }
-        personCountSelect.setOnClickListener(new View.OnClickListener() {
+        memberLimitSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MakeGroup.this);
                 builder.setTitle("모집인원 선택");
-                builder.setItems(personCountArr, new DialogInterface.OnClickListener() {
+                builder.setItems(memberLimitArr, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        personCountSelect.setText(personCountArr[which]);
-                        personCount = which + 2;
-                        Toast.makeText(getApplicationContext(), personCountArr[which], Toast.LENGTH_LONG).show();
+                        memberLimitSelect.setText(memberLimitArr[which]);
+                        memberLimit = which + 2;
+                        Toast.makeText(getApplicationContext(), memberLimitArr[which], Toast.LENGTH_LONG).show();
                     }
                 });
                 builder.show();
@@ -129,7 +129,7 @@ public class MakeGroup extends AppCompatActivity {
                     negativeBuilder("목표 시간을 선택해 주세요", "close");
                     return;
                 }
-                if(personCount == 0) {
+                if(memberLimit == 0) {
                     negativeBuilder("모집 인원을 선택해 주세요", "close");
                     return;
                 }
@@ -182,7 +182,7 @@ public class MakeGroup extends AppCompatActivity {
                                         }
                                     }
                                 };
-                                MakeGroupRequest makeGroupRequest = new MakeGroupRequest(groupName, contents, category, goalTime, userName, responseListener);
+                                MakeGroupRequest makeGroupRequest = new MakeGroupRequest(groupName, contents, category, goalTime, userName, memberLimit, responseListener);
                                 RequestQueue queue = Volley.newRequestQueue(MakeGroup.this);
                                 queue.add(makeGroupRequest);
                             }

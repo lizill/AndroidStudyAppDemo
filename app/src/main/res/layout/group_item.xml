@@ -7,7 +7,6 @@
     android:weightSum="10"
     android:background="@drawable/recyclerview_background"
     android:layout_marginTop="10dp"
-    android:layout_marginBottom="2dp"
     android:paddingLeft="5dp"
     >
     <LinearLayout
@@ -15,6 +14,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_weight="8"
+        android:paddingBottom="5dp"
         >
         <TextView
             android:layout_width="match_parent"
@@ -80,7 +80,9 @@
                 android:layout_weight="3"
                 android:padding="1dp"
                 android:text="목표"
-                android:textSize="15dp"></TextView>
+                android:textSize="15dp"
+                >
+            </TextView>
             <TextView
                 android:id="@+id/goalTimeText"
                 android:layout_width="0dp"
@@ -129,15 +131,14 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:background="#EDEDED"
         >
-        <ImageView
+        <ImageButton
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:src="@drawable/message_icon"
             android:layout_gravity="center"
-            >
-        </ImageView>
+            android:id="@+id/chatButton"
+            android:background="@drawable/custom_ripple_effect">
+        </ImageButton>
     </LinearLayout>
-
 </LinearLayout>
