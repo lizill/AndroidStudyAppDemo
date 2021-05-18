@@ -35,8 +35,8 @@
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:text="채팅"
-        android:id="@+id/chatting"
+        android:text="설정"
+        android:id="@+id/groupOption"
         android:layout_marginTop="20dp"
         >
     </Button>
