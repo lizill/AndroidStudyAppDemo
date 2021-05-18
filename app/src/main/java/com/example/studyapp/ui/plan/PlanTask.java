@@ -2,6 +2,7 @@ package com.example.studyapp.ui.plan;
 
 import android.content.Context;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.studyapp.JSONTask;
@@ -60,12 +61,11 @@ public class PlanTask extends JSONTask {
                 }
 //                PlanFragment.planAdapter.notifyDataSetChanged();
                 PlanFragment.fillTable();
-            }else {
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        PlanFragment.progressBar.setVisibility(View.GONE);
     }
 
 
@@ -83,16 +83,11 @@ public class PlanTask extends JSONTask {
     private void timeSetCalculator(int startHour, int startMin, int endHour, int totalTime){
         for(;startHour<=endHour;startHour++){
             for(;startMin/10<PlanFragment.time[startHour].length;){
-                if(totalTime==0)return;
-                if(totalTime<10){
-                    PlanFragment.time[startHour][startMin/10]+=totalTime;
-                    startMin+=totalTime;
-                    totalTime-=totalTime;
-                }else{
-                    totalTime-=10-startMin%10;
-                    PlanFragment.time[startHour][startMin/10]+=10-startMin%10;
-                    startMin+=10-startMin%10;
-                }
+                if(totalTime<=0)return;
+                int plnum = (totalTime<10-startMin%10)?totalTime:10-startMin%10;
+                totalTime-=plnum;
+                PlanFragment.time[startHour][startMin/10]+=plnum;
+                startMin+=plnum;
             }
             startMin =0;
         }
@@ -143,7 +138,7 @@ public class PlanTask extends JSONTask {
         int st_bTime;
         if(timeStr.substring(0,2).equals("오전")&&(timeStr.substring(3,5).equals("12"))){
             // 0
-            st_bTime=(Integer.parseInt(timeStr.substring(3,5))-12)*60+Integer.parseInt(timeStr.substring(6,8));
+            st_bTime=Integer.parseInt(timeStr.substring(6,8));
         }else if(timeStr.substring(0,2).equals("오후")&&!(timeStr.substring(3,5).equals("12"))){
             // 13~23
             st_bTime=(Integer.parseInt(timeStr.substring(3,5))+12)*60+Integer.parseInt(timeStr.substring(6,8));

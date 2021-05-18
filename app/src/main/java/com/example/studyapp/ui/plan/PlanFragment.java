@@ -63,7 +63,7 @@ public class PlanFragment extends Fragment {
     /*
      * DB와 연결 할 떄 보여줄 progressBar 화면 가운데에서 돌아간다.
      */
-    private static ProgressBar progressBar;
+    static ProgressBar progressBar;
     
 
 
@@ -139,7 +139,8 @@ public class PlanFragment extends Fragment {
                             PlanTask.showToast(root.getContext(),"플랜이 너무 많습니다.");
                         }else{
                             Intent intent = new Intent(getActivity(), PlanSetPage.class);
-
+                            intent.putExtra("userID",userID);
+                            intent.putExtra("userPassword",userPassword);
                             startActivity(intent);
                         }
                     }
@@ -223,7 +224,7 @@ public class PlanFragment extends Fragment {
             }
         }
         planAdapter.notifyDataSetChanged();
-        progressBar.setVisibility(View.GONE);
+//        progressBar.setVisibility(View.GONE);
     }
 
     /*

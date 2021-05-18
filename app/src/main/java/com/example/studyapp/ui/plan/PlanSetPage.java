@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import java.io.*;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -83,15 +84,18 @@ public class PlanSetPage extends AppCompatActivity {
     static int en_hour;
     static int en_min;
     static boolean whoTouch=true;
-    boolean backPressed=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+
         setContentView(R.layout.plan_set_page);
-        userID = FirstActivity.userInfo.getString(FirstActivity.USER_ID,null);
-        userPassword = FirstActivity.userInfo.getString(FirstActivity.USER_PASSWORD,null);
+        Intent intent = getIntent();
+        userID=intent.getStringExtra("userID");
+        userPassword=intent.getStringExtra("userPassword");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 //권한을 거절하면 재 요청을 하는 함수
@@ -125,7 +129,7 @@ public class PlanSetPage extends AppCompatActivity {
         en_hour = st_hour;
         en_min = st_min+29;
         en_btn.setText(PlanTimePicker.hourCal(en_hour, en_min,false));
-        
+
         /*
          * 위 버튼을 눌렀을 때 어느 버튼을 눌렀는지 정하고
          * timepicker로 시간을 정함
@@ -149,13 +153,7 @@ public class PlanSetPage extends AppCompatActivity {
             }
         });
 
-        Button backBtn = (Button) findViewById(R.id.plan_action_btn);
-        backBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                backPressed=true;
-            }
-        });
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -170,54 +168,46 @@ public class PlanSetPage extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        String str = editText.getText().toString().replaceAll(" ","");
+        if(str == null||str.equals(null)||str.equals("")){
+            PlanTask.showToast(this,"과목명을 입력 해주세요.");
+            return true;
+        }
+        if(str.length()>10){
+            PlanTask.showToast(this,"과목이름이 너무 깁니다.");
+            return true;
+        }
+        if(findDuplication(st_hour, st_min, en_hour,en_min).equals("0")){
+            System.out.println("중복 없음");
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("position",PlanFragment.recycleArrayList.size()+1);
+                jsonObject.accumulate("user_id", userID);
+                jsonObject.accumulate("user_password", userPassword);
+                jsonObject.accumulate("subject",str);
+                jsonObject.accumulate("start",st_hour+":"+st_min+":00");
+                jsonObject.accumulate("end",en_hour+":"+en_min+":00");
 
-        System.out.println(item.getItemId());
-
-        if(backPressed){
-            backPressed=false;
-            String str = editText.getText().toString().replaceAll(" ","");
-            if(str == null||str.equals(null)||str.equals("")){
-                PlanTask.showToast(this,"과목명을 입력 해주세요.");
-                return true;
+                PlanTask planTask = new PlanTask(jsonObject, "planInsert", "POST");
+                planTask.execute();
+                planTask = new PlanTask(jsonObject, "plan", "POST");
+                planTask.execute();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            if(str.length()>10){
-                PlanTask.showToast(this,"과목이름이 너무 깁니다.");
-                return true;
-            }
-            if(findDuplication(st_hour, st_min, en_hour,en_min).equals("0")){
-                System.out.println("중복 없음");
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.accumulate("position",PlanFragment.recycleArrayList.size()+1);
-                    jsonObject.accumulate("user_id", userID);
-                    jsonObject.accumulate("user_password", userPassword);
-                    jsonObject.accumulate("subject",str);
-                    jsonObject.accumulate("start",st_hour+":"+st_min+":00");
-                    jsonObject.accumulate("end",en_hour+":"+en_min+":00");
+            PlanTask.showToast(this,"추가되었습니다.");
 
-                    PlanTask planTask = new PlanTask(jsonObject, "planInsert", "POST");
-                    planTask.execute();
-                    planTask = new PlanTask(jsonObject, "plan", "POST");
-                    planTask.execute();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                PlanTask.showToast(this,"추가되었습니다.");
-
-                PlanFragment.planAdapter.notifyDataSetChanged();
-                onBackPressed();
-            }else if(findDuplication(st_hour, st_min, en_hour,en_min).equals("2")){
-                PlanTask.showToast(this,"공부시간은 1분 이상이어야 합니다.");
-            }else{
-                PlanTask.showToast(this,"기존 기록과 시간이 중복됩니다.");
-            }
-        }else{
+            PlanFragment.planAdapter.notifyDataSetChanged();
             onBackPressed();
+        }else if(findDuplication(st_hour, st_min, en_hour,en_min).equals("2")){
+            PlanTask.showToast(this,"공부시간은 1분 이상이어야 합니다.");
+        }else{
+            PlanTask.showToast(this,"기존 기록과 시간이 중복됩니다.");
         }
 
         return true;
     }
-    
+
     /*
      * 중복 확인하는 메소드
      * 시간이 저장된 ArrayList에 있는 시간과 중복되는지 확인하고
@@ -233,7 +223,7 @@ public class PlanSetPage extends AppCompatActivity {
         for(int i = 0;i<PlanFragment.recycleArrayList.size();i++){
             String timeStr = PlanFragment.recycleArrayList.get(i).getTv_content();
             int st_bTime=PlanTask.timeCal(timeStr);
-            int en_bTime=PlanTask.timeCal(timeStr.substring(12));
+            int en_bTime=PlanTask.timeCal(timeStr.substring(11));
             if(     st_time==st_bTime||
                     st_time==en_bTime||
                     en_time==st_bTime||
