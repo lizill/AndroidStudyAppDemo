@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="アカウント"
+        android:text="계정"
         android:textColor="#3080ff"
         android:id="@+id/titleTV"
         />
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/titleTV"
         android:textColor="#3080ff"
-        android:hint="メールアドレス入力"
+        android:hint="아이디 입력"
         android:id="@+id/idET"
         android:inputType="textEmailAddress"
         />
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/idET"
         android:textColor="#3080ff"
-        android:hint="パスワード入力"
+        android:hint="비밀번호 입력"
         android:id="@+id/passwordET"
         android:inputType="textPassword"
         />
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/passwordET"
         android:layout_marginTop="20dp"
-        android:text="ログイン"
+        android:text="로그인"
         android:textColor="#ffffff"
         android:textStyle="bold"
         android:background="@drawable/round_button_blue"
