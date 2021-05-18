@@ -12,7 +12,7 @@
         android:id="@+id/textView"
         android:textSize="70dp"
         android:textStyle="bold"
-        android:textColor="#009688"
+        android:textColor="#3080ff"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"/>
 
