@@ -8,26 +8,29 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:paddingBottom="60dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/relativeLayout"
         />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
 
         <EditText
             android:id="@+id/send_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="メッセージ作成…"
+            android:maxLines="4"
+            android:layout_toLeftOf="@+id/send_btn"
+            android:inputType="textMultiLine"
+            android:hint="메세지 작성"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
@@ -42,7 +45,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="send"
+            android:text="전송"
             />
 
     </RelativeLayout>

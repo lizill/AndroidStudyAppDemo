@@ -128,6 +128,10 @@ public class ChatActivity extends AppCompatActivity {
     // 소켓으로 json객체 전송
     private void sendMessage() {
         String content = sendText.getText().toString().trim();
+        if(content.length() >= 300) {
+            System.out.println("300자 이상은 입력 불가");
+            return;
+        }
         if(!content.equals("")) {
             long currentTime = System.currentTimeMillis();
             mSocket.emit("newMessage", gson.toJson(new MessageData(
