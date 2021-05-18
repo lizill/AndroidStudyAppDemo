@@ -12,16 +12,6 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,11 +41,11 @@ public class LoginActivity extends AppCompatActivity {
                 String userPassword = passwordET.getText().toString();
 
                 if(userID.isEmpty()) {
-                    negativeBuilder("Please insert Email");
+                    negativeBuilder("아이디를 입력해주세요.");
                     return;
                 }
                 if(userPassword.isEmpty()) {
-                    negativeBuilder("Please insert Password");
+                    negativeBuilder("비밀번호를 입력해주세요.");
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
@@ -77,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
     private void negativeBuilder(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setMessage(msg)
-                .setNegativeButton("close", null)
+                .setNegativeButton("확인", null)
                 .create()
                 .show();
     }
@@ -112,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                 }
                 else {
-                    negativeBuilder("Failed Sign In");
+                    negativeBuilder("회원정보를 확인해주세요.");
                     progressBar.setVisibility(View.GONE);
                 }
 
