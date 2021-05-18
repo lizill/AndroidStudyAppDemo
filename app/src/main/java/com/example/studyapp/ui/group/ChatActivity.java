@@ -13,8 +13,14 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.studyapp.FirstActivity;
+import com.example.studyapp.HomeActivity;
+import com.example.studyapp.JSONTask;
 import com.example.studyapp.R;
+import com.example.studyapp.UserNameActivity;
 import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
@@ -166,7 +172,6 @@ public class ChatActivity extends AppCompatActivity {
             else if (!userID.equals(data.getFrom())) {
                 adapter.addItem(new ChatItem(data.getFrom(), data.getContent(), toDate(data.getSendTime()), ChatType.LEFT_MESSAGE));
             }
-//            adapter.notifyDataSetChanged();
             recyclerView.scrollToPosition(adapter.getItemCount() - 1);
         });
     }
