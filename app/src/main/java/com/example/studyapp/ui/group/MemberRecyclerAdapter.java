@@ -2,6 +2,7 @@ package com.example.studyapp.ui.group;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,9 @@ public class MemberRecyclerAdapter extends RecyclerView.Adapter<MemberRecyclerAd
     public void onBindViewHolder(MemberRecyclerAdapter.ViewHolder holder, int position) {
         holder.memberNameText.setText(memberList.get(position).getUserId());
         holder.totalTimeText.setText(memberList.get(position).getTotalTime());
+        if(memberList.get(position).getOnline().equals("1")) {
+            holder.memberImage.setColorFilter(Color.parseColor("#3080FF"));
+        }
     }
 
     @Override

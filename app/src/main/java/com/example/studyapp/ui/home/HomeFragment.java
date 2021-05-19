@@ -87,6 +87,9 @@ public class HomeFragment extends Fragment {
         sub1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 공부 시작 시 온라인 정보를 서버로 보냄
+                mSocket.emit("start", userID);
+
                 //누른 과목 정보 보내주기
                 Intent intent = new Intent(getActivity(), StopwatchActivity.class);
                 intent.putExtra("subject", sub1.getText());

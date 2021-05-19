@@ -48,6 +48,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import com.example.studyapp.FirstActivity;
+import com.google.gson.Gson;
+
+import static com.example.studyapp.ui.home.HomeFragment.mSocket;
 
 public class StopwatchActivity extends AppCompatActivity {
 
@@ -70,6 +73,9 @@ public class StopwatchActivity extends AppCompatActivity {
     DateFormat timeFormat = new SimpleDateFormat("HH mm ss", Locale.KOREA);
 
     private RequestQueue requestQueue;
+
+    private Gson gson = new Gson();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +122,7 @@ public class StopwatchActivity extends AppCompatActivity {
                 if(isFirst){
                     InsertData();
                     isFirst = false;
+
                 }else{
                     UpdateData();
                 }
@@ -353,6 +360,9 @@ public class StopwatchActivity extends AppCompatActivity {
     @Override
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
+        // 공부 종료 정보를 서버로 보냄
+        mSocket.emit("end", userID);
+
         isActiveOn = false;
         handler.removeCallbacks(runnable);
         termTime = SystemClock.uptimeMillis();
@@ -385,6 +395,9 @@ public class StopwatchActivity extends AppCompatActivity {
         builder.setPositiveButton("계속", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // 공부 시작 정보를 서버로 보냄
+                mSocket.emit("start", userID);
+
                 //정지된 만큼 텀 계산
                 termTime = SystemClock.uptimeMillis() - termTime;
                 leaveTime += termTime;

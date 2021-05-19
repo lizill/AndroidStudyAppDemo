@@ -4,11 +4,13 @@ public class MemberData {
     private String roomName;
     private String userId;
     private String totalTime;
+    private String online;
 
-    public MemberData(String roomName, String userId, String totalTime) {
+    public MemberData(String roomName, String userId, String totalTime, String online) {
         this.roomName = roomName;
         this.userId = userId;
         this.totalTime = totalTime;
+        this.online = online;
     }
 
     public String getRoomName() {
@@ -33,5 +35,13 @@ public class MemberData {
 
     public void setTotalTime(String totalTime) {
         this.totalTime = totalTime;
+    }
+
+    public String getOnline() {
+        return online;
+    }
+
+    public void setOnline(String online) {
+        this.online = online;
     }
 }

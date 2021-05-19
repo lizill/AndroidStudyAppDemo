@@ -3,12 +3,15 @@ package com.example.studyapp.ui.group;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -98,7 +101,7 @@ public class GroupPage extends AppCompatActivity {
         // 재현아 이 사이에 코드좀 쓸게 1
         // -----------------------------------------------------------------------
 
-        membersData = new ArrayList<>();
+        membersData = new ArrayList<MemberData>();
 
         tz = TimeZone.getTimeZone("Asia/Seoul");
         dateFormat.setTimeZone(tz);
@@ -120,7 +123,6 @@ public class GroupPage extends AppCompatActivity {
         memberRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
         adapter = new MemberRecyclerAdapter(membersData);
         memberRecyclerView.setAdapter(adapter);
-
         // -----------------------------------------------------------------------
         // 재현아 이 사이에 코드좀 쓸게 1
         // -----------------------------------------------------------------------
@@ -165,7 +167,8 @@ public class GroupPage extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
                     String userID = jsonObject.getString("userID");
                     String totalTime = jsonObject.getString("total_study_time");
-                    membersData.add(new MemberData(group, userID, totalTime));
+                    String online = jsonObject.getString("online");
+                    membersData.add(new MemberData(group, userID, totalTime, online));
                 }
                 adapter.notifyDataSetChanged();
             } catch (JSONException e) {
