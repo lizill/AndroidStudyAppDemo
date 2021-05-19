@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -227,5 +228,12 @@ public class MakeGroup extends AppCompatActivity {
                 .setNegativeButton(text, null)
                 .create()
                 .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(MakeGroup.this, SearchGroupPage.class);
+        startActivity(intent);
+        finish();
     }
 }

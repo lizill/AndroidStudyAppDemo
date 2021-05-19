@@ -76,6 +76,21 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="일별 공부량"
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:gravity="center"
+            android:layout_marginTop="30dp"/>
+
+        <com.github.mikephil.charting.charts.HorizontalBarChart
+            android:id="@+id/month_barChart"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:layout_marginTop="20dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="공부/휴식 비율"
             android:textSize="15sp"
             android:textColor="#000000"

@@ -93,7 +93,6 @@ public class StopwatchActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         subject = intent.getStringExtra("subject");
-
         tv_subject = findViewById(R.id.tv_subject);
         tv_subject.setText(subject);
 

@@ -59,6 +59,7 @@ public class SearchGroupPage extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SearchGroupPage.this, MakeGroup.class);
                 startActivity(intent);
+                finish();
             }
         });
 

@@ -8,14 +8,20 @@
     android:padding="10dp"
     android:background="#F5F5F5"
     >
-
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/groupRecyclerView"
-        android:scrollbars="vertical"
+        android:id="@+id/group_swipe_refresh"
         >
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/groupRecyclerView"
+            android:scrollbars="vertical"
+            >
+        </androidx.recyclerview.widget.RecyclerView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <Button
         android:id="@+id/SearchGroup"
         android:gravity="center"
