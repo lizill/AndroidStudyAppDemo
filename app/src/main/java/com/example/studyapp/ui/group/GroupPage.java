@@ -94,6 +94,7 @@ public class GroupPage extends AppCompatActivity {
                 Intent intent = new Intent(GroupPage.this, GroupOption.class);
                 intent.putExtra("group", group);
                 startActivity(intent);
+                finish();
             }
         });
 

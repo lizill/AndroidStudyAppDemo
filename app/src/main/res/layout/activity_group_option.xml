@@ -150,7 +150,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="모집 인원"
+                android:text="인원수"
                 android:textSize="18dp"
                 android:gravity="center_vertical"
                 android:layout_weight="3"
@@ -186,6 +186,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/master_menu"
+        android:visibility="invisible"
         >
         <TextView
             android:layout_width="match_parent"
@@ -221,7 +222,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:hint="그룹명"
-                android:id="@+id/change_groupName_ET"
+                android:id="@+id/change_groupName_TV"
                 android:layout_weight="6"
                 android:gravity="right | center"
                 android:textSize="18dp"
@@ -254,9 +255,42 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:hint="그룹장"
-                android:id="@+id/change_Master_ET"
+                android:id="@+id/change_master_TV"
                 android:layout_weight="6"
                 android:gravity="right | center"
+                android:textSize="18dp"
+                >
+            </TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:weightSum="10"
+            android:background="@drawable/custom_ripple_effect_option"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:id="@+id/change_contents"
+            android:clickable="true"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="공지사항 변경"
+                android:textSize="18dp"
+                android:gravity="center_vertical"
+                android:layout_weight="4"
+                >
+            </TextView>
+            <TextView
+                android:id="@+id/change_contents_TV"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:gravity="right | center"
+                android:hint="공지사항"
                 android:textSize="18dp"
                 >
             </TextView>
@@ -287,7 +321,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:hint="카테고리"
-                android:id="@+id/change_category_ET"
+                android:id="@+id/change_category_TV"
                 android:layout_weight="6"
                 android:gravity="right | center"
                 android:textSize="18dp"
@@ -323,7 +357,7 @@
                 android:layout_weight="6"
                 android:gravity="right | center"
                 android:textSize="18dp"
-                android:id="@+id/change_goalTime_ET"
+                android:id="@+id/change_goalTime_TV"
                 >
             </TextView>
         </LinearLayout>
@@ -341,7 +375,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="모집 인원 변경"
+                android:text="수용인원 변경"
                 android:textSize="18dp"
                 android:gravity="center_vertical"
                 android:layout_weight="4"
@@ -353,7 +387,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:hint="0명"
-                android:id="@+id/change_memberLimit_ET"
+                android:id="@+id/change_memberLimit_TV"
                 android:layout_weight="6"
                 android:gravity="right | center"
                 android:textSize="18dp"

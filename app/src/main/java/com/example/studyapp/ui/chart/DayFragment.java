@@ -79,15 +79,14 @@ public class DayFragment extends Fragment {
 
     //Information variable
     private String MaxFocus,MinStartTime,MaxEndTime, totalTime, today;
-    private float totalTimeSec, sumDayStartEndTerm;
+    private float allStudyTimeOnDaySec, sumDayStartEndTerm;
     //barchart variable
     private String [] allSubject;
     private float [] timeBySubject;
 
     //color setting
-    private int [] colorList = new int [] {Color.parseColor("#b0adff"), Color.parseColor("#00ccff")};
-    private int [] barColorList = new int [] {Color.parseColor("#ff6161"), Color.parseColor("#faa628"), Color.parseColor("#16de20"),
-            Color.parseColor("#2e38ff"), Color.parseColor("#13187d"), Color.parseColor("#abafff"),};
+    private int [] colorList = new int [] {Color.parseColor("#008cff"), Color.parseColor("#5056bf"), Color.parseColor("#2e38ff"),
+            Color.parseColor("#2caee6"), Color.parseColor("#30cf9c"), Color.parseColor("#4faaff"),};
 
     private String userID;
 
@@ -172,14 +171,11 @@ public class DayFragment extends Fragment {
     private void setPieChartData(){
 
         //오늘 공부 시간
-        float todayStudyTime = totalTimeSec;
-
         //오늘 공부 끝낸 시간 - 시작 시간 = Term
-        float totalTerm = sumDayStartEndTerm;
 
         List<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(todayStudyTime, "공부"));
-        entries.add(new PieEntry(totalTerm - todayStudyTime, "휴식"));
+        entries.add(new PieEntry(allStudyTimeOnDaySec, "공부"));
+        entries.add(new PieEntry(sumDayStartEndTerm - allStudyTimeOnDaySec, "휴식"));
 
         PieDataSet set = new PieDataSet(entries, "Study Information");
         set.setColors(colorList);
@@ -209,9 +205,14 @@ public class DayFragment extends Fragment {
         xAxis.setDrawAxisLine(false);
 
         YAxis yLeft = barChart.getAxisLeft();
-        yLeft.setAxisMaximum(totalTimeSec);
+        yLeft.setAxisMaximum(allStudyTimeOnDaySec);
         yLeft.setAxisMinimum(0f);
         yLeft.setEnabled(false);
+
+        if(allSubject.length == 1){
+            xAxis.setAxisMaximum(1);
+            xAxis.setAxisMinimum(0);
+        }
 
         xAxis.setLabelCount(allSubject.length);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(allSubject));
@@ -229,7 +230,7 @@ public class DayFragment extends Fragment {
             barEntries.add(new BarEntry(i, val));
         }
 
-        BarDataSet dataSet = new BarDataSet(barEntries, "과목별 공부");
+        BarDataSet dataSet = new BarDataSet(barEntries, "오늘 과목별 공부");
         dataSet.setDrawValues(false);
 
         BarData data = new BarData(dataSet);
@@ -361,7 +362,7 @@ public class DayFragment extends Fragment {
                             MaxFocus = studyObject.getString("focusOn");
                             sumDayStartEndTerm = Float.parseFloat(studyObject.getString("TERM"));
                             totalTime = studyObject2.getString("TOTAL");
-                            totalTimeSec = Float.parseFloat(studyObject2.getString("TOTALSEC"));
+                            allStudyTimeOnDaySec = Float.parseFloat(studyObject2.getString("TOTALSEC"));
 
 
                             tv_longTime.setText(MaxFocus);

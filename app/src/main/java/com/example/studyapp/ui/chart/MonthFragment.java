@@ -19,10 +19,18 @@ import com.android.volley.toolbox.Volley;
 import com.example.studyapp.FirstActivity;
 import com.example.studyapp.R;
 import com.example.studyapp.ui.home.HomeFragment;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +48,7 @@ import java.util.TimeZone;
 
 public class MonthFragment extends Fragment {
 
+    private BarChart barChart;
     private PieChart piechart;
     private RequestQueue requestQueue;
 
@@ -49,12 +58,18 @@ public class MonthFragment extends Fragment {
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
     private DateFormat dayFormat = new SimpleDateFormat("MM월 dd일 E요일", Locale.KOREA);
 
+    //barchart variable
+    private float [] dateArray;
+    private float [] timeArray;
+    private float max = 0;
+
     //Information variable
-    private String aveStudyTimeOnMonth,allStudyTimeOnMonth,sumDayStartEndTerm,today;
+    private String aveStudyTimeOnMonth,today;
+    private float allStudyTimeSecOnMonth, sumDayStartEndTerm;
 
     //color setting
-    private int [] colorList = new int [] {Color.parseColor("#b0adff"), Color.parseColor("#00ccff")};
-
+    private int [] colorList = new int [] {Color.parseColor("#008cff"), Color.parseColor("#5056bf"), Color.parseColor("#2e38ff"),
+            Color.parseColor("#2caee6"), Color.parseColor("#30cf9c"), Color.parseColor("#4faaff"),};
     private String userID;
 
     //TextView variable
@@ -75,9 +90,6 @@ public class MonthFragment extends Fragment {
             //Volley Queue  & request json
             requestQueue = Volley.newRequestQueue(getContext());
 
-            Calendar calendar = Calendar.getInstance();
-            int startday = calendar.get(Calendar.DAY_OF_WEEK);
-
             // Time -> Korea setting
             tz = TimeZone.getTimeZone("Asia/Seoul");
             timeFormat.setTimeZone(tz);
@@ -96,50 +108,101 @@ public class MonthFragment extends Fragment {
             tv_month_date = (TextView) v.findViewById(R.id.tv_month_date);
             tv_month_date.setText(Integer.parseInt(today.split("-")[1]) + "월");
 
+            barChart = (com.github.mikephil.charting.charts.HorizontalBarChart) v.findViewById(R.id.month_barChart);
+
             piechart = (com.github.mikephil.charting.charts.PieChart) v.findViewById(R.id.month_piechart);
             searchInfo();
         }
         return v;
     }
+    private void setBarData(){
+        barChart.setDrawBarShadow(false);
+        Description description = new Description();
+        description.setText("");
+        barChart.setDescription(description);
+        barChart.getLegend().setEnabled(false);
+        barChart.setPinchZoom(false);
+        barChart.setClickable(false);
+        barChart.setDoubleTapToZoomEnabled(false);
+        barChart.setDrawValueAboveBar(false);
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setEnabled(true);
+        xAxis.setDrawAxisLine(false);
+
+        YAxis yLeft = barChart.getAxisLeft();
+        yLeft.setAxisMaximum(max);
+        yLeft.setAxisMinimum(0f);
+        yLeft.setEnabled(false);
+
+        xAxis.setLabelCount(31, true);
+        xAxis.setAxisMinimum(0);
+        xAxis.setAxisMaximum(31);
+
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(){
+            private String [] dateslist = new String [31];
+            {
+                for(int i = 0; i <dateslist.length; i++){
+                    dateslist[i] = i+1 + "";
+                }
+            }
+            @Override
+            public String getFormattedValue(float value) {
+                return dateslist[(int)value];
+            }
+        });
+        xAxis.setTextColor(Color.parseColor("#000000"));
+
+        YAxis yRight = barChart.getAxisRight();
+        yRight.setDrawAxisLine(true);
+        yRight.setDrawGridLines(false);
+        yRight.setEnabled(false);
+
+        xAxis.setGranularity(1f);
+        xAxis.setGranularityEnabled(true);
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        int j = 0;
+        for(int i = 0; i < 31; i++){
+            if(i == dateArray[j]){
+                barEntries.add(new BarEntry(dateArray[j], timeArray[j]));
+                j++;
+            }
+            if(j >= dateArray.length) break;
+        }
+
+        BarDataSet dataSet = new BarDataSet(barEntries, "날짜별 공부");
+        dataSet.setDrawValues(false);
+
+        BarData data = new BarData(dataSet);
+        data.setBarWidth(0.1f);
+
+        barChart.animateY(1000);
+        barChart.setData(data);
+        barChart.invalidate();
+    }
     //PieChart data setting
     private void setPieChartData(){
 
-        float studyTotal = timeCastingToFloat(allStudyTimeOnMonth);
-        float termTotal = timeCastingToFloat(sumDayStartEndTerm);
-
         List<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(studyTotal, "공부"));
-        entries.add(new PieEntry(termTotal - studyTotal, "휴식"));
+        entries.add(new PieEntry(allStudyTimeSecOnMonth, "공부"));
+        entries.add(new PieEntry(sumDayStartEndTerm - allStudyTimeSecOnMonth, "휴식"));
 
         PieDataSet set = new PieDataSet(entries, "Study Information");
+
         set.setColors(colorList);
         PieData data = new PieData(set);
         piechart.setData(data);
         piechart.invalidate();
     }
-    private float timeCastingToFloat(String timeData){
-        String [] t = timeData.split(":");
-        float pieTime = 0.0f;
-        for(int i = 0; i < t.length; i++){
-            float tmp = Float.parseFloat(t[i]);
-            if(tmp > 0) {
-                switch (i) {
-                    case 0:
-                        pieTime += tmp * 3600;
-                        break;
-                    case 1:
-                        pieTime += tmp * 60;
-                        break;
-                    case 2:
-                        pieTime += tmp;
-                        break;
-                }
-            }
-        }
-        return pieTime;
+    private void createBarChartDataArray(int len){
+        dateArray = new float [len];
+        timeArray = new float [len];
     }
+
     private void searchInfo(){
-        String url = String.format(Env.monthInfoURL, userID, today);
+        String url = String.format(Env.monthInfo2URL, userID, today);
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>(){
                     @Override
@@ -151,18 +214,34 @@ public class MonthFragment extends Fragment {
                             //object start name : response  >>>>> array
                             JSONArray jsonArray = jsonObject.getJSONArray("response");
                             JSONArray jsonArray2 = jsonObject.getJSONArray("response2");
+                            JSONArray jsonArray3 = jsonObject.getJSONArray("response3");
 
                             JSONObject studyObject = jsonArray.getJSONObject(0);
                             JSONObject studyObject2 = jsonArray2.getJSONObject(0);
 
-                            allStudyTimeOnMonth = studyObject.getString("AllStudyTimeOnMonth");
+                            String allStudyTimeOnMonth = studyObject.getString("AllStudyTimeOnMonth");
                             tv_month_totalTime.setText(allStudyTimeOnMonth);
+
+                            allStudyTimeSecOnMonth = Float.parseFloat(studyObject.getString("AllStudyTimeSecOnMonth"));
 
                             aveStudyTimeOnMonth = studyObject.getString("AverageStudyTimeOnMonth");
                             tv_month_average.setText(aveStudyTimeOnMonth);
 
-                            sumDayStartEndTerm = studyObject2.getString("SumDayStartEndTerm");
+                            sumDayStartEndTerm = Float.parseFloat(studyObject2.getString("SumDayStartEndTerm"));
 
+                            int len = jsonArray3.length();
+                            createBarChartDataArray(len);
+
+                            for(int i = 0; i < len; i++){
+                                JSONObject barChartObject = jsonArray3.getJSONObject(i);
+
+                                dateArray[i] = Float.parseFloat(barChartObject.getString("study_date"));
+                                timeArray[i] = Float.parseFloat(barChartObject.getString("study_time"));
+
+                                if(max < timeArray[i])
+                                    max = timeArray[i];
+                            }
+                            setBarData();
                             setPieChartData();
                         } catch (JSONException e) {
                             e.printStackTrace();
