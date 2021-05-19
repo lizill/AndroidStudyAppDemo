@@ -7,7 +7,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,14 +18,19 @@ import androidx.navigation.NavInflater;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.studyapp.JSONTask;
 import com.example.studyapp.R;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -31,6 +38,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import static com.example.studyapp.FirstActivity.USER_ID;
 import static com.example.studyapp.FirstActivity.userInfo;
@@ -44,6 +57,11 @@ public class GroupPage extends AppCompatActivity {
     private TextView contentsTextView;
     private TextView peopleCountTextView;
     private Button groupOptionButton;
+
+    private RecyclerView memberRecyclerView;
+    private MemberRecyclerAdapter adapter;
+    private TimeZone tz;
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +92,42 @@ public class GroupPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // -----------------------------------------------------------------------
+        // 재현아 이 사이에 코드좀 쓸게 1
+        // -----------------------------------------------------------------------
+
+        ArrayList<MemberData> membersData = new ArrayList<>();
+        membersData.add(new MemberData(group, "testId", "00:te:st"));
+        membersData.add(new MemberData(group, "testId", "00:te:st"));
+        membersData.add(new MemberData(group, "testId", "00:te:st"));
+        membersData.add(new MemberData(group, "testId", "00:te:st"));
+        membersData.add(new MemberData(group, "testId", "00:te:st"));
+
+        tz = TimeZone.getTimeZone("Asia/Seoul");
+        dateFormat.setTimeZone(tz);
+        String today = dateFormat.format(new Date());
+        System.out.println(today);
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.accumulate("room_name", group);
+            jsonObject.accumulate("today", today);
+
+            MemberTask memberTask = new MemberTask(jsonObject, "member", "POST");
+            memberTask.execute();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        memberRecyclerView = (RecyclerView) findViewById(R.id.member_recycler_view);
+        memberRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+        adapter = new MemberRecyclerAdapter(membersData);
+        memberRecyclerView.setAdapter(adapter);
+
+        // -----------------------------------------------------------------------
+        // 재현아 이 사이에 코드좀 쓸게 1
+        // -----------------------------------------------------------------------
     }
 
     private void peopleCountDecrease() {
@@ -96,6 +150,24 @@ public class GroupPage extends AppCompatActivity {
         queue.add(peopleCountDecreaseRequest);
     }
 
+    // -----------------------------------------------------------------------
+    // 재현아 이 사이에 코드좀 쓸게 2
+    // -----------------------------------------------------------------------
+    class MemberTask extends JSONTask {
+
+        public MemberTask(JSONObject jsonObject, String Path, String method) {
+            super(jsonObject, Path, method);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            System.out.println(result);
+
+        }
+    }
+    // -----------------------------------------------------------------------
+    // 재현아 이 사이에 코드좀 쓸게 2
+    // -----------------------------------------------------------------------
 
     class BackgroundTask extends AsyncTask<Void, Void, String> {
 
