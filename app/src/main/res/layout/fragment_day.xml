@@ -16,8 +16,9 @@
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#000000"
             android:text="DAY"
-            android:textSize="30sp"
+            android:textSize="18sp"
             android:layout_gravity="center"/>
 
         <GridLayout
@@ -36,7 +37,7 @@
                 android:layout_row="0"
                 android:layout_column="0"
                 android:layout_gravity="center"
-                android:textColor="#ff9100"/>
+                android:textColor="#79a9ed"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,7 +47,7 @@
                 android:layout_row="0"
                 android:layout_column="1"
                 android:layout_gravity="center"
-                android:textColor="#ff9100"/>
+                android:textColor="#79a9ed"/>
 
             <TextView
                 android:id="@+id/tv_totalTime"
@@ -54,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:text="time"
+                android:textColor="#000000"
                 android:layout_row="1"
                 android:layout_column="0"
                 android:layout_gravity="center"/>
@@ -62,6 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
+                android:textColor="#000000"
                 android:layout_marginLeft="40dp"
                 android:text="time"
                 android:layout_row="1"
@@ -76,7 +79,7 @@
                 android:layout_row="2"
                 android:layout_column="0"
                 android:layout_gravity="center"
-                android:textColor="#ff9100"/>
+                android:textColor="#79a9ed"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,13 +89,14 @@
                 android:layout_row="2"
                 android:layout_column="1"
                 android:layout_gravity="center"
-                android:textColor="#ff9100"/>
+                android:textColor="#79a9ed"/>
             <TextView
                 android:id="@+id/tv_startTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:text="time"
+                android:textColor="#000000"
                 android:layout_row="3"
                 android:layout_column="0"
                 android:layout_gravity="center"/>
@@ -103,6 +107,7 @@
                 android:textSize="20sp"
                 android:layout_marginLeft="40dp"
                 android:text="time"
+                android:textColor="#000000"
                 android:layout_row="3"
                 android:layout_column="1"
                 android:layout_gravity="center"/>
@@ -114,7 +119,8 @@
             android:text="과목별 공부량"
             android:gravity="center"
             android:layout_marginTop="30dp"
-            android:textSize="15sp"/>
+            android:textSize="15sp"
+            android:textColor="#000000"/>
 
         <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/barChart"
@@ -127,6 +133,7 @@
             android:layout_height="wrap_content"
             android:text="공부/휴식 비율"
             android:textSize="15sp"
+            android:textColor="#000000"
             android:gravity="center"
             android:layout_marginTop="30dp"/>
         <com.github.mikephil.charting.charts.PieChart
@@ -141,6 +148,7 @@
             android:layout_height="wrap_content"
             android:text="타임라인"
             android:textSize="15sp"
+            android:textColor="#000000"
             android:gravity="center"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="20dp"/>
