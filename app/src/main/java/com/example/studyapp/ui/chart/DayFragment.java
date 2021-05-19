@@ -25,8 +25,11 @@ import com.example.studyapp.ui.home.HomeFragment;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -34,6 +37,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
@@ -47,6 +51,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -73,14 +78,16 @@ public class DayFragment extends Fragment {
     private DateFormat dayFormat = new SimpleDateFormat("MM월 dd일 E요일", Locale.KOREA);
 
     //Information variable
-    private String MaxFocus,MinStartTime,MaxEndTime, sumDayStartEndTerm,today;
-
+    private String MaxFocus,MinStartTime,MaxEndTime, totalTime, today;
+    private float totalTimeSec, sumDayStartEndTerm;
     //barchart variable
     private String [] allSubject;
-    private String [] timeBySubject;
+    private float [] timeBySubject;
 
     //color setting
     private int [] colorList = new int [] {Color.parseColor("#b0adff"), Color.parseColor("#00ccff")};
+    private int [] barColorList = new int [] {Color.parseColor("#ff6161"), Color.parseColor("#faa628"), Color.parseColor("#16de20"),
+            Color.parseColor("#2e38ff"), Color.parseColor("#13187d"), Color.parseColor("#abafff"),};
 
     private String userID;
 
@@ -93,7 +100,7 @@ public class DayFragment extends Fragment {
         // Inflate the layout for this fragment
         //data exist ? DayFragment : NoneFragment
         View v = null;
-        if(HomeFragment.TOTAL_STUDY_TIME.equals("00:00:00")){
+        if(!HomeFragment.isDayFragment){
             v = inflater.inflate(R.layout.fragment_nonpage, container, false);
         }else{
             v = inflater.inflate(R.layout.fragment_day, container, false);
@@ -108,7 +115,6 @@ public class DayFragment extends Fragment {
             dayFormat.setTimeZone(tz);
 
             tv_totalTime = (TextView) v.findViewById(R.id.tv_totalTime);
-            tv_totalTime.setText(HomeFragment.TOTAL_STUDY_TIME);
 
             tv_longTime = (TextView) v.findViewById(R.id.tv_longTime);
             tv_startTime = (TextView) v.findViewById(R.id.tv_startTime);
@@ -128,7 +134,6 @@ public class DayFragment extends Fragment {
 
 
             barChart = (HorizontalBarChart) v.findViewById(R.id.barChart);
-            searchBarChartData();
 
             piechart = (com.github.mikephil.charting.charts.PieChart) v.findViewById(R.id.piechart);
 
@@ -162,36 +167,15 @@ public class DayFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(new TimeLineAdapter(timeLineModelList, context));
     }
-    private float timeCastingToFloat(String timeData){
-        String [] timeList = timeData.split(":");
-        float timeToSec = 0.0f;
-        for(int i = 0; i < timeList.length; i++){
-            float time = Float.parseFloat(timeList[i]);
-            if(time > 0) {
-                switch (i) {
-                    case 0:
-                        timeToSec += time * 3600;
-                        break;
-                    case 1:
-                        timeToSec += time * 60;
-                        break;
-                    case 2:
-                        timeToSec += time;
-                        break;
-                }
-            }
-        }
-        return timeToSec;
-    }
 
     //PieChart data setting
     private void setPieChartData(){
 
         //오늘 공부 시간
-        float todayStudyTime = timeCastingToFloat(HomeFragment.TOTAL_STUDY_TIME);
+        float todayStudyTime = totalTimeSec;
 
         //오늘 공부 끝낸 시간 - 시작 시간 = Term
-        float totalTerm = timeCastingToFloat(sumDayStartEndTerm);
+        float totalTerm = sumDayStartEndTerm;
 
         List<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(todayStudyTime, "공부"));
@@ -208,39 +192,59 @@ public class DayFragment extends Fragment {
     private void setBarData(){
 //        allSubject, timeBySubject
 
-        ArrayList<BarEntry> yVals = new ArrayList<>();
-        ArrayList<String> dataSets = new ArrayList<>();
-
-        for(int i = 0; i < allSubject.length; i++){
-            float val = Float.parseFloat(timeBySubject[i]);
-            yVals.add(new BarEntry(i, val));
-//            xAxisValues.add(allSubject[i]);
-        }
-
-        BarDataSet set1 = new BarDataSet(yVals, "과목별 시간");
-
-        BarData data = new BarData(set1);
-
-        barChart.setData(data);
-        barChart.getAxisLeft().setDrawLabels(false);
-        barChart.getAxisRight().setDrawLabels(false);
-        barChart.getAxisLeft().setDrawGridLines(false);
-        barChart.getXAxis().setDrawGridLines(false);
-
-        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        barChart.getAxisRight().setEnabled(false);
-        barChart.getAxisLeft().setEnabled(false);
-        barChart.animateY(3000);
-        barChart.setDrawValueAboveBar(false);
-        barChart.getXAxis().setCenterAxisLabels(false);
-        barChart.invalidate();
+        barChart.setDrawBarShadow(false);
+        Description description = new Description();
+        description.setText("");
+        barChart.setDescription(description);
+        barChart.getLegend().setEnabled(false);
+        barChart.setPinchZoom(false);
         barChart.setClickable(false);
         barChart.setDoubleTapToZoomEnabled(false);
-        barChart.setPinchZoom(false);
+        barChart.setDrawValueAboveBar(false);
 
-//        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setEnabled(true);
+        xAxis.setDrawAxisLine(false);
 
+        YAxis yLeft = barChart.getAxisLeft();
+        yLeft.setAxisMaximum(totalTimeSec);
+        yLeft.setAxisMinimum(0f);
+        yLeft.setEnabled(false);
+
+        xAxis.setLabelCount(allSubject.length);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(allSubject));
+        xAxis.setTextColor(Color.parseColor("#000000"));
+
+        YAxis yRight = barChart.getAxisRight();
+        yRight.setDrawAxisLine(true);
+        yRight.setDrawGridLines(false);
+        yRight.setEnabled(false);
+
+
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        for(int i = 0; i < timeBySubject.length; i++){
+            float val = timeBySubject[i];
+            barEntries.add(new BarEntry(i, val));
+        }
+
+        BarDataSet dataSet = new BarDataSet(barEntries, "과목별 공부");
+        dataSet.setDrawValues(false);
+
+        BarData data = new BarData(dataSet);
+        data.setBarWidth(0.5f);
+
+        barChart.animateY(1000);
+
+        barChart.setDrawBarShadow(true);
+        dataSet.setBarShadowColor(Color.argb(40,150,150,150));
+
+        barChart.setData(data);
+        data.setValueFormatter(new IndexAxisValueFormatter());
+        barChart.invalidate();
     }
+
     private void searchBarChartData(){
         String url = String.format(Env.barchartURL, userID,today);
         StringRequest request = new StringRequest(Request.Method.GET, url,
@@ -263,7 +267,8 @@ public class DayFragment extends Fragment {
                                 String subjectStudyTime = studyObject.getString("study_time");
 
                                 allSubject[i] = subject;
-                                timeBySubject[i] = subjectStudyTime;
+                                timeBySubject[i] = Float.parseFloat(subjectStudyTime);
+
                             }
 
                             setBarData();
@@ -283,7 +288,7 @@ public class DayFragment extends Fragment {
     }
     private void createBarChartDataArray(int len){
         allSubject = new String [len];
-        timeBySubject = new String [len];
+        timeBySubject = new float [len];
     }
 
     private void createTimelineDataArray(int len){
@@ -337,7 +342,7 @@ public class DayFragment extends Fragment {
         requestQueue.add(request);
     }
     private void searchInfo(){
-        String url = String.format(Env.infoURL, userID,today);
+        String url = String.format(Env.info2URL, userID,today);
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>(){
                     @Override
@@ -349,16 +354,23 @@ public class DayFragment extends Fragment {
                             //object start name : response  >>>>> array
                             JSONArray jsonArray = jsonObject.getJSONArray("response");
                             JSONObject studyObject = jsonArray.getJSONObject(0);
+                            JSONObject studyObject2 = jsonArray.getJSONObject(1);
+
                             MinStartTime = studyObject.getString("START");
                             MaxEndTime = studyObject.getString("END");
                             MaxFocus = studyObject.getString("focusOn");
-                            sumDayStartEndTerm = studyObject.getString("TERM");
+                            sumDayStartEndTerm = Float.parseFloat(studyObject.getString("TERM"));
+                            totalTime = studyObject2.getString("TOTAL");
+                            totalTimeSec = Float.parseFloat(studyObject2.getString("TOTALSEC"));
+
 
                             tv_longTime.setText(MaxFocus);
                             tv_startTime.setText(MinStartTime);
                             tv_endTime.setText(MaxEndTime);
+                            tv_totalTime.setText(totalTime);
 
                             setPieChartData();
+                            searchBarChartData();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
