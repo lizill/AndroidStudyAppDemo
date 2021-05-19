@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,7 +39,7 @@ import static com.example.studyapp.FirstActivity.userInfo;
 
 public class GroupFragment extends Fragment {
     private RecyclerView groupRecyclerView;
-    private GroupRecyclerAdapter adapter;
+    public GroupRecyclerAdapter adapter;
     private ArrayList<Group> groupList;
     private String userID;
     private Button searchGroupButton;
@@ -70,10 +71,16 @@ public class GroupFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
-                new BackgroundTask().execute();
             }
         });
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        groupList.clear();
+        new BackgroundTask().execute();
     }
 
     class BackgroundTask extends AsyncTask<Void, Void, String> {
