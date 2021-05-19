@@ -58,6 +58,7 @@ public class GroupPage extends AppCompatActivity {
     private TextView peopleCountTextView;
     private Button groupOptionButton;
 
+    private ArrayList<MemberData> membersData;
     private RecyclerView memberRecyclerView;
     private MemberRecyclerAdapter adapter;
     private TimeZone tz;
@@ -97,12 +98,7 @@ public class GroupPage extends AppCompatActivity {
         // 재현아 이 사이에 코드좀 쓸게 1
         // -----------------------------------------------------------------------
 
-        ArrayList<MemberData> membersData = new ArrayList<>();
-        membersData.add(new MemberData(group, "testId", "00:te:st"));
-        membersData.add(new MemberData(group, "testId", "00:te:st"));
-        membersData.add(new MemberData(group, "testId", "00:te:st"));
-        membersData.add(new MemberData(group, "testId", "00:te:st"));
-        membersData.add(new MemberData(group, "testId", "00:te:st"));
+        membersData = new ArrayList<>();
 
         tz = TimeZone.getTimeZone("Asia/Seoul");
         dateFormat.setTimeZone(tz);
@@ -161,8 +157,20 @@ public class GroupPage extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            System.out.println(result);
+            try {
+                JSONObject memberObject = new JSONObject(result);
+                JSONArray jsonArray = new JSONArray(memberObject.getString("data"));
 
+                for(int i=0; i<jsonArray.length(); i++) {
+                    JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
+                    String userID = jsonObject.getString("userID");
+                    String totalTime = jsonObject.getString("total_study_time");
+                    membersData.add(new MemberData(group, userID, totalTime));
+                }
+                adapter.notifyDataSetChanged();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
     // -----------------------------------------------------------------------
