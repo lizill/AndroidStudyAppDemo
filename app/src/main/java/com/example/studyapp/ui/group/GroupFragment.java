@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.studyapp.R;
 
@@ -43,6 +44,7 @@ public class GroupFragment extends Fragment {
     private ArrayList<Group> groupList;
     private String userID;
     private Button searchGroupButton;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private GroupViewModel groupViewModel;
 
@@ -69,6 +71,15 @@ public class GroupFragment extends Fragment {
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), SearchGroupPage.class);
                         startActivity(intent);
+                    }
+                });
+
+                swipeRefreshLayout = root.findViewById(R.id.group_swipe_refresh);
+                swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        onResume();
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 });
             }
