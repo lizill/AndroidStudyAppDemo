@@ -91,7 +91,6 @@ public class HomeFragment extends Fragment {
                 /*
                 onChnaged= 뷰를 눌러서 실행했을때 실행시킬 이벤트 삽입
                  */
-
             }
         });
         return root;

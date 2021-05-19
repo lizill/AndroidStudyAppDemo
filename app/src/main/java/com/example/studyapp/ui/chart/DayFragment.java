@@ -213,10 +213,9 @@ public class DayFragment extends Fragment {
         yLeft.setAxisMinimum(0f);
         yLeft.setEnabled(false);
 
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("ds");
         xAxis.setLabelCount(allSubject.length);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(allSubject));
+        xAxis.setTextColor(Color.parseColor("#000000"));
 
         YAxis yRight = barChart.getAxisRight();
         yRight.setDrawAxisLine(true);
@@ -235,7 +234,6 @@ public class DayFragment extends Fragment {
 
         BarData data = new BarData(dataSet);
         data.setBarWidth(0.5f);
-        data.setValueTextSize(10);
 
         barChart.animateY(1000);
 

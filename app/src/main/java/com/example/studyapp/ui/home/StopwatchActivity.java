@@ -88,7 +88,6 @@ public class StopwatchActivity extends AppCompatActivity {
         start = timeFormat.format(new Date());
         gapOfSecond = 60 - Integer.parseInt(start.split(" ")[2]);
         gapOfMinute = 60 - Integer.parseInt(start.split(" ")[1]) - 1;
-        System.out.println(gapOfMinute + "분   " + gapOfSecond + "초 차이 있습니다.");
 
         //과목정보 불러오기
         Intent intent = getIntent();
@@ -172,7 +171,6 @@ public class StopwatchActivity extends AppCompatActivity {
                         //json object >> {response:[{key : value}, {.....
                         JSONObject jsonObject = new JSONObject(response);
                         String res = jsonObject.getString("success");
-                        Toast.makeText(StopwatchActivity.this, res, Toast.LENGTH_SHORT).show();
 
                     } catch (JSONException e) {
                     e.printStackTrace();
@@ -207,7 +205,6 @@ public class StopwatchActivity extends AppCompatActivity {
                     //json object >> {response:[{key : value}, {.....
                     JSONObject jsonObject = new JSONObject(response);
                     String res = jsonObject.getString("success");
-                    Toast.makeText(StopwatchActivity.this, res, Toast.LENGTH_SHORT).show();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -257,11 +254,14 @@ public class StopwatchActivity extends AppCompatActivity {
                             if(!studyTime.equals("null")){
                                 convertToTime(studyTime);
                                 studyTimeSec = Integer.parseInt(studyTimeSecTmp);
-                                studyTimeTotalSec = Integer.parseInt(studyTotalTime);
                             }else{
                                 isFirst = true;
                                 studyTimeSec = 0;
+                            }
+                            if(studyTotalTime.equals("null")){
                                 studyTimeTotalSec = 0;
+                            }else{
+                                studyTimeTotalSec = Integer.parseInt(studyTotalTime);
                             }
                             handler.postDelayed(runnable, 0);
                         } catch (JSONException e) {
