@@ -90,7 +90,9 @@ public class GroupFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        int size = groupList.size();
         groupList.clear();
+        adapter.notifyItemRangeRemoved(0, size);
         new BackgroundTask().execute();
     }
 
