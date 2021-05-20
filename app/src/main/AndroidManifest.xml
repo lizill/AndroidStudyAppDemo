@@ -16,7 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.group.ChangeGroupName"></activity>
         <activity android:name=".ui.group.GroupOption" />
         <activity android:name=".ui.home.StopwatchActivity" />
         <activity
