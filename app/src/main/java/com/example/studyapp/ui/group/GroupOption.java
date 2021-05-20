@@ -2,6 +2,7 @@ package com.example.studyapp.ui.group;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -64,6 +66,7 @@ public class GroupOption extends AppCompatActivity {
     private TextView changeMemberLimit_TV;
 
     private LinearLayout changeGroupName;
+    private LinearLayout changeMemberLimit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,7 @@ public class GroupOption extends AppCompatActivity {
         changeMemberLimit_TV = findViewById(R.id.change_memberLimit_TV);
 
         changeGroupName = findViewById(R.id.change_groupName);
+        changeMemberLimit = findViewById(R.id.change_memberLimit);
 
         dropGroupButton = findViewById(R.id.dropGroup);
         groupLeaveButton = findViewById(R.id.leaveGroup);
@@ -218,14 +222,97 @@ public class GroupOption extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String changeGroupName = groupNameET.getText().toString();
-                        Response.Listener<String> responseLister = new Response.Listener<String>() {
+                        if(changeGroupName.isEmpty()) {
+                            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(GroupOption.this);
+                            builder.setTitle("그룹정보 변경").setMessage("그룹 이름을 입력해 주세요.")
+                                    .setNegativeButton("확인", null)
+                                    .create()
+                                    .show();
+                        } else {
+                            Response.Listener<String> responseLister = new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
+                                        JSONObject jsonResponse = new JSONObject(response);
+                                        boolean success = jsonResponse.getBoolean("success");
+                                        Log.d("success", ""+success);
+                                        if(!success) {
+                                            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try{
+                                                        JSONObject jsonResponse = new JSONObject(response);
+                                                        boolean success = jsonResponse.getBoolean("success");
+                                                        if (success) {
+                                                            Log.d("성공",":::");
+                                                            groupName = changeGroupName;
+                                                            groupName_TV.setText(changeGroupName);
+                                                            changeGroupName_TV.setHint(changeGroupName);
+                                                        }
+                                                    } catch (Exception e){
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            };
+                                            ChangeGroupNameRequest changeGroupNameRequest = new ChangeGroupNameRequest(groupName, changeGroupName, responseListener);
+                                            RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
+                                            queue.add(changeGroupNameRequest);
+                                        }
+                                        else {
+                                            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(GroupOption.this);
+                                            builder.setTitle("그룹정보 변경").setMessage("이미 사용중인 그룹이름 입니다.")
+                                                    .setNegativeButton("확인", null)
+                                                    .create()
+                                                    .show();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+                            GroupNameCheck groupNameCheck = new GroupNameCheck(changeGroupName, responseLister);
+                            RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
+                            queue.add(groupNameCheck);
+                        }
+                    }
+                });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
+
+        changeMemberLimit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] memberLimitArr = new String[49];
+                for(int i = 0; i < 49; i++){
+                    memberLimitArr[i] =(i+2) + "명";
+                }
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(GroupOption.this);
+                builder.setTitle("모집인원 선택");
+                builder.setItems(memberLimitArr, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int changeMemberLimit = which + 2;
+                        Response.Listener<String> responseListener = new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonResponse = new JSONObject(response);
-                                    boolean success = jsonResponse.getBoolean("success");
-                                    Log.d("success", ""+success);
-                                    if(!success) {
+                                try{
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    JSONArray jsonArray = jsonObject.getJSONArray("response");
+                                    jsonObject = jsonArray.getJSONObject(0);
+                                    String memberCount = jsonObject.getString("count");
+                                    Log.d("아아아아", memberCount);
+                                    Log.d(""+(Integer.parseInt(memberCount) >= changeMemberLimit), memberCount + ":" + changeMemberLimit);
+                                    if (Integer.parseInt(memberCount) > changeMemberLimit) {
+                                        Log.d("크거나 같음","불가능");
+                                        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(GroupOption.this);
+                                        builder.setTitle("그룹정보 변경").setMessage("현재 인원보다 적습니다.")
+                                                .setNegativeButton("확인", null)
+                                                .create()
+                                                .show();
+                                    } else {
                                         Response.Listener<String> responseListener = new Response.Listener<String>() {
                                             @Override
                                             public void onResponse(String response) {
@@ -234,39 +321,30 @@ public class GroupOption extends AppCompatActivity {
                                                     boolean success = jsonResponse.getBoolean("success");
                                                     if (success) {
                                                         Log.d("성공",":::");
-                                                        groupName = changeGroupName;
-                                                        groupName_TV.setText(changeGroupName);
-                                                        changeGroupName_TV.setHint(changeGroupName);
+                                                        memberLimit = changeMemberLimit + "";
+                                                        groupMember_TV.setText(memberCount + "/" + memberLimit);
+                                                        changeMemberLimit_TV.setHint(memberLimit + "명");
                                                     }
                                                 } catch (Exception e){
                                                     e.printStackTrace();
                                                 }
                                             }
                                         };
-                                        ChangeGroupNameRequest changeGroupNameRequest = new ChangeGroupNameRequest(groupName, changeGroupName, responseListener);
+                                        ChangeMemberLimitRequest changeMemberLimitRequest = new ChangeMemberLimitRequest(groupName, changeMemberLimit, responseListener);
                                         RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
-                                        queue.add(changeGroupNameRequest);
+                                        queue.add(changeMemberLimitRequest);
                                     }
-                                    else {
-                                        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(GroupOption.this);
-                                        builder.setTitle("그룹정보 변경").setMessage("이미 사용중인 그룹이름 입니다.")
-                                                .setNegativeButton("확인", null)
-                                                .create()
-                                                .show();
-                                    }
-                                } catch (Exception e) {
+                                } catch (Exception e){
                                     e.printStackTrace();
                                 }
                             }
                         };
-                        GroupNameCheck groupNameCheck = new GroupNameCheck(changeGroupName, responseLister);
+                        MemberCountCheck memberCountCheck = new MemberCountCheck(groupName, responseListener);
                         RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
-                        queue.add(groupNameCheck);
+                        queue.add(memberCountCheck);
                     }
                 });
-
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                builder.show();
             }
         });
 
