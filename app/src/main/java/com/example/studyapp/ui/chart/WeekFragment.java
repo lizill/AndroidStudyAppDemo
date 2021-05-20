@@ -2,6 +2,7 @@ package com.example.studyapp.ui.chart;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +22,22 @@ import com.android.volley.toolbox.Volley;
 import com.example.studyapp.FirstActivity;
 import com.example.studyapp.R;
 import com.example.studyapp.ui.home.HomeFragment;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,9 +52,9 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 
-public class WeekFragment extends Fragment {
+public class WeekFragment extends Fragment implements OnChartValueSelectedListener {
 
-
+    private BarChart barChart;
     private PieChart piechart;
     private RequestQueue requestQueue;
 
@@ -52,11 +64,19 @@ public class WeekFragment extends Fragment {
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
     private DateFormat dayFormat = new SimpleDateFormat("MM월 dd일 E요일", Locale.KOREA);
 
+
+    //barchart variable
+    private float [] dateArray;
+    private float [] timeArray;
+    private float max = 0;
+
     //Information variable
-    private String allStudyTimeOnWeek,aveStudyTimeOnWeek,sumDayStartEndTerm,today;
+    private String aveStudyTimeOnWeek,today;
+    private float allStudyTimeSecOnWeek, sumDayStartEndTerm;
 
     //color setting
-    private int [] colorList = new int [] {Color.parseColor("#b0adff"), Color.parseColor("#00ccff")};
+    private int [] colorList = new int [] {Color.parseColor("#008cff"), Color.parseColor("#5056bf"), Color.parseColor("#2e38ff"),
+            Color.parseColor("#2caee6"), Color.parseColor("#30cf9c"), Color.parseColor("#4faaff"),};
 
     private String userID;
 
@@ -94,9 +114,10 @@ public class WeekFragment extends Fragment {
 
             //현재 날짜 요일 불러오기
             today = dateFormat.format(new Date());
-            String day = dayFormat.format(new Date());
 
             tv_week_date = (TextView) v.findViewById(R.id.tv_week_date);
+
+            barChart = (com.github.mikephil.charting.charts.HorizontalBarChart) v.findViewById(R.id.week_barChart);
 
             piechart = (com.github.mikephil.charting.charts.PieChart) v.findViewById(R.id.week_piechart);
             searchInfo();
@@ -107,14 +128,9 @@ public class WeekFragment extends Fragment {
     //PieChart data setting
     private void setPieChartData(){
 
-        float studyTotal = timeCastingToFloat(allStudyTimeOnWeek);
-
-        //오늘 공부 끝낸 시간 - 시작 시간 = Term
-        float termTotal = timeCastingToFloat(sumDayStartEndTerm);
-
         List<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(studyTotal, "공부"));
-        entries.add(new PieEntry(termTotal - studyTotal, "휴식"));
+        entries.add(new PieEntry(allStudyTimeSecOnWeek, "공부"));
+        entries.add(new PieEntry(sumDayStartEndTerm - allStudyTimeSecOnWeek, "휴식"));
 
         PieDataSet set = new PieDataSet(entries, "Study Information");
         set.setColors(colorList);
@@ -122,29 +138,73 @@ public class WeekFragment extends Fragment {
         piechart.setData(data);
         piechart.invalidate();
     }
-    private float timeCastingToFloat(String timeData){
-        String [] t = timeData.split(":");
-        float pieTime = 0.0f;
-        for(int i = 0; i < t.length; i++){
-            float tmp = Float.parseFloat(t[i]);
-            if(tmp > 0) {
-                switch (i) {
-                    case 0:
-                        pieTime += tmp * 3600;
-                        break;
-                    case 1:
-                        pieTime += tmp * 60;
-                        break;
-                    case 2:
-                        pieTime += tmp;
-                        break;
-                }
-            }
-        }
-        return pieTime;
+    private void createBarChartDataArray(int len){
+        dateArray = new float [len];
+        timeArray = new float [len];
     }
+    private void setBarData(){
+        barChart.setDrawBarShadow(false);
+        Description description = new Description();
+        description.setText("");
+        barChart.setDescription(description);
+        barChart.getLegend().setEnabled(false);
+        barChart.setPinchZoom(false);
+        barChart.setClickable(false);
+        barChart.setDoubleTapToZoomEnabled(false);
+        barChart.setDrawValueAboveBar(false);
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setEnabled(true);
+        xAxis.setDrawAxisLine(false);
+
+        YAxis yLeft = barChart.getAxisLeft();
+        yLeft.setAxisMaximum(max);
+        yLeft.setAxisMinimum(0f);
+        yLeft.setEnabled(false);
+
+        xAxis.setLabelCount(7);
+
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(){
+            private String [] dayslist = {"월", "화", "수", "목", "금", "토", "일"};
+            @Override
+            public String getFormattedValue(float value) {
+                return dayslist[(int)value];
+            }
+        });
+        xAxis.setTextColor(Color.parseColor("#000000"));
+
+        YAxis yRight = barChart.getAxisRight();
+        yRight.setDrawAxisLine(true);
+        yRight.setDrawGridLines(false);
+        yRight.setEnabled(false);
+
+
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        int j = 0;
+        for(int i = 0; i < 7; i++){
+            if(i == dateArray[j]){
+                barEntries.add(new BarEntry(dateArray[j], timeArray[j]));
+                j++;
+            }
+            if(j >= dateArray.length) break;
+        }
+
+        BarDataSet dataSet = new BarDataSet(barEntries, "요일별 공부");
+        dataSet.setDrawValues(false);
+
+        BarData data = new BarData(dataSet);
+        data.setBarWidth(0.5f);
+
+        barChart.animateY(1000);
+
+        barChart.setData(data);
+        barChart.invalidate();
+    }
+
     private void searchInfo(){
-        String url = String.format(Env.weekInfoURL, userID,today);
+        String url = String.format(Env.weekInfo2URL, userID,today);
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>(){
                     @Override
@@ -155,24 +215,41 @@ public class WeekFragment extends Fragment {
                             JSONArray jsonArray = jsonObject.getJSONArray("response");
                             JSONArray jsonArray2 = jsonObject.getJSONArray("response2");
                             JSONArray jsonArray3 = jsonObject.getJSONArray("response3");
+                            JSONArray jsonArray4 = jsonObject.getJSONArray("response4");
 
                             JSONObject studyObject = jsonArray.getJSONObject(0);
                             JSONObject studyObject2 = jsonArray2.getJSONObject(0);
                             JSONObject weekObject = jsonArray3.getJSONObject(0);
 
-                            allStudyTimeOnWeek = studyObject.getString("AllStudyTimeOnWeek");
+                            String allStudyTimeOnWeek = studyObject.getString("AllStudyTimeOnWeek");
                             tv_week_totalTime.setText(allStudyTimeOnWeek);
+
+                            allStudyTimeSecOnWeek = Float.parseFloat(studyObject.getString("AllStudyTimeSecOnWeek"));
 
                             aveStudyTimeOnWeek = studyObject.getString("AverageStudyTimeOnWeek");
                             tv_week_average.setText(aveStudyTimeOnWeek);
 
-                            sumDayStartEndTerm = studyObject2.getString("SumDayStartEndTerm");
+                            sumDayStartEndTerm = Float.parseFloat(studyObject2.getString("SumDayStartEndTerm"));
 
                             String firstDay = weekObject.getString("week_first_day");
                             String lastDay = weekObject.getString("week_last_day");
 
                             tv_week_date.setText(String.format("%s일 ~ %s일",firstDay,lastDay));
 
+                            int len = jsonArray4.length();
+                            createBarChartDataArray(len);
+
+                            for(int i = 0; i < len; i++){
+                                JSONObject barChartObject = jsonArray4.getJSONObject(i);
+
+                                dateArray[i] = Float.parseFloat(barChartObject.getString("study_date"));
+                                timeArray[i] = Float.parseFloat(barChartObject.getString("study_time"));
+
+                                if(max < timeArray[i])
+                                    max = timeArray[i];
+                            }
+
+                            setBarData();
                             setPieChartData();
 
                         } catch (JSONException e) {
@@ -187,5 +264,15 @@ public class WeekFragment extends Fragment {
         });
         request.setShouldCache(false);
         requestQueue.add(request);
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+
+    }
+
+    @Override
+    public void onNothingSelected() {
+
     }
 }
