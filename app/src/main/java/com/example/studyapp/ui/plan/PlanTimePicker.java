@@ -20,17 +20,11 @@ import java.util.zip.DataFormatException;
 
 public class PlanTimePicker extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener{
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        // System.out.println(hourCal(hourOfDay, minute, PlanSetPage.touch));
-        if(PlanSetPage.touch){
-            PlanSetPage.st_btn.setText(hourCal(hourOfDay, minute, true));
-        }else{
-            PlanSetPage.en_btn.setText(hourCal(hourOfDay, minute, false));
-        }
-        PlanSetPage.en_txt.setText("종료시간: "+timeCal()+" 분 동안");
-    }
 
+    /*
+     * PlanSetPage에서 버튼을 눌렀을 때 시작되는 이벤트 이 이벤트에서 timePicker를 설정함
+     * timepicker에는 현재 시간을 가져와서 몇 시 몇 분인지 선택 할 수 있게 해줌
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -43,6 +37,27 @@ public class PlanTimePicker extends DialogFragment
         timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         return timePickerDialog;
     }
+
+    /*
+     * PlanSetPage에서 시작인지 끝인지 어느 버튼을 눌렀는지에 따라
+     * 이벤트가 다르게 시작함
+     */
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        // System.out.println(hourCal(hourOfDay, minute, PlanSetPage.touch));
+        if(PlanSetPage.whoTouch){
+            PlanSetPage.st_btn.setText(hourCal(hourOfDay, minute, true));
+        }else{
+            PlanSetPage.en_btn.setText(hourCal(hourOfDay, minute, false));
+        }
+        PlanSetPage.en_txt.setText("종료시간: "+timeCal()+" 분 동안");
+    }
+
+    /*
+     * 시간을 설정하는 method 가져온 시간이 24시간으로 가져오는데 그 값을 우리가 알아먹기 쉽게
+     * 오전 00:00:00, 오후 00:00:00이런식으로 바꿔줌
+     */
+
     public static String hourCal(int hour, int min, boolean who){
         String noon ="";
         String result = "";
@@ -68,19 +83,6 @@ public class PlanTimePicker extends DialogFragment
             hour -=12;
         }
         result = who?" 부터":" 까지";
-//        if(who){
-//            if(hour<10){
-//                PlanSetPage.st_btn_text = "0"+hour+":"+min;
-//            }else{
-//                PlanSetPage.st_btn_text = hour+":"+min;
-//            }
-//        }else{
-//            if(hour<10){
-//                PlanSetPage.en_btn_text = "0"+hour+":"+min;
-//            }else{
-//                PlanSetPage.en_btn_text = hour+":"+min;
-//            }
-//        }
         result = noon+" "+hour+" : "+min+result;
 
         return result;

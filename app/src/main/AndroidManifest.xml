@@ -16,7 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.group.ChangeGroupName"></activity>
         <activity android:name=".ui.group.GroupOption" />
         <activity android:name=".ui.home.StopwatchActivity" />
         <activity
@@ -45,6 +44,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ui.group.GroupPage"
             android:parentActivityName=".HomeActivity"
             >

@@ -1,12 +1,10 @@
 package com.example.studyapp.ui.plan;
 
-import android.graphics.Color;
+import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.studyapp.HomeActivity;
 import com.example.studyapp.JSONTask;
 import com.example.studyapp.R;
 import com.example.studyapp.recycle.PlanData;
@@ -16,15 +14,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+
+
 public class PlanTask extends JSONTask {
 
-
+    /*
+     * 작업시 여러 결과 사항을 띄울 Toast
+     * 화면 하단에 띄운다.
+     */
+    private static Toast toast;
 
 
     public PlanTask(JSONObject jsonObject, String urlPath, String method) {
         super(jsonObject, urlPath, method);
     }
-
+    /*
+     * 서버와 연결하고 난 뒤 결과를 받을 때 사용하는 메소드
+     * 결과에 필요한 시작과 끝 시간을 가져와 메소드로 시간을 사람들이 읽기 쉽게 조절하여 PlanData에 저장하고
+     * 그 PLanData를 ArrayList에 넣어 recycler view로 동적으로 보여준다.
+     */
     @Override
     protected void onPostExecute(String result) {
         PlanFragment.listRemove();
@@ -33,13 +41,7 @@ public class PlanTask extends JSONTask {
             String resultNum = jsonObject.get("result").toString();
             if(resultNum.equals("1")) {
                 JSONArray array = new JSONArray(jsonObject.get("data").toString());
-                // Save user info
-                // 결과값이 result로 나옴
-//                    JSONArray array = jsonObject.get("data");
-//                    System.out.println(array);
                 for(int i = 0;i<array.length();i++){
-//                        System.out.println("#"+Integer.toHexString(i)+"3080ff");
-//                        System.out.println("분리"+i);
                     JSONObject jsO = array.getJSONObject(i);
                     int startHour =Integer.parseInt(jsO.getString("START").substring(0,2));
                     int startMin = Integer.parseInt(jsO.getString("START").substring(3,5));
@@ -49,15 +51,7 @@ public class PlanTask extends JSONTask {
                     String str = timeStr(startHour, startMin,endHour,endMin);
                     timeSet(startHour,startMin,endHour,endMin);
 
-                    PlanData planData = null;
-
-//                        planData = new PlanData(
-//                                R.drawable.p0,
-//                                jsO.getString("SUBJECT"),
-//                                jsO.getString("START")+"부터 "+jsO.getString("END")+"까지",
-//                                "#"+Integer.toHexString(i)+""+Integer.toHexString(i)+"3080ff");
-
-                    planData = new PlanData(
+                    PlanData planData = new PlanData(
                             R.drawable.p0,
                             jsO.getString("SUBJECT"),
                             str,
@@ -65,34 +59,22 @@ public class PlanTask extends JSONTask {
                     PlanFragment.recycleArrayList.add(planData);
 //                        ArrayList<PlanData> arrayList;
                 }
+//                PlanFragment.planAdapter.notifyDataSetChanged();
                 PlanFragment.fillTable();
-                PlanFragment.planAdapter.notifyDataSetChanged();
-            }else {
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-//            for(int i =0;i<arrayList.size();i++){
-//                System.out.println(arrayList.get(i).getTv_name());
-//            }
-//            System.out.println(arrayList.size());
-
-
-
+        PlanFragment.progressBar.setVisibility(View.GONE);
     }
 
 
     private void timeSet(int startHour, int startMin, int endHour, int endMin){
-//        time[][]
-//        int startTime = startHour*60+startMin;
-//        int endTime = endHour*60+endMin;
-        int totalTime = (endHour*60+endMin)-(startHour*60+startMin);
+        int totalTime = (endHour*60+endMin+1)-(startHour*60+startMin);
         if(totalTime>0){
-
             timeSetCalculator(startHour,startMin,endHour,totalTime);
         }else{
-            int startTotal = 23*60+59-(startHour*60+startMin);
+            int startTotal = 24*60-(startHour*60+startMin);
             int endTotal = endHour*60+endMin;
             timeSetCalculator(0,0,endHour,endTotal);
             timeSetCalculator(startHour,startMin,23,startTotal);
@@ -101,16 +83,11 @@ public class PlanTask extends JSONTask {
     private void timeSetCalculator(int startHour, int startMin, int endHour, int totalTime){
         for(;startHour<=endHour;startHour++){
             for(;startMin/10<PlanFragment.time[startHour].length;){
-                if(totalTime==0)return;
-                if(totalTime<10){
-                    totalTime-=totalTime;
-                    PlanFragment.time[startHour][startMin/10]+=totalTime;
-                    startMin+=totalTime;
-                }else{
-                    totalTime-=10-startMin%10;
-                    PlanFragment.time[startHour][startMin/10]+=10-startMin%10;
-                    startMin+=10-startMin%10;
-                }
+                if(totalTime<=0)return;
+                int plnum = (totalTime<10-startMin%10)?totalTime:10-startMin%10;
+                totalTime-=plnum;
+                PlanFragment.time[startHour][startMin/10]+=plnum;
+                startMin+=plnum;
             }
             startMin =0;
         }
@@ -161,7 +138,7 @@ public class PlanTask extends JSONTask {
         int st_bTime;
         if(timeStr.substring(0,2).equals("오전")&&(timeStr.substring(3,5).equals("12"))){
             // 0
-            st_bTime=(Integer.parseInt(timeStr.substring(3,5))-12)*60+Integer.parseInt(timeStr.substring(6,8));
+            st_bTime=Integer.parseInt(timeStr.substring(6,8));
         }else if(timeStr.substring(0,2).equals("오후")&&!(timeStr.substring(3,5).equals("12"))){
             // 13~23
             st_bTime=(Integer.parseInt(timeStr.substring(3,5))+12)*60+Integer.parseInt(timeStr.substring(6,8));
@@ -175,5 +152,14 @@ public class PlanTask extends JSONTask {
 
         }
         return st_bTime;
+    }
+    public static void showToast(Context context, String message) {
+
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+//        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 }
