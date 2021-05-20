@@ -151,6 +151,9 @@ public class GroupFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                     count++;
                 }
+                for (Group g : groupList) {
+                    Log.d(g.getGroup(), "그룹이름");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

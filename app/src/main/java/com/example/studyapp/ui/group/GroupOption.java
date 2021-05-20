@@ -129,7 +129,6 @@ public class GroupOption extends AppCompatActivity {
                                                         boolean success = jsonResponse.getBoolean("success");
                                                         if (success) {
                                                             Log.d("성공",":::");
-
                                                             GroupOption.super.onBackPressed();
                                                         }
                                                     } catch (Exception e){
