@@ -30,7 +30,7 @@ public class MakeGroup extends AppCompatActivity {
     private EditText groupNameEditText;
     private EditText categorySelect;
     private EditText contentsEditText;
-    public final String[] categoryArr = {"초등학교", "중학교", "고등학교", "대학교"};
+    public final static String[] categoryArr = {"초등학교", "중학교", "고등학교", "대학교"};
     private EditText goalTimeSelect;
     public final String[] goalTimeArr = new String[12];
     private int goalTime = 0;

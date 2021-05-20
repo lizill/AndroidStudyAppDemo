@@ -59,7 +59,6 @@ public class GroupOption extends AppCompatActivity {
     private TextView groupMember_TV;
 
     private TextView changeGroupName_TV;
-    private TextView changeContents_TV;
     private TextView changeMaster_TV;
     private TextView changeCategory_TV;
     private TextView changeGoalTime_TV;
@@ -67,6 +66,10 @@ public class GroupOption extends AppCompatActivity {
 
     private LinearLayout changeGroupName;
     private LinearLayout changeMemberLimit;
+    private LinearLayout changeGoalTime;
+    private LinearLayout changeCategory;
+    private LinearLayout changeContents;
+    private LinearLayout changeMaster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +88,6 @@ public class GroupOption extends AppCompatActivity {
         groupCategory_TV = findViewById(R.id.groupCategory);
         groupMember_TV = findViewById(R.id.groupMember);
 
-        changeContents_TV = findViewById(R.id.change_contents_TV);
         changeGroupName_TV = findViewById(R.id.change_groupName_TV);
         changeMaster_TV = findViewById(R.id.change_master_TV);
         changeCategory_TV = findViewById(R.id.change_category_TV);
@@ -94,6 +96,10 @@ public class GroupOption extends AppCompatActivity {
 
         changeGroupName = findViewById(R.id.change_groupName);
         changeMemberLimit = findViewById(R.id.change_memberLimit);
+        changeGoalTime = findViewById(R.id.change_goalTime);
+        changeCategory = findViewById(R.id.change_category);
+        changeContents = findViewById(R.id.change_contents);
+        changeMaster = findViewById(R.id.change_master);
 
         dropGroupButton = findViewById(R.id.dropGroup);
         groupLeaveButton = findViewById(R.id.leaveGroup);
@@ -348,6 +354,128 @@ public class GroupOption extends AppCompatActivity {
             }
         });
 
+        changeGoalTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] goalTimeArr = new String[12];
+                for(int i = 0; i < 12; i++){
+                    goalTimeArr[i] = "하루 " + (i+1) + "시간";
+                }
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(GroupOption.this);
+                builder.setTitle("목표시간 선택");
+                builder.setItems(goalTimeArr, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        goalTime = (which + 1)+"";
+                        Response.Listener<String> responseListener = new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try{
+                                    JSONObject jsonResponse = new JSONObject(response);
+                                    boolean success = jsonResponse.getBoolean("success");
+                                    if (success) {
+                                        Log.d("성공",":::");
+                                        groupGoalTime_TV.setText(goalTime + "시간");
+                                        changeGoalTime_TV.setHint(goalTime + "시간");
+                                    }
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        ChangeGoalTimeRequest changeGoalTimeRequest = new ChangeGoalTimeRequest(groupName, goalTime, responseListener);
+                        RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
+                        queue.add(changeGoalTimeRequest);
+                    }
+                });
+                builder.show();
+
+            }
+        });
+
+        changeCategory.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(GroupOption.this);
+                builder.setTitle("카테고리 선택");
+                builder.setItems(MakeGroup.categoryArr, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        category = MakeGroup.categoryArr[which];
+                        Response.Listener<String> responseListener = new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try{
+                                    JSONObject jsonResponse = new JSONObject(response);
+                                    boolean success = jsonResponse.getBoolean("success");
+                                    if (success) {
+                                        Log.d("성공",":::");
+                                        groupCategory_TV.setText(category);
+                                        changeCategory_TV.setHint(category);
+                                    }
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        ChangeCategoryRequest changeCategoryRequest = new ChangeCategoryRequest(groupName, category, responseListener);
+                        RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
+                        queue.add(changeCategoryRequest);
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        changeContents.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(GroupOption.this);
+                builder.setTitle("공지사항 변경").setMessage("공지사항");
+                final EditText contentsET = new EditText(GroupOption.this);
+                contentsET.setText(contents);
+                contentsET.setHint("변경하실 공지사항을 입력하세요.");
+                contentsET.setHeight(500);
+                builder.setView(contentsET);
+                builder.setPositiveButton("변경하기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        contents = contentsET.getText().toString();
+                        Response.Listener<String> responseListener = new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try{
+                                    JSONObject jsonResponse = new JSONObject(response);
+                                    boolean success = jsonResponse.getBoolean("success");
+                                    if (success) {
+                                        Log.d("성공",":::");
+                                    }
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        ChangeContentsRequest changeContentsRequest = new ChangeContentsRequest(groupName, contents, responseListener);
+                        RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
+                        queue.add(changeContentsRequest);
+                    }
+                });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
+
+        changeMaster.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
     @Override
     public void onBackPressed() {
@@ -405,7 +533,6 @@ public class GroupOption extends AppCompatActivity {
                     changeGroupName_TV.setHint(groupName);
 
                     contents = object.getString("contents");
-                    changeContents_TV.setHint(contents);
 
                     memberCount = object.getString("count");
 
@@ -414,7 +541,7 @@ public class GroupOption extends AppCompatActivity {
                     changeCategory_TV.setHint(category);
 
                     goalTime = object.getString("goalTime");
-                    groupGoalTime_TV.setText(goalTime);
+                    groupGoalTime_TV.setText(goalTime + "시간");
                     changeGoalTime_TV.setHint(goalTime + "시간");
 
                     master = object.getString("master");

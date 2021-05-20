@@ -22,7 +22,7 @@ import static com.example.studyapp.FirstActivity.userInfo;
 
 public class MemberRecyclerAdapter extends RecyclerView.Adapter<MemberRecyclerAdapter.ViewHolder> {
 
-    private ArrayList<MemberData> memberList;
+        private ArrayList<MemberData> memberList;
 
     public MemberRecyclerAdapter(ArrayList<MemberData> list) {
         memberList = list;
