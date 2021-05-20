@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/studytime1" />
+                    android:src="@drawable/timecolor1" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/studytime2" />
+                    android:src="@drawable/timecolor2" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/studytime3" />
+                    android:src="@drawable/timecolor3" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -74,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/studytime4" />
+                    android:src="@drawable/timecolor4" />
 
                 <TextView
                     android:layout_width="wrap_content"

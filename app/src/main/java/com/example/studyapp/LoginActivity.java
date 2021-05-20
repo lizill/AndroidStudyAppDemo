@@ -3,6 +3,7 @@ package com.example.studyapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -12,14 +13,25 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+
+import static com.example.studyapp.ui.home.HomeFragment.mSocket;
 
 public class LoginActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private EditText idET, passwordET;
     private Button loginButton;
+
+    private Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +84,25 @@ public class LoginActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void connectSocket(String userID) {
+
+        // ------------------------------------------------------------------------------------
+        // 소켓 연결
+        // ------------------------------------------------------------------------------------
+        try {
+            mSocket = IO.socket("http://132.226.20.103:9876");
+            Log.d("SOCKET", "Connection success : " + mSocket.id());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        mSocket.connect();
+
+        mSocket.on(Socket.EVENT_CONNECT, args -> {
+            mSocket.emit("login", userID);
+        });
+
+    }
+
     class LoginTask extends JSONTask {
 
         public LoginTask(JSONObject jsonObject, String urlPath, String method) {
@@ -100,6 +131,8 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, UserNameActivity.class);
                     LoginActivity.this.startActivity(intent);
                     finish();
+
+                    connectSocket(userID);
                 }
                 else {
                     negativeBuilder("회원정보를 확인해주세요.");

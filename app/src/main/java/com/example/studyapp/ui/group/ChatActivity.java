@@ -20,20 +20,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import io.socket.client.IO;
-import io.socket.client.Socket;
+import static com.example.studyapp.ui.home.HomeFragment.mSocket;
 
 public class ChatActivity extends AppCompatActivity {
 
     private String userID;
     private String roomName;
 
-    private Socket mSocket;
+//    private Socket mSocket;
     private Gson gson = new Gson();
 
     private RecyclerView recyclerView;
@@ -102,17 +100,17 @@ public class ChatActivity extends AppCompatActivity {
         // ------------------------------------------------------------------------------------
         // 소켓 연결
         // ------------------------------------------------------------------------------------
-        try {
-            mSocket = IO.socket("http://132.226.20.103:9876");
-            Log.d("SOCKET", "Connection success : " + mSocket.id());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        mSocket.connect();
+//        try {
+//            mSocket = IO.socket("http://132.226.20.103:9876");
+//            Log.d("SOCKET", "Connection success : " + mSocket.id());
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+//        mSocket.connect();
 
-        mSocket.on(Socket.EVENT_CONNECT, args -> {
-            mSocket.emit("enter", gson.toJson(new RoomData(userID, roomName, System.currentTimeMillis())));
-        });
+//        HomeFragment.mSocket.on(Socket.EVENT_CONNECT, args -> {
+//            HomeFragment.mSocket.emit("enter", gson.toJson(new RoomData(userID, roomName, System.currentTimeMillis())));
+//        });
 
         mSocket.on("update", args -> {
             MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
@@ -128,6 +126,10 @@ public class ChatActivity extends AppCompatActivity {
     // 소켓으로 json객체 전송
     private void sendMessage() {
         String content = sendText.getText().toString().trim();
+        if(content.length() >= 300) {
+            System.out.println("300자 이상은 입력 불가");
+            return;
+        }
         if(!content.equals("")) {
             long currentTime = System.currentTimeMillis();
             mSocket.emit("newMessage", gson.toJson(new MessageData(
@@ -159,12 +161,12 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     // 화면을 떠났을 때
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mSocket.emit("left", gson.toJson(new RoomData(userID, roomName, System.currentTimeMillis())));
-        mSocket.disconnect();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        HomeFragment.mSocket.emit("left", gson.toJson(new RoomData(userID, roomName, System.currentTimeMillis())));
+//        HomeFragment.mSocket.disconnect();
+//    }
 
     class MessageDataTask extends JSONTask {
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -15,6 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+
+import static com.example.studyapp.ui.home.HomeFragment.mSocket;
 
 public class FirstActivity extends AppCompatActivity {
 
@@ -104,6 +112,25 @@ public class FirstActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void connectSocket(String userID) {
+
+        // ------------------------------------------------------------------------------------
+        // 소켓 연결
+        // ------------------------------------------------------------------------------------
+        try {
+            mSocket = IO.socket("http://132.226.20.103:9876");
+            Log.d("SOCKET", "Connection success : " + mSocket.id());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        mSocket.connect();
+
+        mSocket.on(Socket.EVENT_CONNECT, args -> {
+            mSocket.emit("login", userID);
+        });
+
+    }
+
     class FirstTask extends JSONTask {
 
         public FirstTask(JSONObject jsonObject, String urlPath, String method) {
@@ -126,6 +153,8 @@ public class FirstActivity extends AppCompatActivity {
                         FirstActivity.this.startActivity(intent);
                     }
                     finish();
+
+                    connectSocket(userId);
                 } else {
                     negativeBuilder("로그인 정보를 확인해 주세요.");
                     progressBar.setVisibility(View.GONE);

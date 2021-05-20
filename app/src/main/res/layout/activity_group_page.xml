@@ -51,13 +51,12 @@
         android:padding="5dp"
         >
     </TextView>
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:text="그룹탈퇴"
-        android:id="@+id/leaveGroup"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/member_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="20dp"
-        >
-    </Button>
+        />
+
 </LinearLayout>

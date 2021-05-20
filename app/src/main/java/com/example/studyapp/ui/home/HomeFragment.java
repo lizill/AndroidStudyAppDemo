@@ -2,6 +2,7 @@ package com.example.studyapp.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +29,14 @@ import com.example.studyapp.R;
 import com.example.studyapp.recycle.HomeAdapter;
 import com.example.studyapp.recycle.HomeData;
 import com.example.studyapp.ui.chart.Env;
+import com.example.studyapp.ui.group.RoomData;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +45,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
@@ -48,9 +55,11 @@ public class HomeFragment extends Fragment {
     private Button sub1;
     private TextView tv_data;
     private RequestQueue requestQueue;
-    private String today,userID,todayStudyTime;
-    public static String TOTAL_STUDY_TIME;
-    public static boolean isWeekFragment,isMonthFragment;
+    private String today,userID;
+    public static boolean isDayFragment, isWeekFragment,isMonthFragment;
+
+    // import 해서 어디서든 사용하기!
+    public static Socket mSocket;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -78,6 +87,9 @@ public class HomeFragment extends Fragment {
         sub1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 공부 시작 시 온라인 정보를 서버로 보냄
+                mSocket.emit("start", userID);
+
                 //누른 과목 정보 보내주기
                 Intent intent = new Intent(getActivity(), StopwatchActivity.class);
                 intent.putExtra("subject", sub1.getText());
@@ -92,9 +104,9 @@ public class HomeFragment extends Fragment {
                 /*
                 onChnaged= 뷰를 눌러서 실행했을때 실행시킬 이벤트 삽입
                  */
-
             }
         });
+
         return root;
     }
     private void totalStudyTime() {
@@ -111,7 +123,7 @@ public class HomeFragment extends Fragment {
                             JSONArray jsonArray = jsonObject.getJSONArray("response");
 
                             JSONObject studyObject = jsonArray.getJSONObject(0);
-                            todayStudyTime = studyObject.getString("study_time");
+                            String todayStudyTime = studyObject.getString("study_time");
 
                             JSONObject studyObject2 = jsonArray.getJSONObject(1);
                             String study_week_time = studyObject2.getString("study_week_time");
@@ -122,19 +134,13 @@ public class HomeFragment extends Fragment {
                             if(!study_week_time.equals("null")) isWeekFragment = true;
                             if(!study_month_time.equals("null")) isMonthFragment = true;
 
-
-//                            if(todayStudyTime.equals("null")){
-//                                todayStudyTime = "00:00:00";
-//                            }else{
-//                                isDayFragment = true;
-//                            }
-//                            tv_data.setText(todayStudyTime);
-                            if(todayStudyTime.equals("null")){
-                                TOTAL_STUDY_TIME = "00:00:00";
+                            if(!todayStudyTime.equals("null")){
+                                isDayFragment = true;
                             }else{
-                                TOTAL_STUDY_TIME = todayStudyTime;
+                                todayStudyTime = "00:00:00";
                             }
-                            tv_data.setText(TOTAL_STUDY_TIME);
+
+                            tv_data.setText(todayStudyTime);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -149,4 +155,5 @@ public class HomeFragment extends Fragment {
         request.setShouldCache(false);
         requestQueue.add(request);
     }
+
 }
