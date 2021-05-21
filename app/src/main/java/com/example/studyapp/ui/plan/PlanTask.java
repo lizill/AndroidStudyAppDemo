@@ -70,7 +70,7 @@ public class PlanTask extends JSONTask {
 
 
     private void timeSet(int startHour, int startMin, int endHour, int endMin){
-        int totalTime = (endHour*60+endMin+1)-(startHour*60+startMin);
+        int totalTime = (endHour*60+endMin)-(startHour*60+startMin);
         if(totalTime>0){
             timeSetCalculator(startHour,startMin,endHour,totalTime);
         }else{
