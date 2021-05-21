@@ -108,6 +108,7 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
                                                             Intent intent = new Intent(activity,  GroupPage.class);
                                                             intent.putExtra("group", group);
                                                             activity.startActivity(intent);
+                                                            activity.finish();
                                                         }
                                                     } catch (Exception e){
                                                         e.printStackTrace();

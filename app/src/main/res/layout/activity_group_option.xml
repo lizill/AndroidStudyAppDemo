@@ -20,6 +20,8 @@
             android:text="그룹정보"
             android:background="#FFFFFF"
             android:paddingLeft="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             >
         </TextView>
         <LinearLayout
@@ -194,6 +196,8 @@
             android:text="그룹장 메뉴"
             android:background="#FFFFFF"
             android:paddingLeft="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             >
         </TextView>
         <LinearLayout
@@ -237,7 +241,7 @@
             android:background="@drawable/custom_ripple_effect_option"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:id="@+id/change_Master"
+            android:id="@+id/change_master"
             android:clickable="true"
             >
             <TextView
@@ -290,7 +294,7 @@
                 android:cursorVisible="false"
                 android:focusable="false"
                 android:gravity="right | center"
-                android:hint="공지사항"
+                android:hint=">"
                 android:textSize="18dp"
                 >
             </TextView>

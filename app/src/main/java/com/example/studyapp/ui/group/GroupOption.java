@@ -2,6 +2,7 @@ package com.example.studyapp.ui.group;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -57,13 +59,17 @@ public class GroupOption extends AppCompatActivity {
     private TextView groupMember_TV;
 
     private TextView changeGroupName_TV;
-    private TextView changeContents_TV;
     private TextView changeMaster_TV;
     private TextView changeCategory_TV;
     private TextView changeGoalTime_TV;
     private TextView changeMemberLimit_TV;
 
     private LinearLayout changeGroupName;
+    private LinearLayout changeMemberLimit;
+    private LinearLayout changeGoalTime;
+    private LinearLayout changeCategory;
+    private LinearLayout changeContents;
+    private LinearLayout changeMaster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +88,6 @@ public class GroupOption extends AppCompatActivity {
         groupCategory_TV = findViewById(R.id.groupCategory);
         groupMember_TV = findViewById(R.id.groupMember);
 
-        changeContents_TV = findViewById(R.id.change_contents_TV);
         changeGroupName_TV = findViewById(R.id.change_groupName_TV);
         changeMaster_TV = findViewById(R.id.change_master_TV);
         changeCategory_TV = findViewById(R.id.change_category_TV);
@@ -90,6 +95,11 @@ public class GroupOption extends AppCompatActivity {
         changeMemberLimit_TV = findViewById(R.id.change_memberLimit_TV);
 
         changeGroupName = findViewById(R.id.change_groupName);
+        changeMemberLimit = findViewById(R.id.change_memberLimit);
+        changeGoalTime = findViewById(R.id.change_goalTime);
+        changeCategory = findViewById(R.id.change_category);
+        changeContents = findViewById(R.id.change_contents);
+        changeMaster = findViewById(R.id.change_master);
 
         dropGroupButton = findViewById(R.id.dropGroup);
         groupLeaveButton = findViewById(R.id.leaveGroup);
@@ -218,14 +228,97 @@ public class GroupOption extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String changeGroupName = groupNameET.getText().toString();
-                        Response.Listener<String> responseLister = new Response.Listener<String>() {
+                        if(changeGroupName.isEmpty()) {
+                            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(GroupOption.this);
+                            builder.setTitle("그룹정보 변경").setMessage("그룹 이름을 입력해 주세요.")
+                                    .setNegativeButton("확인", null)
+                                    .create()
+                                    .show();
+                        } else {
+                            Response.Listener<String> responseLister = new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
+                                        JSONObject jsonResponse = new JSONObject(response);
+                                        boolean success = jsonResponse.getBoolean("success");
+                                        Log.d("success", ""+success);
+                                        if(!success) {
+                                            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try{
+                                                        JSONObject jsonResponse = new JSONObject(response);
+                                                        boolean success = jsonResponse.getBoolean("success");
+                                                        if (success) {
+                                                            Log.d("성공",":::");
+                                                            groupName = changeGroupName;
+                                                            groupName_TV.setText(changeGroupName);
+                                                            changeGroupName_TV.setHint(changeGroupName);
+                                                        }
+                                                    } catch (Exception e){
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            };
+                                            ChangeGroupNameRequest changeGroupNameRequest = new ChangeGroupNameRequest(groupName, changeGroupName, responseListener);
+                                            RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
+                                            queue.add(changeGroupNameRequest);
+                                        }
+                                        else {
+                                            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(GroupOption.this);
+                                            builder.setTitle("그룹정보 변경").setMessage("이미 사용중인 그룹이름 입니다.")
+                                                    .setNegativeButton("확인", null)
+                                                    .create()
+                                                    .show();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+                            GroupNameCheck groupNameCheck = new GroupNameCheck(changeGroupName, responseLister);
+                            RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
+                            queue.add(groupNameCheck);
+                        }
+                    }
+                });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
+
+        changeMemberLimit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] memberLimitArr = new String[49];
+                for(int i = 0; i < 49; i++){
+                    memberLimitArr[i] =(i+2) + "명";
+                }
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(GroupOption.this);
+                builder.setTitle("모집인원 선택");
+                builder.setItems(memberLimitArr, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int changeMemberLimit = which + 2;
+                        Response.Listener<String> responseListener = new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonResponse = new JSONObject(response);
-                                    boolean success = jsonResponse.getBoolean("success");
-                                    Log.d("success", ""+success);
-                                    if(!success) {
+                                try{
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    JSONArray jsonArray = jsonObject.getJSONArray("response");
+                                    jsonObject = jsonArray.getJSONObject(0);
+                                    String memberCount = jsonObject.getString("count");
+                                    Log.d("아아아아", memberCount);
+                                    Log.d(""+(Integer.parseInt(memberCount) >= changeMemberLimit), memberCount + ":" + changeMemberLimit);
+                                    if (Integer.parseInt(memberCount) > changeMemberLimit) {
+                                        Log.d("크거나 같음","불가능");
+                                        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(GroupOption.this);
+                                        builder.setTitle("그룹정보 변경").setMessage("현재 인원보다 적습니다.")
+                                                .setNegativeButton("확인", null)
+                                                .create()
+                                                .show();
+                                    } else {
                                         Response.Listener<String> responseListener = new Response.Listener<String>() {
                                             @Override
                                             public void onResponse(String response) {
@@ -234,39 +327,152 @@ public class GroupOption extends AppCompatActivity {
                                                     boolean success = jsonResponse.getBoolean("success");
                                                     if (success) {
                                                         Log.d("성공",":::");
-                                                        groupName = changeGroupName;
-                                                        groupName_TV.setText(changeGroupName);
-                                                        changeGroupName_TV.setHint(changeGroupName);
+                                                        memberLimit = changeMemberLimit + "";
+                                                        groupMember_TV.setText(memberCount + "/" + memberLimit);
+                                                        changeMemberLimit_TV.setHint(memberLimit + "명");
                                                     }
                                                 } catch (Exception e){
                                                     e.printStackTrace();
                                                 }
                                             }
                                         };
-                                        ChangeGroupNameRequest changeGroupNameRequest = new ChangeGroupNameRequest(groupName, changeGroupName, responseListener);
+                                        ChangeMemberLimitRequest changeMemberLimitRequest = new ChangeMemberLimitRequest(groupName, changeMemberLimit, responseListener);
                                         RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
-                                        queue.add(changeGroupNameRequest);
+                                        queue.add(changeMemberLimitRequest);
                                     }
-                                    else {
-                                        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(GroupOption.this);
-                                        builder.setTitle("그룹정보 변경").setMessage("이미 사용중인 그룹이름 입니다.")
-                                                .setNegativeButton("확인", null)
-                                                .create()
-                                                .show();
-                                    }
-                                } catch (Exception e) {
+                                } catch (Exception e){
                                     e.printStackTrace();
                                 }
                             }
                         };
-                        GroupNameCheck groupNameCheck = new GroupNameCheck(changeGroupName, responseLister);
+                        MemberCountCheck memberCountCheck = new MemberCountCheck(groupName, responseListener);
                         RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
-                        queue.add(groupNameCheck);
+                        queue.add(memberCountCheck);
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        changeGoalTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] goalTimeArr = new String[12];
+                for(int i = 0; i < 12; i++){
+                    goalTimeArr[i] = "하루 " + (i+1) + "시간";
+                }
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(GroupOption.this);
+                builder.setTitle("목표시간 선택");
+                builder.setItems(goalTimeArr, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        goalTime = (which + 1)+"";
+                        Response.Listener<String> responseListener = new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try{
+                                    JSONObject jsonResponse = new JSONObject(response);
+                                    boolean success = jsonResponse.getBoolean("success");
+                                    if (success) {
+                                        Log.d("성공",":::");
+                                        groupGoalTime_TV.setText(goalTime + "시간");
+                                        changeGoalTime_TV.setHint(goalTime + "시간");
+                                    }
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        ChangeGoalTimeRequest changeGoalTimeRequest = new ChangeGoalTimeRequest(groupName, goalTime, responseListener);
+                        RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
+                        queue.add(changeGoalTimeRequest);
+                    }
+                });
+                builder.show();
+
+            }
+        });
+
+        changeCategory.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(GroupOption.this);
+                builder.setTitle("카테고리 선택");
+                builder.setItems(MakeGroup.categoryArr, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        category = MakeGroup.categoryArr[which];
+                        Response.Listener<String> responseListener = new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try{
+                                    JSONObject jsonResponse = new JSONObject(response);
+                                    boolean success = jsonResponse.getBoolean("success");
+                                    if (success) {
+                                        Log.d("성공",":::");
+                                        groupCategory_TV.setText(category);
+                                        changeCategory_TV.setHint(category);
+                                    }
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        ChangeCategoryRequest changeCategoryRequest = new ChangeCategoryRequest(groupName, category, responseListener);
+                        RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
+                        queue.add(changeCategoryRequest);
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        changeContents.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(GroupOption.this);
+                builder.setTitle("공지사항 변경").setMessage("공지사항");
+                final EditText contentsET = new EditText(GroupOption.this);
+                contentsET.setText(contents);
+                contentsET.setHint("변경하실 공지사항을 입력하세요.");
+                contentsET.setHeight(500);
+                builder.setView(contentsET);
+                builder.setPositiveButton("변경하기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        contents = contentsET.getText().toString();
+                        Response.Listener<String> responseListener = new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try{
+                                    JSONObject jsonResponse = new JSONObject(response);
+                                    boolean success = jsonResponse.getBoolean("success");
+                                    if (success) {
+                                        Log.d("성공",":::");
+                                    }
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        ChangeContentsRequest changeContentsRequest = new ChangeContentsRequest(groupName, contents, responseListener);
+                        RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
+                        queue.add(changeContentsRequest);
                     }
                 });
 
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
+            }
+        });
+
+        changeMaster.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -327,7 +533,6 @@ public class GroupOption extends AppCompatActivity {
                     changeGroupName_TV.setHint(groupName);
 
                     contents = object.getString("contents");
-                    changeContents_TV.setHint(contents);
 
                     memberCount = object.getString("count");
 
@@ -336,7 +541,7 @@ public class GroupOption extends AppCompatActivity {
                     changeCategory_TV.setHint(category);
 
                     goalTime = object.getString("goalTime");
-                    groupGoalTime_TV.setText(goalTime);
+                    groupGoalTime_TV.setText(goalTime + "시간");
                     changeGoalTime_TV.setHint(goalTime + "시간");
 
                     master = object.getString("master");
