@@ -23,13 +23,26 @@ public class RankFragment extends Fragment {
         rankViewModel =
                 new ViewModelProvider(this).get(RankViewModel.class);
         View root = inflater.inflate(R.layout.fragment_rank, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
+//        final TextView textView = root.findViewById(R.id.text_notifications);
         rankViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
+//                asd
+//                textView.setText(s);
             }
         });
         return root;
     }
 }
+
+
+
+
+
+/*
+<ProgressBar
+        android:id="@+id/progress2"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:progress="25" />*/

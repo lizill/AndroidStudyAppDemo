@@ -213,6 +213,10 @@ public class PlanFragment extends Fragment {
      * 해당 table에 저장 해 둔 table을 저장된 time 2차원배열에 공부 시간에 따라 표가 색칠됨
      * 표가 색칠 된 뒤 Recycler view를 이용해 동적으로 추가함
      */
+
+    /**
+     *
+     */
     public static void fillTable(){
         for(int i = 0;i<time.length;i++){
             for(int j=0;j<time[i].length;j++){
@@ -231,6 +235,10 @@ public class PlanFragment extends Fragment {
      * recycler view에 사용되는 arraylist를 맨마지막만 하나씩 줄이고 늘여도 상관없지만
      * 만일에 중간 내용이 변할 우려를 생각해 전부 제거하고 추가하는 방식을 사용.
      * 시간 배열같은 경우엔 초기화가 필요하기 때문에 무조건 이 메소드를 돌려야 함
+     */
+
+    /**
+     *
      */
     public static void listRemove(){
         while(!recycleArrayList.isEmpty()){

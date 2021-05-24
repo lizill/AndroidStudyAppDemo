@@ -61,20 +61,12 @@ import static java.sql.DriverManager.println;
 public class PlanSetPage extends AppCompatActivity {
     private final int PERMISSIONS_REQUEST_RESULT = 1;
 
-    /*
-     * 사용자의 id와 password
-     */
+
     private String userID;
     private String userPassword;
-    /*
-     * 과목을 설정하는 edittext
-     */
+
     private EditText editText;
 
-    /*
-     * 시간을 고르는 PlanTimePicker에 사용 될 시간
-     * 시작, 끝, 어디를 선택한지 확인하는 boolean값
-     */
     public static Button st_btn;
     public static Button en_btn;
     public static TextView en_txt;
@@ -102,9 +94,7 @@ public class PlanSetPage extends AppCompatActivity {
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_RESULT);
             }
-        }//권한 요청
-
-        // 입력 값을 넣는 edittext선언
+        }
         editText = findViewById(R.id.plan_subject);
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -114,10 +104,6 @@ public class PlanSetPage extends AppCompatActivity {
             }
         });
 
-        /*
-         * Calender를 이용하여 오늘 지금 시간을 가져오고 그 시간에서 시, 분을 변수에 저장
-         * 그리고 그 값을 view에 settext로 지정한다.
-         */
         Calendar mCal = Calendar.getInstance();
         st_hour = mCal.get(Calendar.HOUR_OF_DAY);
         st_min = mCal.get(Calendar.MINUTE);
@@ -130,10 +116,6 @@ public class PlanSetPage extends AppCompatActivity {
         en_min = st_min+29;
         en_btn.setText(PlanTimePicker.hourCal(en_hour, en_min,false));
 
-        /*
-         * 위 버튼을 눌렀을 때 어느 버튼을 눌렀는지 정하고
-         * timepicker로 시간을 정함
-         */
         PlanTimePicker planTimePicker = new PlanTimePicker();
         st_btn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -160,10 +142,11 @@ public class PlanSetPage extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
-    /*
-     * 상단 액션바에 추가 된 버튼에 이벤트를 삽입
-     * 이벤트가 발동되었을 때 서버와 연결하여 가져온 값들과 내가 TimePicker를 이용하여 입력한 값을 비교해
-     * 중복되는 값을 확인하고 없다면 PlanTask를 이용해 서버와 연결하고 데이터를 보내는 메소드를 실행함
+
+    /**
+     *
+     * @param item
+     * @return
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -215,6 +198,15 @@ public class PlanSetPage extends AppCompatActivity {
      * 중복되면 1을 return
      * 시작값과 끝값이 같으면 2를 return하고
      * 결과를 통해 위 method에서 toast를 띄움
+     */
+
+    /**
+     * 
+     * @param st_hour
+     * @param st_min
+     * @param en_hour
+     * @param en_min
+     * @return
      */
     public String findDuplication(int st_hour, int st_min, int en_hour, int en_min){
         int st_time = st_hour*60+st_min;

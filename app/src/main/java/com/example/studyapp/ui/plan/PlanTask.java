@@ -28,6 +28,7 @@ public class PlanTask extends JSONTask {
     public PlanTask(JSONObject jsonObject, String urlPath, String method) {
         super(jsonObject, urlPath, method);
     }
+
     /*
      * 서버와 연결하고 난 뒤 결과를 받을 때 사용하는 메소드
      * 결과에 필요한 시작과 끝 시간을 가져와 메소드로 시간을 사람들이 읽기 쉽게 조절하여 PlanData에 저장하고
@@ -68,7 +69,13 @@ public class PlanTask extends JSONTask {
         PlanFragment.progressBar.setVisibility(View.GONE);
     }
 
-
+    /**
+     *
+     * @param startHour
+     * @param startMin
+     * @param endHour
+     * @param endMin
+     */
     private void timeSet(int startHour, int startMin, int endHour, int endMin){
         int totalTime = (endHour*60+endMin)-(startHour*60+startMin);
         if(totalTime>0){
@@ -95,7 +102,14 @@ public class PlanTask extends JSONTask {
     }
 
 
-
+    /**
+     *
+     * @param startTime
+     * @param startMin
+     * @param endTime
+     * @param endMin
+     * @return
+     */
     private String timeStr(int startTime, int startMin, int endTime, int endMin){
         String str = "";
         String startTimeStr = "";
@@ -134,6 +148,11 @@ public class PlanTask extends JSONTask {
         return str;
     }
 
+    /**
+     *
+     * @param timeStr
+     * @return
+     */
     public static int timeCal(String timeStr){
         int st_bTime;
         if(timeStr.substring(0,2).equals("오전")&&(timeStr.substring(3,5).equals("12"))){
@@ -153,6 +172,12 @@ public class PlanTask extends JSONTask {
         }
         return st_bTime;
     }
+
+    /**
+     *
+     * @param context
+     * @param message
+     */
     public static void showToast(Context context, String message) {
 
         if (toast != null) {

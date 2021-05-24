@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/maincolor</item> <!-- 액션바 -->
         <item name="colorPrimaryVariant">@color/maincolor</item>  <!-- 상태바 -->
         <item name="colorOnPrimary">@color/white</item>
-
+        <item name="android:textColor">@color/maincolor</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/maincolor</item>
         <item name="colorSecondaryVariant">@color/maincolor</item>

@@ -58,6 +58,13 @@ public class PlanTimePicker extends DialogFragment
      * 오전 00:00:00, 오후 00:00:00이런식으로 바꿔줌
      */
 
+    /**
+     *
+     * @param hour
+     * @param min
+     * @param who
+     * @return
+     */
     public static String hourCal(int hour, int min, boolean who){
         String noon ="";
         String result = "";
@@ -87,6 +94,11 @@ public class PlanTimePicker extends DialogFragment
 
         return result;
     }
+
+    /**
+     *
+     * @return
+     */
     public static String timeCal(){
         int cal_hour=PlanSetPage.en_hour-PlanSetPage.st_hour;
         int cal_min=PlanSetPage.en_min-PlanSetPage.st_min;
