@@ -36,6 +36,7 @@ public class PlanTask extends JSONTask {
      */
     @Override
     protected void onPostExecute(String result) {
+        System.out.println(result);
         PlanFragment.listRemove();
         try {
             JSONObject jsonObject = new JSONObject(result);
@@ -52,8 +53,29 @@ public class PlanTask extends JSONTask {
                     String str = timeStr(startHour, startMin,endHour,endMin);
                     timeSet(startHour,startMin,endHour,endMin);
 
+                    int picnum = 0;
+                    switch(jsO.getString("picture")){
+                        case "1":
+                            picnum = R.drawable.dhb;
+                            break;
+                        case "2":
+                            picnum = R.drawable.jys;
+                            break;
+                        case "3":
+                            picnum = R.drawable.jhj;
+                            break;
+                        case "4":
+                            picnum = R.drawable.mjj;
+                            break;
+                        case "5":
+                            picnum = R.drawable.hsj;
+                            break;
+                        default:
+                            picnum = R.drawable.p0;
+                    }
+
                     PlanData planData = new PlanData(
-                            R.drawable.p0,
+                            picnum,
                             jsO.getString("SUBJECT"),
                             str,
                             "#"+Integer.toHexString(i)+""+Integer.toHexString(i)+"3080ff");

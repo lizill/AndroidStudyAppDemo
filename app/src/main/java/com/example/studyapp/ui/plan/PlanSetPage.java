@@ -170,6 +170,7 @@ public class PlanSetPage extends AppCompatActivity {
                 jsonObject.accumulate("subject",str);
                 jsonObject.accumulate("start",st_hour+":"+st_min+":00");
                 jsonObject.accumulate("end",en_hour+":"+en_min+":00");
+                jsonObject.accumulate("picture",(int)(Math.random()*50));
 
                 PlanTask planTask = new PlanTask(jsonObject, "planInsert", "POST");
                 planTask.execute();
