@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.acl.Group;
+import java.util.Arrays;
 
 import static com.example.studyapp.FirstActivity.USER_ID;
 import static com.example.studyapp.FirstActivity.USER_NAME;
@@ -472,7 +473,54 @@ public class GroupOption extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try{
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray jsonArray = jsonObject.getJSONArray("response");
+                            String[] members = new String[jsonArray.length()];
+                            for(int i = 0; i < members.length; i++) {
+                                members[i] = jsonArray.getJSONObject(i).getString("userName");
+                            }
+                            Log.d("완성", Arrays.toString(members));
+                            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(GroupOption.this);
+                            builder.setTitle("그룹장 변경");
+                            builder.setItems(members, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String newMaster = members[which];
+                                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            try{
+                                                JSONObject jsonResponse = new JSONObject(response);
+                                                boolean success = jsonResponse.getBoolean("success");
+                                                if (success) {
+                                                    Log.d("성공",":::");
+                                                    groupMaster_TV.setText(newMaster);
+                                                    changeMaster_TV.setHint(newMaster);
+                                                    onBackPressed();
+                                                }
+                                            } catch (Exception e){
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    };
+                                    ChangeMasterRequest changeMasterRequest = new ChangeMasterRequest(groupName, newMaster, responseListener);
+                                    RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
+                                    queue.add(changeMasterRequest);
+                                }
+                            });
+                            builder.show();
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                GetMemberRequest getMemberRequest = new GetMemberRequest(groupName, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(GroupOption.this);
+                queue.add(getMemberRequest);
             }
         });
 
