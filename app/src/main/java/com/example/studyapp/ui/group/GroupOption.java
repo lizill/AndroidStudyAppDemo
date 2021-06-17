@@ -20,6 +20,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.studyapp.R;
+import com.example.studyapp.ui.home.HomeFragment;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,6 +73,8 @@ public class GroupOption extends AppCompatActivity {
     private LinearLayout changeCategory;
     private LinearLayout changeContents;
     private LinearLayout changeMaster;
+
+    private Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +135,9 @@ public class GroupOption extends AppCompatActivity {
                                         JSONObject jsonResponse = new JSONObject(response);
                                         boolean success = jsonResponse.getBoolean("success");
                                         if (success) {
+
+                                            HomeFragment.mSocket.emit("left", gson.toJson(new RoomData(userID, groupName, System.currentTimeMillis())));
+
                                             Log.d("성공",":::");
                                             Response.Listener<String> responseListener = new Response.Listener<String>() {
                                                 @Override

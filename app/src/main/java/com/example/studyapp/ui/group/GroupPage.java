@@ -98,10 +98,6 @@ public class GroupPage extends AppCompatActivity {
             }
         });
 
-        // -----------------------------------------------------------------------
-        // 재현아 이 사이에 코드좀 쓸게 1
-        // -----------------------------------------------------------------------
-
         membersData = new ArrayList<MemberData>();
 
         tz = TimeZone.getTimeZone("Asia/Seoul");
@@ -124,9 +120,6 @@ public class GroupPage extends AppCompatActivity {
         memberRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
         adapter = new MemberRecyclerAdapter(membersData);
         memberRecyclerView.setAdapter(adapter);
-        // -----------------------------------------------------------------------
-        // 재현아 이 사이에 코드좀 쓸게 1
-        // -----------------------------------------------------------------------
     }
 
     private void peopleCountDecrease() {
@@ -149,9 +142,6 @@ public class GroupPage extends AppCompatActivity {
         queue.add(peopleCountDecreaseRequest);
     }
 
-    // -----------------------------------------------------------------------
-    // 재현아 이 사이에 코드좀 쓸게 2
-    // -----------------------------------------------------------------------
     class MemberTask extends JSONTask {
 
         public MemberTask(JSONObject jsonObject, String Path, String method) {
@@ -177,9 +167,6 @@ public class GroupPage extends AppCompatActivity {
             }
         }
     }
-    // -----------------------------------------------------------------------
-    // 재현아 이 사이에 코드좀 쓸게 2
-    // -----------------------------------------------------------------------
 
     class BackgroundTask extends AsyncTask<Void, Void, String> {
 

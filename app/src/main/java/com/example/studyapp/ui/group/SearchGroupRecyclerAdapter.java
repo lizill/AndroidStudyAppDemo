@@ -18,11 +18,15 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.studyapp.R;
+import com.example.studyapp.ui.home.HomeFragment;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import io.socket.client.Socket;
 
 import static com.example.studyapp.FirstActivity.USER_ID;
 import static com.example.studyapp.FirstActivity.userInfo;
@@ -33,6 +37,8 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
     private ArrayList<Group> groupList;
     private Context mContext;
     private String userID = userInfo.getString(USER_ID,null);
+
+    private Gson gson = new Gson();
 
     public SearchGroupRecyclerAdapter(Activity activity, Context mContext, ArrayList<Group> list) {
         this.activity = activity;
@@ -103,6 +109,11 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
                                                         JSONObject jsonResponse = new JSONObject(response);
                                                         boolean success = jsonResponse.getBoolean("success");
                                                         if (success) {
+
+                                                            HomeFragment.mSocket.on(Socket.EVENT_CONNECT, args -> {
+                                                                HomeFragment.mSocket.emit("enter", gson.toJson(new RoomData(userID, group, System.currentTimeMillis())));
+                                                            });
+
                                                             Log.d("성공",":::");
                                                             peopleCountIncrease(group);
                                                             Intent intent = new Intent(activity,  GroupPage.class);
@@ -127,9 +138,6 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
                             MemberCountCheck memberCountCheck = new MemberCountCheck(group, responseListener);
                             RequestQueue queue = Volley.newRequestQueue(mContext);
                             queue.add(memberCountCheck);
-
-
-
                         }
 
                     });
