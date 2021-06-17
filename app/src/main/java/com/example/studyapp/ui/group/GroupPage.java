@@ -151,15 +151,17 @@ public class GroupPage extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             try {
+                System.out.println(result);
                 JSONObject memberObject = new JSONObject(result);
                 JSONArray jsonArray = new JSONArray(memberObject.getString("data"));
 
                 for(int i=0; i<jsonArray.length(); i++) {
                     JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
-                    String userID = jsonObject.getString("userID");
+                    System.out.println(jsonObject.toString());
+                    String userName = jsonObject.getString("userName");
                     String totalTime = jsonObject.getString("total_study_time");
                     String online = jsonObject.getString("online");
-                    membersData.add(new MemberData(group, userID, totalTime, online));
+                    membersData.add(new MemberData(group, userName, totalTime, online));
                 }
                 adapter.notifyDataSetChanged();
             } catch (JSONException e) {

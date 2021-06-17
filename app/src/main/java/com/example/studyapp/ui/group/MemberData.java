@@ -2,13 +2,13 @@ package com.example.studyapp.ui.group;
 
 public class MemberData {
     private String roomName;
-    private String userId;
+    private String userName;
     private String totalTime;
     private String online;
 
-    public MemberData(String roomName, String userId, String totalTime, String online) {
+    public MemberData(String roomName, String userName, String totalTime, String online) {
         this.roomName = roomName;
-        this.userId = userId;
+        this.userName = userName;
         this.totalTime = totalTime;
         this.online = online;
     }
@@ -22,11 +22,11 @@ public class MemberData {
     }
 
     public String getUserId() {
-        return userId;
+        return userName;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        this.userName = userId;
     }
 
     public String getTotalTime() {
