@@ -1,5 +1,6 @@
 package com.example.studyapp.recycle;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,13 +49,12 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.CustomViewHold
         holder.tv_rank_pf.setText(arrayList.get(position).getTv_rank_pf());
         holder.tv_rank_time.setText(arrayList.get(position).getTv_rank_time());
         holder.pb_rank_progress.setProgress(arrayList.get(position).getPb_rank_progress());
-        holder.iv_rank_studying.setImageResource(arrayList.get(position).getIv_rank_studying());
+//        holder.iv_rank_studying.setImageResource(arrayList.get(position).getIv_rank_studying());
+        holder.iv_rank_studying.setImageResource(R.drawable.member_image);
+        if(arrayList.get(position).getIv_rank_studying()==1){
+            holder.iv_rank_studying.setColorFilter(Color.parseColor("#3080FF"));
+        }
 
-//        this.rv_rank_pf = (TextView) itemView.findViewById(R.id.rank_pf);
-//        this.rv_rank_name = (TextView) itemView.findViewById(R.id.rank_name);
-//        this.rv_rank_time = (TextView) itemView.findViewById(R.id.rank_time);
-//        this.rv_rank_progress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
-//        this.rv_rank_studying = (ImageView) itemView.findViewById(R.id.rank_studying);
 
 
         holder.itemView.setTag(position);

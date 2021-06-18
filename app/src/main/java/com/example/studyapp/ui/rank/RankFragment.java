@@ -161,17 +161,14 @@ public class RankFragment extends Fragment {
                                         tv_time = root.findViewById(R.id.ranking_3_time);
                                         break;
                                     default:
+                                        int online = jo.getInt("online");
 
-//                                        static ArrayList<RankData> recycleArrayList;
-//                                        static RankAdapter rankAdapter;
-//                                        private RecyclerView recyclerView;
-//                                        private LinearLayoutManager linearLayoutManager;
                                         RankData rankData = new RankData(
                                                 jo.getString("Ranking"),
                                                 name,
                                                 joTotalTime,
                                                 ((timeSecond*100)/first)>0?(timeSecond*100)/first:1,
-                                                R.drawable.member_image);
+                                                online);
                                         recycleArrayList.add(rankData);
                                         continue;
                                 }
