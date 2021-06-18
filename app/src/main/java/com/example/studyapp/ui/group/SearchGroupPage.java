@@ -4,10 +4,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
@@ -40,6 +43,8 @@ public class SearchGroupPage extends AppCompatActivity {
     private ArrayList<Group> groupList;
     private String userID;
     private Button makeGroupButton;
+    private EditText searchName_ET;
+    private String searchName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,24 @@ public class SearchGroupPage extends AppCompatActivity {
             }
         });
 
+        searchName_ET = findViewById(R.id.searchName_ET);
+        searchName_ET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchName = s.toString();
+                new BackgroundTask().execute();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         new BackgroundTask().execute();
     }
 
@@ -75,7 +98,7 @@ public class SearchGroupPage extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... voids) {
             try {
-                String link = "https://www.dong0110.com/chatphp/SearchGroup.php?userID=" + userID;
+                String link = "https://www.dong0110.com/chatphp/SearchGroup.php?userID=" + userID  + "&searchName=" + searchName;
                 URL url = new URL(link);
                 HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                 InputStream inputStream = httpURLConnection.getInputStream();
@@ -103,6 +126,9 @@ public class SearchGroupPage extends AppCompatActivity {
         @Override
         public void onPostExecute(String result) {
             try {
+                int size = groupList.size();
+                groupList.clear();
+                adapter.notifyItemRangeRemoved(0, size);
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
                 Log.d("응답", ""+jsonArray.length());

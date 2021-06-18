@@ -98,10 +98,6 @@ public class GroupPage extends AppCompatActivity {
             }
         });
 
-        // -----------------------------------------------------------------------
-        // 재현아 이 사이에 코드좀 쓸게 1
-        // -----------------------------------------------------------------------
-
         membersData = new ArrayList<MemberData>();
 
         tz = TimeZone.getTimeZone("Asia/Seoul");
@@ -124,9 +120,6 @@ public class GroupPage extends AppCompatActivity {
         memberRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
         adapter = new MemberRecyclerAdapter(membersData);
         memberRecyclerView.setAdapter(adapter);
-        // -----------------------------------------------------------------------
-        // 재현아 이 사이에 코드좀 쓸게 1
-        // -----------------------------------------------------------------------
     }
 
     private void peopleCountDecrease() {
@@ -149,9 +142,6 @@ public class GroupPage extends AppCompatActivity {
         queue.add(peopleCountDecreaseRequest);
     }
 
-    // -----------------------------------------------------------------------
-    // 재현아 이 사이에 코드좀 쓸게 2
-    // -----------------------------------------------------------------------
     class MemberTask extends JSONTask {
 
         public MemberTask(JSONObject jsonObject, String Path, String method) {
@@ -161,15 +151,17 @@ public class GroupPage extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             try {
+                System.out.println(result);
                 JSONObject memberObject = new JSONObject(result);
                 JSONArray jsonArray = new JSONArray(memberObject.getString("data"));
 
                 for(int i=0; i<jsonArray.length(); i++) {
                     JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
-                    String userID = jsonObject.getString("userID");
+                    System.out.println(jsonObject.toString());
+                    String userName = jsonObject.getString("userName");
                     String totalTime = jsonObject.getString("total_study_time");
                     String online = jsonObject.getString("online");
-                    membersData.add(new MemberData(group, userID, totalTime, online));
+                    membersData.add(new MemberData(group, userName, totalTime, online));
                 }
                 adapter.notifyDataSetChanged();
             } catch (JSONException e) {
@@ -177,9 +169,6 @@ public class GroupPage extends AppCompatActivity {
             }
         }
     }
-    // -----------------------------------------------------------------------
-    // 재현아 이 사이에 코드좀 쓸게 2
-    // -----------------------------------------------------------------------
 
     class BackgroundTask extends AsyncTask<Void, Void, String> {
 

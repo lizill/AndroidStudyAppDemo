@@ -78,7 +78,7 @@ public class GroupFragment extends Fragment {
                 swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        onResume();
+                        new BackgroundTask().execute();
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 });
@@ -90,9 +90,6 @@ public class GroupFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        int size = groupList.size();
-        groupList.clear();
-        adapter.notifyItemRangeRemoved(0, size);
         new BackgroundTask().execute();
     }
 
@@ -133,6 +130,9 @@ public class GroupFragment extends Fragment {
         @Override
         public void onPostExecute(String result) {
             try {
+                int size = groupList.size();
+                groupList.clear();
+                adapter.notifyItemRangeRemoved(0, size);
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
                 if(jsonArray.length() == 0) return;

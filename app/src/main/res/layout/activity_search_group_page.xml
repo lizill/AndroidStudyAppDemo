@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.group.SearchGroupPage"
+    android:orientation="vertical"
+    >
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="  검색"
+        android:id="@+id/searchName_ET"
+        android:background="@null"
+        >
+    </EditText>
+    <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:padding="10dp"
     android:background="#F5F5F5"
-    >
-
+        >
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,4 +41,5 @@
         android:layout_marginBottom="10dp"
         >
     </Button>
-</FrameLayout>
+    </FrameLayout>
+</LinearLayout>
