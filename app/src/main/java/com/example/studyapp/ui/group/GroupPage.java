@@ -72,6 +72,8 @@ public class GroupPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_page);
 
+        getSupportActionBar().setTitle("Group");
+
         Intent intent = getIntent();
         userID = userInfo.getString(USER_ID, null);
         group = intent.getStringExtra("group");

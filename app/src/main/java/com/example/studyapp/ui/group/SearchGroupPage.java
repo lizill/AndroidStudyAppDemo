@@ -51,6 +51,8 @@ public class SearchGroupPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_group_page);
 
+        getSupportActionBar().setTitle("Group");
+
         userID = userInfo.getString(USER_ID,null);
         groupList = new ArrayList<Group>();
         groupRecyclerView = findViewById(R.id.searchGroupRecyclerView);

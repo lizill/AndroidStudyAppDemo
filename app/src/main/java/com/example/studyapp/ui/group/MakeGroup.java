@@ -46,6 +46,8 @@ public class MakeGroup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_group);
 
+        getSupportActionBar().setTitle("Group");
+
         userID = userInfo.getString(USER_ID,null);
         userName = userInfo.getString(USER_NAME, null);
 

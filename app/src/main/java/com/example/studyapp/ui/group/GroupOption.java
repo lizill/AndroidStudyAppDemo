@@ -81,6 +81,8 @@ public class GroupOption extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_option);
 
+        getSupportActionBar().setTitle("Group");
+
         Intent intent = getIntent();
         userID = userInfo.getString(USER_ID, null);
         userName = userInfo.getString(USER_NAME, null);
