@@ -126,8 +126,8 @@ public class SearchGroupPage extends AppCompatActivity {
         @Override
         public void onPostExecute(String result) {
             try {
-                groupList.clear();
                 int size = groupList.size();
+                groupList.clear();
                 adapter.notifyItemRangeRemoved(0, size);
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
