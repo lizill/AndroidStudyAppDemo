@@ -50,8 +50,8 @@ public class PlanTask extends JSONTask {
                     int endHour =Integer.parseInt(jsO.getString("END").substring(0,2));
                     int endMin =Integer.parseInt(jsO.getString("END").substring(3,5));
 
-                    String str = timeStr(startHour, startMin,endHour,endMin);
-                    timeSet(startHour,startMin,endHour,endMin);
+                    String str = timeStr(startHour, startMin,endHour,endMin+1);
+                    timeSet(startHour,startMin,endHour,endMin+1);
 
                     int picnum = 0;
                     switch(jsO.getString("picture")){
