@@ -12,6 +12,53 @@
         android:background="@null"
         >
     </EditText>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="* 카테고리 선택"
+        android:layout_gravity="center"
+        >
+    </TextView>
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        >
+        <TableRow>
+            <CheckBox
+                android:id="@+id/university"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="대학교"
+                android:checked="true"
+                >
+            </CheckBox>
+            <CheckBox
+                android:id="@+id/highSchool"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="고등학교"
+                android:checked="true"
+                >
+            </CheckBox>
+            <CheckBox
+                android:id="@+id/middleSchool"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="중학교"
+                android:checked="true"
+                >
+            </CheckBox>
+            <CheckBox
+                android:id="@+id/elementarySchool"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="초등학교"
+                android:checked="true"
+                >
+            </CheckBox>
+        </TableRow>
+    </TableLayout>
     <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"

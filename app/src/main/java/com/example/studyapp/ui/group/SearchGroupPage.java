@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -45,6 +46,14 @@ public class SearchGroupPage extends AppCompatActivity {
     private Button makeGroupButton;
     private EditText searchName_ET;
     private String searchName = "";
+    private CheckBox university_CB;
+    private CheckBox highSchool_CB;
+    private CheckBox middleSchool_CB;
+    private CheckBox elementarySchool_CB;
+    private String university = "대학교";
+    private String highSchool = "고등학교";
+    private String middleSchool = "중학교";
+    private String elementarySchool = "초등학교";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +97,58 @@ public class SearchGroupPage extends AppCompatActivity {
             }
         });
 
+        university_CB = findViewById(R.id.university);
+        university_CB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(university_CB.isChecked()) {
+                    university = "대학교";
+                } else {
+                    university = "";
+                }
+                new BackgroundTask().execute();
+            }
+        });
+
+        highSchool_CB = findViewById(R.id.highSchool);
+        highSchool_CB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(highSchool_CB.isChecked()) {
+                    highSchool = "고등학교";
+                } else {
+                    highSchool = "";
+                }
+                new BackgroundTask().execute();
+            }
+        });
+
+        middleSchool_CB = findViewById(R.id.middleSchool);
+        middleSchool_CB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(middleSchool_CB.isChecked()) {
+                    middleSchool = "중학교";
+                } else {
+                    middleSchool = "";
+                }
+                new BackgroundTask().execute();
+            }
+        });
+
+        elementarySchool_CB = findViewById(R.id.elementarySchool);
+        elementarySchool_CB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(elementarySchool_CB.isChecked()) {
+                    elementarySchool = "초등학교";
+                } else {
+                    elementarySchool = "";
+                }
+                new BackgroundTask().execute();
+            }
+        });
+
         new BackgroundTask().execute();
     }
 
@@ -100,7 +161,7 @@ public class SearchGroupPage extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... voids) {
             try {
-                String link = "https://www.dong0110.com/chatphp/SearchGroup.php?userID=" + userID  + "&searchName=" + searchName;
+                String link = "https://www.dong0110.com/chatphp/SearchGroup.php?userID=" + userID  + "&searchName=" + searchName + "&university=" + university + "&highSchool=" + highSchool + "&middleSchool=" + middleSchool + "&elementarySchool=" + elementarySchool;
                 URL url = new URL(link);
                 HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                 InputStream inputStream = httpURLConnection.getInputStream();
