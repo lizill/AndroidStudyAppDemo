@@ -149,13 +149,7 @@ public class ChartFragment extends Fragment {
 
         viewPager2.setAdapter(new PagerAdapter(getActivity()));
 
-        if(HomeFragment.isDayFragment){
-            setCreateTabLayout(new Fragment[] {new DayFragment(today,1), new WeekFragment(today,1), new MonthFragment(today,1)});
-        }else{
-            setCreateTabLayout(new Fragment[] {new DayFragment(today,0), new WeekFragment(today,0), new MonthFragment(today,0)});
-        }
-
-
+        setStartTabLayout(today);
         chartViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -163,6 +157,29 @@ public class ChartFragment extends Fragment {
         });
         return root;
     }
+    private void setStartTabLayout(String today){
+        DayFragment dayFragment= null;
+        WeekFragment weekFragment = null;
+        MonthFragment monthFragment = null;
+
+        if(HomeFragment.isDayFragment){
+            dayFragment = new DayFragment(today, 1);
+        }else{
+            dayFragment = new DayFragment(today, 0);
+        }
+        if(HomeFragment.isWeekFragment){
+            weekFragment = new WeekFragment(today, 1);
+        }else{
+            weekFragment = new WeekFragment(today, 0);
+        }
+        if(HomeFragment.isMonthFragment){
+            monthFragment = new MonthFragment(today, 1);
+        }else{
+            monthFragment = new MonthFragment(today, 0);
+        }
+        setCreateTabLayout(new Fragment[] {dayFragment,weekFragment,monthFragment});
+    }
+
     private void setCreateTabLayout(Fragment [] fragments){
         PagerAdapter pagerAdapter2 = new PagerAdapter(getActivity());
         for(Fragment frag : fragments){

@@ -131,6 +131,7 @@ public class HomeFragment extends Fragment {
                             String study_month_time = studyObject3.getString("study_month_time");
 
                             if(!study_week_time.equals("null")) isWeekFragment = true;
+                            System.out.println("isWeekFragment : " + study_week_time);
                             if(!study_month_time.equals("null")) isMonthFragment = true;
 
                             if(!todayStudyTime.equals("null")){

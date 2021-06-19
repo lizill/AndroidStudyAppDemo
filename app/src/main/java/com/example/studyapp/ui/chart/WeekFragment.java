@@ -96,7 +96,7 @@ public class WeekFragment extends Fragment {
         //data exist ? DayFragment : NoneFragment
         View v = null;
 
-        if(!HomeFragment.isWeekFragment | idx == 0){
+        if(idx == 0){
             v = inflater.inflate(R.layout.fragment_nonpage, container, false);
         }else{
             v = inflater.inflate(R.layout.fragment_week, container, false);
