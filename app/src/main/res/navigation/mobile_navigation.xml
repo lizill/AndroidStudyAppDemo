@@ -9,7 +9,7 @@
         android:id="@+id/navigation_chart"
         android:name="com.example.studyapp.ui.chart.ChartFragment"
         android:label="@string/title_chart"
-        tools:layout="@layout/fragment_chart" />
+        tools:layout="@layout/activity_chart" />
 
     <fragment
         android:id="@+id/navigation_plan"
@@ -36,7 +36,7 @@
     <fragment
         android:id="@+id/navigation_group"
         android:name="com.example.studyapp.ui.group.GroupFragment"
-        android:label="@string/title_rank"
+        android:label="@string/title_group"
         tools:layout="@layout/fragment_group" >
                 <action
                     android:id="@+id/home_action"
