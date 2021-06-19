@@ -52,9 +52,10 @@ class StudyDate implements DayViewDecorator {
     public void decorate(DayViewFacade view) {
         String [] tmp = studyTime.split(":");
         int hour = Integer.parseInt(tmp[0]);
+        int minute = Integer.parseInt(tmp[1]);
         int second = Integer.parseInt(tmp[2]);
         //공부시간에 따라서 색깔 변화 준다.
-        if(second > 0 && hour < 2){
+        if(hour < 2 && (second > 0 || minute > 0)){
             view.setBackgroundDrawable(drawables.get(0));
         }else if(hour >= 2 && hour < 4){
             view.setBackgroundDrawable(drawables.get(1));

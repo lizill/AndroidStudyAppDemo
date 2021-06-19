@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
@@ -21,16 +22,22 @@ import com.example.studyapp.R;
 import com.example.studyapp.ui.home.HomeFragment;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.google.android.material.transition.MaterialSharedAxis;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +50,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.TimeZone;
 
 
@@ -102,78 +110,76 @@ public class MonthFragment extends Fragment {
             tv_month_date = (TextView) v.findViewById(R.id.tv_month_date);
             tv_month_date.setText(Integer.parseInt(today.split("-")[1]) + "월");
 
-            barChart = (com.github.mikephil.charting.charts.HorizontalBarChart) v.findViewById(R.id.month_barChart);
-
+            barChart = (com.github.mikephil.charting.charts.BarChart) v.findViewById(R.id.month_barChart);
             piechart = (com.github.mikephil.charting.charts.PieChart) v.findViewById(R.id.month_piechart);
             searchInfo();
         }
         return v;
     }
-    private void setBarData(){
-        barChart.setDrawBarShadow(false);
+    private void setBarChartData(){
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        int j = 0;
+        entries.add(new BarEntry(0, 0));
+        for(int i = 1; i <= 31; i++){
+            if(j < dateArray.length){
+                if(dateArray[j] == i){
+                    entries.add(new BarEntry(i, timeArray[j]));
+                    j++;
+                }else{
+                    entries.add(new BarEntry(i, 0));
+                }
+            }else{
+                entries.add(new BarEntry(i, 0));
+            }
+        }
         Description description = new Description();
-        description.setText("");
+        description.setEnabled(false);
         barChart.setDescription(description);
-        barChart.getLegend().setEnabled(false);
+        barChart.setMaxVisibleValueCount(32);
         barChart.setPinchZoom(false);
-        barChart.setClickable(false);
-        barChart.setDoubleTapToZoomEnabled(false);
-        barChart.setDrawValueAboveBar(false);
-
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setDrawGridLines(false);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setEnabled(true);
-        xAxis.setDrawAxisLine(false);
+        barChart.setDrawBarShadow(false);
+        barChart.setDrawGridBackground(false);
 
         YAxis yLeft = barChart.getAxisLeft();
-        yLeft.setAxisMaximum(max);
-        yLeft.setAxisMinimum(0f);
-        yLeft.setEnabled(false);
+        yLeft.setAxisMaximum(max); //어디 위치에 선을 그리기 위해 10f로 맥시멈을 정함
+        yLeft.setAxisMinimum(1f); //최소값 0
 
-        xAxis.setLabelCount(31, true);
-        xAxis.setAxisMinimum(0);
-        xAxis.setAxisMaximum(31);
+        yLeft.setDrawAxisLine(false);
+//        yLeft.setEnabled(false);
+        yLeft.setDrawAxisLine(true);
+        yLeft.setDrawLabels(false);
 
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(){
-            private String [] dateslist = new String [31];
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(0f);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setDrawGridLines(false);
+        xAxis.setValueFormatter(new ValueFormatter() {
+            private String [] days = new String [32];
             {
-                for(int i = 0; i <dateslist.length; i++){
-                    dateslist[i] = i+1 + "";
+                for(int i = 0; i <= 31; i++){
+                    days[i] = i +"";
                 }
             }
             @Override
             public String getFormattedValue(float value) {
-                return dateslist[(int)value];
+                return days[(int) value];
             }
         });
-        xAxis.setTextColor(Color.parseColor("#000000"));
 
-        YAxis yRight = barChart.getAxisRight();
-        yRight.setDrawAxisLine(true);
-        yRight.setDrawGridLines(false);
-        yRight.setEnabled(false);
-
-        xAxis.setGranularity(1f);
-        xAxis.setGranularityEnabled(true);
-        ArrayList<BarEntry> barEntries = new ArrayList<>();
-        int j = 0;
-        for(int i = 0; i < 31; i++){
-            if(i == dateArray[j]){
-                barEntries.add(new BarEntry(dateArray[j], timeArray[j]));
-                j++;
-            }
-            if(j >= dateArray.length) break;
-        }
-
-        BarDataSet dataSet = new BarDataSet(barEntries, "날짜별 공부");
-        dataSet.setDrawValues(false);
-
-        BarData data = new BarData(dataSet);
-        data.setBarWidth(0.1f);
-
+        barChart.getAxisRight().setEnabled(false);
+        barChart.setTouchEnabled(false);
         barChart.animateY(1000);
+        barChart.getLegend().setEnabled(false);
+
+        BarDataSet barDataSet = new BarDataSet(entries, "DataSet");
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(barDataSet);
+        BarData data = new BarData(dataSets);
+        data.setBarWidth(0.4f);
+
         barChart.setData(data);
+        barChart.setFitBars(false);
         barChart.invalidate();
     }
     //PieChart data setting
@@ -235,7 +241,7 @@ public class MonthFragment extends Fragment {
                                 if(max < timeArray[i])
                                     max = timeArray[i];
                             }
-                            setBarData();
+                            setBarChartData();
                             setPieChartData();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -250,4 +256,5 @@ public class MonthFragment extends Fragment {
         request.setShouldCache(false);
         requestQueue.add(request);
     }
+
 }
