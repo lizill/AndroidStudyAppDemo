@@ -364,6 +364,12 @@ public class StopwatchActivity extends AppCompatActivity {
 
         isActiveOn = false;
         handler.removeCallbacks(runnable);
+        if(isFirst){
+            InsertData();
+            isFirst = false;
+        }else{
+            UpdateData();
+        }
         termTime = SystemClock.uptimeMillis();
     }
 

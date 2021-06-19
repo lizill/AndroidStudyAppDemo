@@ -94,7 +94,6 @@ public class HomeFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), StopwatchActivity.class);
                 intent.putExtra("subject", sub1.getText());
                 startActivity(intent);
-
             }
         });
 
