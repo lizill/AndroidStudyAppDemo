@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,12 +46,12 @@ import com.example.studyapp.FirstActivity;
 public class StopwatchActivity extends AppCompatActivity {
 
     private TextView textView ;
-    private Button back_btn;
+    private ImageButton back_btn;
     private long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     private Handler handler;
-    private int Seconds, Minutes, MilliSeconds, Hours, tmp, t, hour, min, sec;
+    private int Seconds, Minutes, MilliSeconds, Hours, tmp, t, hour, min, sec, allhour,allmin,allsec,at,ahour,amin,asec;
     private String today,userID,start,end;
-    public static String  subject;
+    public static String subject;
     private boolean isFirst = false;
 
     //현재 날짜 불러오기
@@ -63,7 +64,8 @@ public class StopwatchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stopwatch);textView = (TextView)findViewById(R.id.textView);
+        setContentView(R.layout.activity_stopwatch);
+        textView = (TextView)findViewById(R.id.tv_subject_timer);
 
         userID = FirstActivity.userInfo.getString("userId", null);
 
@@ -87,7 +89,7 @@ public class StopwatchActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(getApplication());
         searchStudyTimeToday();
 
-        back_btn = (Button)findViewById(R.id.back_btn);
+        back_btn = (ImageButton)findViewById(R.id.back_btn);
 
         handler = new Handler() ;
         StartTime = SystemClock.uptimeMillis();
@@ -99,12 +101,7 @@ public class StopwatchActivity extends AppCompatActivity {
                 Intent intent = new Intent(StopwatchActivity.this, HomeActivity.class);
                 startActivity(intent);
 
-                if(isFirst){
-//                    InsertData();
-                    isFirst = false;
-                }else{
-                    UpdateData();
-                }
+
                 handler.removeCallbacks(runnable);
 
                 end = timeFormat.format(new Date());
@@ -176,12 +173,20 @@ public class StopwatchActivity extends AppCompatActivity {
         })  {
             @Override
             protected Map<String, String> getParams() {
+                int updateTime = (hour*3600+min*60+sec)-(Hours*3600+Minutes*60+Seconds);
+                int newHour = updateTime /3600;
+                updateTime %=3600;
+                int newMin = updateTime/60;
+                updateTime %=60;
+                int newSec = updateTime;
+                String newTime = String.format("%02d", newHour) + ":" + String.format("%02d", newMin) + ":" + String.format("%02d", newSec);
+                System.out.println(newTime);
                 String time = textView.getText().toString().replace(":","");
                 Map<String,String> params = new HashMap<>();
                 params.put("userID", userID);
                 params.put("study_date", today);
                 params.put("study_subject", subject);
-                params.put("study_time", time);
+                params.put("study_time", newTime);
                 return params;
             }
         };
@@ -210,13 +215,21 @@ public class StopwatchActivity extends AppCompatActivity {
         })  {
             @Override
             protected Map<String, String> getParams() {
+                int updateTime = (hour*3600+min*60+sec)-(Hours*3600+Minutes*60+Seconds);
+                int newHour = updateTime /3600;
+                updateTime %=3600;
+                int newMin = updateTime/60;
+                updateTime %=60;
+                int newSec = updateTime;
+                String newTime = String.format("%02d", newHour) + ":" + String.format("%02d", newMin) + ":" + String.format("%02d", newSec);
+//                private int Seconds, Minutes, MilliSeconds, Hours, tmp, t, hour, min, sec, allhour,allmin,allsec,at,ahour,amin,asec;
                 String time = textView.getText().toString().replace(":","");
                 System.out.println(userID + " " + today + " " + subject + " " + time);
                 Map<String,String> params = new HashMap<>();
                 params.put("userID", userID);
                 params.put("study_date", today);
                 params.put("study_subject", subject);
-                params.put("study_time", time);
+                params.put("study_time", newTime);
                 return params;
             }
         };
@@ -239,7 +252,21 @@ public class StopwatchActivity extends AppCompatActivity {
                             JSONArray jsonArray = jsonObject.getJSONArray("response");
                             JSONObject studyObject = jsonArray.getJSONObject(0);
                             String studyTime = studyObject.getString("study_time");
+                            int totalTime = 0;
+                            try {
+                                totalTime = Integer.parseInt(jsonArray.getJSONObject(1).getString("study_total_time"));
+                            }catch(Exception error){
 
+                            }
+
+                            allhour = totalTime/3600;
+                            allmin = (totalTime%3600)/60;
+                            allsec = (totalTime%3600)%60;
+                            String formatedTime = String.format("%02d", allhour) + ":" + String.format("%02d", allmin) + ":" + String.format("%02d", allsec);
+                            TextView allTime = findViewById(R.id.tv_total_timer);
+                            allTime.setText(formatedTime);
+                            System.out.println(formatedTime);
+//                            String.format("%02d", totalTime_hour) + ":" + String.format("%02d", totalTime_min) + ":" + String.format("%02d", totalTime_sec)
                             if(!studyTime.equals("null")){
                                 convertToTime(studyTime);
                             }else{
@@ -266,6 +293,7 @@ public class StopwatchActivity extends AppCompatActivity {
         Seconds = Integer.parseInt(time[2]);
     }
     public Runnable runnable = new Runnable() {
+        //인덱스
         public void run() {
             MillisecondTime = SystemClock.uptimeMillis() - StartTime;
 
@@ -274,13 +302,39 @@ public class StopwatchActivity extends AppCompatActivity {
             //시간의 흐름
             tmp = (int)(UpdateTime / 1000);
             t = Seconds + tmp;
+             at = allsec + tmp;
             hour = Hours + t / 3600;
+            ahour = allhour + at/3600;
             t %= 3600;
+            at%=3600;
             min = Minutes + t / 60;
+            amin = allmin+at/60;
             t %= 60;
+            at %= 60;
             sec = t;
-
+            asec = at;
             MilliSeconds = (int) (UpdateTime % 1000);
+
+
+            TextView allTime = findViewById(R.id.tv_total_timer);
+//            String oldAllTime = allTime.getText().toString();
+//            String[] time = oldAllTime.split(":");
+//            int oldhour = Integer.parseInt(time[0]);
+//            int oldmin = Integer.parseInt(time[1]);
+//            int oldsec = Integer.parseInt(time[2]);
+//            oldsec+=(tmp%3600)%60;
+//            if(oldsec>=60){
+//                oldsec = 0;
+//                oldmin++;
+//                if(oldmin>=60){
+//                    oldmin=0;
+//                    oldhour++;
+//                }
+//            }
+            String formatedTime = String.format("%02d", ahour) + ":" + String.format("%02d", amin) + ":" + String.format("%02d", asec);
+            allTime.setText(formatedTime);
+
+
 
             //String format을 통한 시간 대입
             textView.setText(String.format("%02d", hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec));

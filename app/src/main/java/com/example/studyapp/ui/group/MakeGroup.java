@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,13 +30,13 @@ public class MakeGroup extends AppCompatActivity {
     private EditText groupNameEditText;
     private EditText categorySelect;
     private EditText contentsEditText;
-    public final String[] categoryArr = {"초등학교", "중학교", "고등학교", "대학교"};
+    public final static String[] categoryArr = {"초등학교", "중학교", "고등학교", "대학교"};
     private EditText goalTimeSelect;
     public final String[] goalTimeArr = new String[12];
     private int goalTime = 0;
-    private EditText personCountSelect;
-    public final String[] personCountArr = new String[49];
-    private int personCount = 0;
+    private EditText memberLimitSelect;
+    public final String[] memberLimitArr = new String[49];
+    private int memberLimit = 0;
     private Button makeGroupButton;
     private String userName;
 
@@ -44,6 +45,8 @@ public class MakeGroup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_group);
+
+        getSupportActionBar().setTitle("Group");
 
         userID = userInfo.getString(USER_ID,null);
         userName = userInfo.getString(USER_NAME, null);
@@ -89,21 +92,21 @@ public class MakeGroup extends AppCompatActivity {
             }
         });
 
-        personCountSelect = findViewById(R.id.personCount);
+        memberLimitSelect = findViewById(R.id.personCount);
         for(int i = 0; i < 49; i++){
-            personCountArr[i] =(i+2) + "명";
+            memberLimitArr[i] =(i+2) + "명";
         }
-        personCountSelect.setOnClickListener(new View.OnClickListener() {
+        memberLimitSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MakeGroup.this);
                 builder.setTitle("모집인원 선택");
-                builder.setItems(personCountArr, new DialogInterface.OnClickListener() {
+                builder.setItems(memberLimitArr, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        personCountSelect.setText(personCountArr[which]);
-                        personCount = which + 2;
-                        Toast.makeText(getApplicationContext(), personCountArr[which], Toast.LENGTH_LONG).show();
+                        memberLimitSelect.setText(memberLimitArr[which]);
+                        memberLimit = which + 2;
+                        Toast.makeText(getApplicationContext(), memberLimitArr[which], Toast.LENGTH_LONG).show();
                     }
                 });
                 builder.show();
@@ -129,7 +132,7 @@ public class MakeGroup extends AppCompatActivity {
                     negativeBuilder("목표 시간을 선택해 주세요", "close");
                     return;
                 }
-                if(personCount == 0) {
+                if(memberLimit == 0) {
                     negativeBuilder("모집 인원을 선택해 주세요", "close");
                     return;
                 }
@@ -182,7 +185,7 @@ public class MakeGroup extends AppCompatActivity {
                                         }
                                     }
                                 };
-                                MakeGroupRequest makeGroupRequest = new MakeGroupRequest(groupName, contents, category, goalTime, userName, responseListener);
+                                MakeGroupRequest makeGroupRequest = new MakeGroupRequest(groupName, contents, category, goalTime, userName, memberLimit, responseListener);
                                 RequestQueue queue = Volley.newRequestQueue(MakeGroup.this);
                                 queue.add(makeGroupRequest);
                             }
@@ -227,5 +230,12 @@ public class MakeGroup extends AppCompatActivity {
                 .setNegativeButton(text, null)
                 .create()
                 .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(MakeGroup.this, SearchGroupPage.class);
+        startActivity(intent);
+        finish();
     }
 }

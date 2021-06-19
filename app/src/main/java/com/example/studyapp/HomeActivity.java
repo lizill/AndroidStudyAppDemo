@@ -12,12 +12,18 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 public class HomeActivity extends AppCompatActivity {
+
     //AppCompatActivity : 하위버전을 지원하기 위해 있음.
+
+
+    public static HomeActivity homeActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
+        homeActivity=this;
         setContentView(R.layout.activity_home);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);

@@ -15,10 +15,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.studyapp.R;
 
@@ -38,10 +40,11 @@ import static com.example.studyapp.FirstActivity.userInfo;
 
 public class GroupFragment extends Fragment {
     private RecyclerView groupRecyclerView;
-    private GroupRecyclerAdapter adapter;
+    public GroupRecyclerAdapter adapter;
     private ArrayList<Group> groupList;
     private String userID;
     private Button searchGroupButton;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private GroupViewModel groupViewModel;
 
@@ -70,10 +73,24 @@ public class GroupFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
-                new BackgroundTask().execute();
+
+                swipeRefreshLayout = root.findViewById(R.id.group_swipe_refresh);
+                swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        new BackgroundTask().execute();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
             }
         });
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new BackgroundTask().execute();
     }
 
     class BackgroundTask extends AsyncTask<Void, Void, String> {
@@ -113,6 +130,9 @@ public class GroupFragment extends Fragment {
         @Override
         public void onPostExecute(String result) {
             try {
+                int size = groupList.size();
+                groupList.clear();
+                adapter.notifyItemRangeRemoved(0, size);
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
                 if(jsonArray.length() == 0) return;
@@ -132,6 +152,9 @@ public class GroupFragment extends Fragment {
                     groupList.add(group);
                     adapter.notifyDataSetChanged();
                     count++;
+                }
+                for (Group g : groupList) {
+                    Log.d(g.getGroup(), "그룹이름");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

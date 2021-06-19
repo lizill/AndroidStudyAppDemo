@@ -1,32 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GroupActivity"
-    android:orientation="vertical"
     android:padding="10dp"
     android:background="#F5F5F5"
     >
-
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:id="@+id/groupRecyclerView"
-        android:scrollbars="vertical"
+        android:layout_height="match_parent"
+        android:id="@+id/group_swipe_refresh"
         >
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/groupRecyclerView"
+            android:scrollbars="vertical"
+            >
+        </androidx.recyclerview.widget.RecyclerView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <Button
-        android:layout_marginTop="10dp"
-        android:layout_width="130dp"
-        android:layout_height="40dp"
-        android:text="그룹 가입"
-        android:background="@color/purple_500"
-        android:layout_gravity="right"
         android:id="@+id/SearchGroup"
+        android:gravity="center"
+        android:layout_gravity="right | bottom"
+        android:text="+"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/button_shape"
+        android:shadowColor="#A8A8A8"
+        android:shadowRadius="5"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         >
     </Button>
 
 
-</LinearLayout>
+</FrameLayout>

@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.studyapp.ui.home.HomeFragment.mSocket;
+
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHolder> {
 
     public HomeAdapter() {
@@ -67,8 +69,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
         holder.tv_name.setText(arrayList.get(position).getTv_name());
         holder.subject_time.setText(arrayList.get(position).getSubject_time());
         holder.itemView.setTag(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String curName = holder.tv_name.getText().toString();
+            }
+        });
 
         holder.itemView.setOnClickListener(v -> {
+            mSocket.emit("start", userID);
        Intent intent = new Intent(v.getContext(),StopwatchActivity.class);
        intent.putExtra("subject", arrayList.get(position).getTv_name());
        intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);

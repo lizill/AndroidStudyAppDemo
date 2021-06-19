@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="minutes">
+        <item>0분</item>
+        <item>1분</item>
+        <item>2분</item>
+        <item>3분</item>
+        <item>4분</item>
+        <item>5분</item>
+        <item>6분</item>
+        <item>7분</item>
+        <item>8분</item>
+        <item>9분</item>
+        <item>10분</item>
+        <item>11분</item>
+        <item>12분</item>
+        <item>13분</item>
+        <item>14분</item>
+        <item>15분</item>
+        <item>16분</item>
+        <item>17분</item>
+        <item>18분</item>
+        <item>19분</item>
+        <item>20분</item>
+        <item>21분</item>
+        <item>22분</item>
+        <item>23분</item>
+        <item>24분</item>
+        <item>25분</item>
+        <item>26분</item>
+        <item>27분</item>
+        <item>28분</item>
+        <item>29분</item>
+        <item>30분</item>
+        <item>31분</item>
+        <item>32분</item>
+        <item>33분</item>
+        <item>34분</item>
+        <item>35분</item>
+        <item>36분</item>
+        <item>37분</item>
+        <item>38분</item>
+        <item>39분</item>
+        <item>40분</item>
+        <item>41분</item>
+        <item>42분</item>
+        <item>43분</item>
+        <item>44분</item>
+        <item>45분</item>
+        <item>46분</item>
+        <item>47분</item>
+        <item>48분</item>
+        <item>49분</item>
+        <item>50분</item>
+        <item>51분</item>
+        <item>52분</item>
+        <item>53분</item>
+        <item>54분</item>
+        <item>55분</item>
+        <item>56분</item>
+        <item>57분</item>
+        <item>58분</item>
+        <item>59분</item>
+    </string-array>
+
+</resources>

@@ -9,7 +9,7 @@
         android:id="@+id/navigation_chart"
         android:name="com.example.studyapp.ui.chart.ChartFragment"
         android:label="@string/title_chart"
-        tools:layout="@layout/fragment_chart" />
+        tools:layout="@layout/activity_chart" />
 
     <fragment
         android:id="@+id/navigation_plan"
@@ -21,7 +21,11 @@
         android:id="@+id/navigation_home"
         android:name="com.example.studyapp.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+<!--        <action-->
+<!--            android:id="@+id/home_action"-->
+<!--            app:destination="@id/navigation_group"/>-->
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_rank"
@@ -32,6 +36,10 @@
     <fragment
         android:id="@+id/navigation_group"
         android:name="com.example.studyapp.ui.group.GroupFragment"
-        android:label="@string/title_rank"
-        tools:layout="@layout/fragment_group" />
+        android:label="@string/title_group"
+        tools:layout="@layout/fragment_group" >
+                <action
+                    android:id="@+id/home_action"
+                    app:destination="@id/navigation_group"/>
+    </fragment>
 </navigation>

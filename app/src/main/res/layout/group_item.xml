@@ -80,7 +80,9 @@
                 android:layout_weight="3"
                 android:padding="1dp"
                 android:text="목표"
-                android:textSize="15dp"></TextView>
+                android:textSize="15dp"
+                >
+            </TextView>
             <TextView
                 android:id="@+id/goalTimeText"
                 android:layout_width="0dp"
@@ -129,7 +131,6 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:background="#EDEDED"
         >
         <ImageButton
             android:layout_width="match_parent"
@@ -137,7 +138,7 @@
             android:src="@drawable/message_icon"
             android:layout_gravity="center"
             android:id="@+id/chatButton"
-            android:background="#EDEDED">
+            android:background="@drawable/custom_ripple_effect">
         </ImageButton>
     </LinearLayout>
 </LinearLayout>

@@ -4,19 +4,149 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.AppCompat.Light"
     tools:context=".ui.rank.RankFragment">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/rv_rank">
 
-    <TextView
-        android:id="@+id/text_notifications"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+                <Button
+                    android:id="@+id/btn_daily_rank"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:textColor="@color/maincolor"
+                    android:background="@drawable/click_blue"
+                    android:text="일간" />
+
+                <Button
+                    android:id="@+id/btn_week_rank"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:textColor="@color/maincolor"
+                    android:background="@drawable/click_blue"
+                    android:text="주간" />
+                <Button
+                    android:id="@+id/btn_month_rank"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:textColor="@color/maincolor"
+                    android:background="@drawable/click_blue"
+                    android:text="월간" />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/ranking_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ranking_2"
+            android:background="@drawable/ic_medal_gold"
+            />
+
+        <TextView
+            android:id="@+id/ranking_1_name"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/ranking_1"
+            app:layout_constraintEnd_toEndOf="@+id/ranking_1"
+            app:layout_constraintTop_toBottomOf="@id/ranking_1"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="1등"/>
+
+        <TextView
+            android:id="@+id/ranking_1_time"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/ranking_1"
+            app:layout_constraintEnd_toEndOf="@+id/ranking_1"
+            app:layout_constraintTop_toBottomOf="@id/ranking_1_name"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="1등 공부 시간"/>
+
+        <ImageView
+            android:id="@+id/ranking_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ranking_1"
+            app:layout_constraintEnd_toStartOf="@+id/ranking_3"
+            android:background="@drawable/ic_medal_silver"
+            />
+
+        <TextView
+            android:id="@+id/ranking_2_name"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/ranking_2"
+            app:layout_constraintEnd_toEndOf="@+id/ranking_2"
+            app:layout_constraintTop_toBottomOf="@id/ranking_2"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="2등"/>
+
+        <TextView
+            android:id="@+id/ranking_2_time"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/ranking_2"
+            app:layout_constraintEnd_toEndOf="@+id/ranking_2"
+            app:layout_constraintTop_toBottomOf="@id/ranking_2_name"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="2등 공부 시간"/>
+
+        <ImageView
+            android:id="@+id/ranking_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_medal_bronze"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ranking_2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ranking_3_name"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/ranking_3"
+            app:layout_constraintTop_toBottomOf="@id/ranking_3"
+            app:layout_constraintEnd_toEndOf="@id/ranking_3"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="3등"/>
+
+        <TextView
+            android:id="@+id/ranking_3_time"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/ranking_3"
+            app:layout_constraintTop_toBottomOf="@id/ranking_3_name"
+            app:layout_constraintEnd_toEndOf="@id/ranking_3"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="3등 공부 시간"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_rank"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintHeight_max="wrap"
+            android:layout_marginTop="150dp"
+            android:layout_marginBottom="50dp"
+            android:scrollbarSize="5dp"
+            android:scrollbarThumbVertical="@android:color/darker_gray"
+            android:scrollbars="vertical"/>
+
+    <include
+        layout="@layout/progress_bar"
+        tools:layout_editor_absoluteX="-16dp"
+        tools:layout_editor_absoluteY="198dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -50,6 +50,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import io.socket.client.Socket;
+
 import static com.example.studyapp.FirstActivity.USER_ID;
 import static com.example.studyapp.FirstActivity.userInfo;
 
@@ -61,6 +63,7 @@ public class HomeFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private EditText editTextTextPersonName;
     private RecyclerView subjectRecyclerView;
+    public static Socket mSocket;
 
 
     private HomeViewModel homeViewModel;
@@ -70,6 +73,8 @@ public class HomeFragment extends Fragment {
     private String today,userID, subject;
     public static String TOTAL_STUDY_TIME;
     public static View root;
+
+    public static boolean isDayFragment, isWeekFragment,isMonthFragment;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -117,18 +122,18 @@ public class HomeFragment extends Fragment {
                  */
                 Button addButton = (Button)root.findViewById(R.id.addButton);
                 addButton.setOnClickListener(new View.OnClickListener(){
-                @Override
+                    @Override
                     public void onClick(View v){
-                    HomeData homeData = null;
-                    homeData = new HomeData(editTextTextPersonName.getText().toString(),"00:00:00");
-                    plusSubject();
-                    arrayList.add(homeData);
-                    homeAdapter.notifyDataSetChanged();
-                }
+                        HomeData homeData = null;
+                        homeData = new HomeData(editTextTextPersonName.getText().toString(),"00:00:00");
+                        plusSubject();
+                        arrayList.add(homeData);
+                        homeAdapter.notifyDataSetChanged();
+                    }
 
                 });
             }
-            });
+        });
         return root;
     }
 
@@ -138,24 +143,56 @@ public class HomeFragment extends Fragment {
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 response -> {
                     try {
+
                         //json object >> {response:[{key : value}, {.....
                         JSONObject jsonObject = new JSONObject(response);
+
                         //object start name : response  >>>>> array
                         JSONArray jsonArray = jsonObject.getJSONArray("response");
+
                         JSONObject studyObject = jsonArray.getJSONObject(0);
+                        String todayStudyTime = studyObject.getString("study_time");
 
-                        String studyTime = studyObject.getString("study_time");
+                        JSONObject studyObject2 = jsonArray.getJSONObject(1);
+                        String study_week_time = studyObject2.getString("study_week_time");
 
+                        JSONObject studyObject3 = jsonArray.getJSONObject(2);
+                        String study_month_time = studyObject3.getString("study_month_time");
 
+                        if(!study_week_time.equals("null")) isWeekFragment = true;
+                        if(!study_month_time.equals("null")) isMonthFragment = true;
 
-                        if(studyTime.equals("null")){
-                            TOTAL_STUDY_TIME = "00:00:00";
-                            tv_data.setText(TOTAL_STUDY_TIME);
+                        if(!todayStudyTime.equals("null")){
+                            isDayFragment = true;
                         }else{
-                            TOTAL_STUDY_TIME = studyTime;
-                            tv_data.setText(TOTAL_STUDY_TIME);
+                            todayStudyTime = "00:00:00";
                         }
-                        System.out.println(TOTAL_STUDY_TIME);
+
+                        tv_data.setText(todayStudyTime);
+
+
+
+
+
+
+//                        //json object >> {response:[{key : value}, {.....
+//                        JSONObject jsonObject = new JSONObject(response);
+//                        //object start name : response  >>>>> array
+//                        JSONArray jsonArray = jsonObject.getJSONArray("response");
+//                        JSONObject studyObject = jsonArray.getJSONObject(0);
+//
+//                        String studyTime = studyObject.getString("study_time");
+//
+//
+//
+//                        if(studyTime.equals("null")){
+//                            TOTAL_STUDY_TIME = "00:00:00";
+//                            tv_data.setText(TOTAL_STUDY_TIME);
+//                        }else{
+//                            TOTAL_STUDY_TIME = studyTime;
+//                            tv_data.setText(TOTAL_STUDY_TIME);
+//                        }
+//                        System.out.println(TOTAL_STUDY_TIME);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -171,33 +208,32 @@ public class HomeFragment extends Fragment {
 
 
     private void totalSubject() {
-            String url = String.format(Env.subjectNameURL, userID, today);
+        String url = String.format(Env.subjectNameURL, userID, today);
 
-            StringRequest request = new StringRequest(Request.Method.GET, url,
-                    response -> {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            JSONArray jsonArray = jsonObject.getJSONArray("response");
-                            int count  = 0;
-                            while(count<jsonArray.length()) {
-                                JSONObject studyObject = jsonArray.getJSONObject(count);
-                                String subjectName = studyObject.getString("subject"+count);
-                                String todaySubjectName = studyObject.getString("todaySubjectName"+count);
-                                String todaySubjectTime = studyObject.getString("todaySubjectTime"+count);
-
-                                if(todaySubjectTime == "null"){
-                                    todaySubjectTime = "";
-                                }
-                                HomeData returnSubjects = new HomeData(subjectName,todaySubjectTime);
-                                arrayList.add(returnSubjects);
-                                homeAdapter.notifyDataSetChanged();
-                                count++;
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONArray jsonArray = jsonObject.getJSONArray("response");
+                        int count  = 0;
+                        while(count<jsonArray.length()) {
+                            JSONObject studyObject = jsonArray.getJSONObject(count);
+                            String subjectName = studyObject.getString("subject"+count);
+                            String todaySubjectName = studyObject.getString("todaySubjectName"+count);
+                            String todaySubjectTime = studyObject.getString("todaySubjectTime"+count);
+                            if(todaySubjectTime.equals("")||todaySubjectTime.equals("null")){
+                                todaySubjectTime = "00:00:00";
                             }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            HomeData returnSubjects = new HomeData(subjectName,todaySubjectTime);
+                            arrayList.add(returnSubjects);
+                            homeAdapter.notifyDataSetChanged();
+                            count++;
                         }
-                    }, new Response.ErrorListener() {
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -208,7 +244,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void plusSubject() {
-    String url = Env.PlusSubjectURL;
+        String url = Env.PlusSubjectURL;
         long now = System.currentTimeMillis();
         Date mDate = new Date(now);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

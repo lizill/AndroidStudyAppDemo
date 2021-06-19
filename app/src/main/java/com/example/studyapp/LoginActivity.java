@@ -3,6 +3,7 @@ package com.example.studyapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -12,24 +13,25 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+
+import static com.example.studyapp.ui.home.HomeFragment.mSocket;
 
 public class LoginActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private EditText idET, passwordET;
     private Button loginButton;
+
+    private Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +53,11 @@ public class LoginActivity extends AppCompatActivity {
                 String userPassword = passwordET.getText().toString();
 
                 if(userID.isEmpty()) {
-                    negativeBuilder("Please insert Email");
+                    negativeBuilder("아이디를 입력해주세요.");
                     return;
                 }
                 if(userPassword.isEmpty()) {
-                    negativeBuilder("Please insert Password");
+                    negativeBuilder("비밀번호를 입력해주세요.");
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
@@ -77,9 +79,28 @@ public class LoginActivity extends AppCompatActivity {
     private void negativeBuilder(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setMessage(msg)
-                .setNegativeButton("close", null)
+                .setNegativeButton("확인", null)
                 .create()
                 .show();
+    }
+
+    private void connectSocket(String userID) {
+
+        // ------------------------------------------------------------------------------------
+        // 소켓 연결
+        // ------------------------------------------------------------------------------------
+        try {
+            mSocket = IO.socket("http://132.226.20.103:9876");
+            Log.d("SOCKET", "Connection success : " + mSocket.id());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        mSocket.connect();
+
+        mSocket.on(Socket.EVENT_CONNECT, args -> {
+            mSocket.emit("login", userID);
+        });
+
     }
 
     class LoginTask extends JSONTask {
@@ -110,9 +131,11 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, UserNameActivity.class);
                     LoginActivity.this.startActivity(intent);
                     finish();
+
+                    connectSocket(userID);
                 }
                 else {
-                    negativeBuilder("Failed Sign In");
+                    negativeBuilder("회원정보를 확인해주세요.");
                     progressBar.setVisibility(View.GONE);
                 }
 

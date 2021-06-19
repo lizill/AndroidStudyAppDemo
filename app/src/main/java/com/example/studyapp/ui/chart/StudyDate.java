@@ -28,31 +28,13 @@ class StudyDate implements DayViewDecorator {
 
         date = setDays(divDate(studyDate));
     }
-    //그냥 숫자로 오기때문에 그걸 hh:mm:ss 단위로 만듦
-    private String makeVisibleTime(String study){
-        String [] ar = {"0","0","0","0","0","0"};
-        int idx = ar.length -1;
-        for(int i = study.length()-1; i >= 0; i--){
-            char c = study.charAt(i);
-            ar[idx--] = String.valueOf(c);
-        }
-        String time = "";
-        for(int i = 0; i < ar.length; i++){
-            time += ar[i];
-
-            if(i == 1 || i == 3){
-                time += ":";
-            }
-        }
-        return time;
-    }
     // set year month day
     public CalendarDay setDays(String [] s){
         int year = Integer.valueOf(s[0]);
         int month = Integer.valueOf(s[1]) - 1;
         int day = Integer.valueOf(s[2]);
-        CalendarDay tmp = CalendarDay.from(year,month,day);
-        return tmp;
+        CalendarDay setDay = CalendarDay.from(year,month,day);
+        return setDay;
     }
     // String "2xxx-xx-xx" -> array
     public String []  divDate(String studyDate){
@@ -68,18 +50,19 @@ class StudyDate implements DayViewDecorator {
     }
     @Override
     public void decorate(DayViewFacade view) {
-        String [] t = makeVisibleTime(studyTime).split(":");
-        int tmp = Integer.parseInt(t[0]);
-
+        String [] tmp = studyTime.split(":");
+        int hour = Integer.parseInt(tmp[0]);
+        int minute = Integer.parseInt(tmp[1]);
+        int second = Integer.parseInt(tmp[2]);
         //공부시간에 따라서 색깔 변화 준다.
-        if(tmp > 0 && tmp < 2){
-            view.setSelectionDrawable(drawables.get(0));
-        }else if(tmp >= 2 && tmp < 4){
-            view.setSelectionDrawable(drawables.get(1));
-        }else if(tmp >= 4 && tmp < 7){
-            view.setSelectionDrawable(drawables.get(2));
-        }else if(tmp >= 7){
-            view.setSelectionDrawable(drawables.get(3));
+        if(hour < 2 && (second > 0 || minute > 0)){
+            view.setBackgroundDrawable(drawables.get(0));
+        }else if(hour >= 2 && hour < 4){
+            view.setBackgroundDrawable(drawables.get(1));
+        }else if(hour >= 4 && hour < 7){
+            view.setBackgroundDrawable(drawables.get(2));
+        }else if(hour >= 7){
+            view.setBackgroundDrawable(drawables.get(3));
         }
     }
 }
