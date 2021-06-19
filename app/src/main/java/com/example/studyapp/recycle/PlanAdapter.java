@@ -79,7 +79,8 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.CustomViewHold
                         try {
                             String userID = FirstActivity.userInfo.getString(FirstActivity.USER_ID,null);
                             String userPassword = FirstActivity.userInfo.getString(FirstActivity.USER_PASSWORD,null);
-                            int positions = PlanFragment.getRecycleArrayList().get(holder.getAdapterPosition()).getPosition();
+                            int positions = PlanFragment.getRecycleArrayList().get(holder.getAdapterPosition()).
+                                    getPosition();
                             JSONObject jsonObject = new JSONObject();
                             jsonObject.accumulate("user_id", userID);
                             jsonObject.accumulate("user_password", userPassword);
