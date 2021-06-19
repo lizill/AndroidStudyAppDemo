@@ -1,5 +1,6 @@
 package com.example.studyapp.ui.chart;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -50,20 +51,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.zip.Inflater;
 
 
-public class WeekFragment extends Fragment implements OnChartValueSelectedListener {
+public class WeekFragment extends Fragment {
 
     private BarChart barChart;
     private PieChart piechart;
     private RequestQueue requestQueue;
-
-    //time format setting
-    private TimeZone tz;
-    private DateFormat timeFormat = new SimpleDateFormat("a HH mm", Locale.KOREA);
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-    private DateFormat dayFormat = new SimpleDateFormat("MM월 dd일 E요일", Locale.KOREA);
-
 
     //barchart variable
     private float [] dateArray;
@@ -82,6 +77,14 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
 
     //TextView variable
     TextView tv_week_totalTime,tv_week_average,tv_week_date;
+    private int idx=1;
+    public WeekFragment(String today){
+        this.today = today;
+    }
+    public WeekFragment(String today, int idx){
+        this.today = today;
+        this.idx = idx;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,8 +93,7 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
         //data exist ? DayFragment : NoneFragment
         View v = null;
 
-//        if(HomeFragment.TOTAL_STUDY_TIME.equals("00:00:00")){
-        if(!HomeFragment.isWeekFragment){
+        if(!HomeFragment.isWeekFragment | idx == 0){
             v = inflater.inflate(R.layout.fragment_nonpage, container, false);
         }else{
             v = inflater.inflate(R.layout.fragment_week, container, false);
@@ -99,21 +101,12 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
             //Volley Queue  & request json
             requestQueue = Volley.newRequestQueue(getContext());
 
-            // Time -> Korea setting
-            tz = TimeZone.getTimeZone("Asia/Seoul");
-            timeFormat.setTimeZone(tz);
-            dateFormat.setTimeZone(tz);
-            dayFormat.setTimeZone(tz);
-
             tv_week_totalTime = (TextView) v.findViewById(R.id.tv_week_totalTime);
             tv_week_average = (TextView) v.findViewById(R.id.tv_week_average);
 
 
             //userID 받아오기
             userID = FirstActivity.userInfo.getString("userId", null);
-
-            //현재 날짜 요일 불러오기
-            today = dateFormat.format(new Date());
 
             tv_week_date = (TextView) v.findViewById(R.id.tv_week_date);
 
@@ -211,7 +204,6 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-
                             JSONArray jsonArray = jsonObject.getJSONArray("response");
                             JSONArray jsonArray2 = jsonObject.getJSONArray("response2");
                             JSONArray jsonArray3 = jsonObject.getJSONArray("response3");
@@ -230,6 +222,7 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
                             tv_week_average.setText(aveStudyTimeOnWeek);
 
                             sumDayStartEndTerm = Float.parseFloat(studyObject2.getString("SumDayStartEndTerm"));
+
 
                             String firstDay = weekObject.getString("week_first_day");
                             String lastDay = weekObject.getString("week_last_day");
@@ -264,15 +257,5 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
         });
         request.setShouldCache(false);
         requestQueue.add(request);
-    }
-
-    @Override
-    public void onValueSelected(Entry e, Highlight h) {
-
-    }
-
-    @Override
-    public void onNothingSelected() {
-
     }
 }

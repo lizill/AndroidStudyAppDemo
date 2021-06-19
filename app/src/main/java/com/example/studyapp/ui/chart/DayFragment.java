@@ -3,12 +3,15 @@ package com.example.studyapp.ui.chart;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,13 +73,6 @@ public class DayFragment extends Fragment {
     private List<TimeLineModel> timeLineModelList;
     private TimeLineModel[] timeLineModel;
     private LinearLayoutManager linearLayoutManager;
-
-    //time format setting
-    private TimeZone tz;
-    private DateFormat timeFormat = new SimpleDateFormat("a HH mm", Locale.KOREA);
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-    private DateFormat dayFormat = new SimpleDateFormat("MM월 dd일 E요일", Locale.KOREA);
-
     //Information variable
     private String MaxFocus,MinStartTime,MaxEndTime, totalTime, today;
     private float allStudyTimeOnDaySec, sumDayStartEndTerm;
@@ -89,9 +85,18 @@ public class DayFragment extends Fragment {
             Color.parseColor("#2caee6"), Color.parseColor("#30cf9c"), Color.parseColor("#4faaff"),};
 
     private String userID;
-
+    private int idx = 1;
     //TextView variable
-    TextView tv_totalTime,tv_longTime,tv_startTime,tv_endTime,tv_date;
+    private TextView tv_totalTime,tv_longTime,tv_startTime,tv_endTime,tv_date;
+
+    public DayFragment(String today){
+        this.today = today;
+        this.idx = 2;
+    }
+    public DayFragment(String today, int idx){
+        this.today = today;
+        this.idx = idx;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,19 +104,17 @@ public class DayFragment extends Fragment {
         // Inflate the layout for this fragment
         //data exist ? DayFragment : NoneFragment
         View v = null;
-        if(!HomeFragment.isDayFragment){
+        /*
+        지금 데이터가 없어서 isDayFragment가 false라고 친다
+
+         */
+        if(idx == 0){
             v = inflater.inflate(R.layout.fragment_nonpage, container, false);
         }else{
             v = inflater.inflate(R.layout.fragment_day, container, false);
 
             //Volley Queue  & request json
             requestQueue = Volley.newRequestQueue(getContext());
-
-            // Time -> Korea setting
-            tz = TimeZone.getTimeZone("Asia/Seoul");
-            timeFormat.setTimeZone(tz);
-            dateFormat.setTimeZone(tz);
-            dayFormat.setTimeZone(tz);
 
             tv_totalTime = (TextView) v.findViewById(R.id.tv_totalTime);
 
@@ -122,12 +125,8 @@ public class DayFragment extends Fragment {
             //userID 받아오기
             userID = FirstActivity.userInfo.getString("userId", null);
 
-            //현재 날짜 요일 불러오기
-            today = dateFormat.format(new Date());
-            String day = dayFormat.format(new Date());
-
             tv_date = (TextView) v.findViewById(R.id.tv_date);
-            tv_date.setText(day);
+            tv_date.setText(today);
 
             searchInfo();
 
@@ -140,7 +139,6 @@ public class DayFragment extends Fragment {
             searchTimelineData();
 
         }
-
         return v;
     }
     private void setTimelineData(){

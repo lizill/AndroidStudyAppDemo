@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -89,7 +90,6 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 // 공부 시작 시 온라인 정보를 서버로 보냄
                 mSocket.emit("start", userID);
-
                 //누른 과목 정보 보내주기
                 Intent intent = new Intent(getActivity(), StopwatchActivity.class);
                 intent.putExtra("subject", sub1.getText());

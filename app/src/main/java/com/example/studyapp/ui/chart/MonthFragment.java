@@ -52,12 +52,6 @@ public class MonthFragment extends Fragment {
     private PieChart piechart;
     private RequestQueue requestQueue;
 
-    //time format setting
-    private TimeZone tz;
-    private DateFormat timeFormat = new SimpleDateFormat("a HH mm", Locale.KOREA);
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-    private DateFormat dayFormat = new SimpleDateFormat("MM월 dd일 E요일", Locale.KOREA);
-
     //barchart variable
     private float [] dateArray;
     private float [] timeArray;
@@ -70,10 +64,19 @@ public class MonthFragment extends Fragment {
     //color setting
     private int [] colorList = new int [] {Color.parseColor("#008cff"), Color.parseColor("#5056bf"), Color.parseColor("#2e38ff"),
             Color.parseColor("#2caee6"), Color.parseColor("#30cf9c"), Color.parseColor("#4faaff"),};
-    private String userID;
+    private String userID,date;
 
     //TextView variable
     TextView tv_month_totalTime,tv_month_average,tv_month_date;
+
+    public MonthFragment(String today){
+        this.today = today;
+    }
+    private int idx=1;
+    public MonthFragment(String today,int idx){
+        this.today = today;
+        this.idx = idx;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,7 +85,7 @@ public class MonthFragment extends Fragment {
         //data exist ? DayFragment : NoneFragment
 
         View v = null;
-        if(!HomeFragment.isMonthFragment){
+        if(!HomeFragment.isMonthFragment | idx == 0){
             v = inflater.inflate(R.layout.fragment_nonpage, container, false);
         }else{
             v = inflater.inflate(R.layout.fragment_month, container, false);
@@ -90,20 +93,11 @@ public class MonthFragment extends Fragment {
             //Volley Queue  & request json
             requestQueue = Volley.newRequestQueue(getContext());
 
-            // Time -> Korea setting
-            tz = TimeZone.getTimeZone("Asia/Seoul");
-            timeFormat.setTimeZone(tz);
-            dateFormat.setTimeZone(tz);
-            dayFormat.setTimeZone(tz);
-
             tv_month_totalTime = (TextView) v.findViewById(R.id.tv_month_totalTime);
             tv_month_average = (TextView) v.findViewById(R.id.tv_month_average);
 
             //userID 받아오기
             userID = FirstActivity.userInfo.getString("userId", null);
-
-            //현재 날짜 요일 불러오기
-            today = dateFormat.format(new Date());
 
             tv_month_date = (TextView) v.findViewById(R.id.tv_month_date);
             tv_month_date.setText(Integer.parseInt(today.split("-")[1]) + "월");

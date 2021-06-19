@@ -19,5 +19,5 @@ public class Env {
     public static String monthInfoURL = "https://dong0110.com/chatphp/chart/RequireMonthInfo.php?userID=%s&study_date=%s";
     public static String monthInfo2URL = "https://dong0110.com/chatphp/chart/RequireMonthInfo2.php?userID=%s&study_date=%s";
     public static String allDaysInfoURL = "https://dong0110.com/chatphp/chart/DayStudyTime.php?userID=%s";
-
+    public static String getDaysStudyTimeInfoURL = "https://dong0110.com/chatphp/chart/DayStudyTime2.php?userID=%s&study_date=%s";
 }
