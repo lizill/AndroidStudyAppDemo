@@ -121,7 +121,6 @@ public class StopwatchActivity extends AppCompatActivity {
                 if(isFirst){
                     InsertData();
                     isFirst = false;
-
                 }else{
                     UpdateData();
                 }
