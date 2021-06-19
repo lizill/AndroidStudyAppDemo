@@ -93,7 +93,7 @@ public class MonthFragment extends Fragment {
         //data exist ? DayFragment : NoneFragment
 
         View v = null;
-        if(!HomeFragment.isMonthFragment | idx == 0){
+        if(idx == 0){
             v = inflater.inflate(R.layout.fragment_nonpage, container, false);
         }else{
             v = inflater.inflate(R.layout.fragment_month, container, false);
@@ -163,7 +163,6 @@ public class MonthFragment extends Fragment {
             }
             @Override
             public String getFormattedValue(float value) {
-                System.out.println(days[(int) value]);
                 return days[(int) value];
             }
         });

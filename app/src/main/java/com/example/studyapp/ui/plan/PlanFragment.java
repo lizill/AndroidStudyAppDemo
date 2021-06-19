@@ -1,9 +1,11 @@
 package com.example.studyapp.ui.plan;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,8 +34,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class PlanFragment extends Fragment {
-
-
     // 로그인하면 FirstActivity에 User의 ID와 PASSWORD가 저장되는데
     // 이를 여기에서 서버의 DB와 연결하기 위해 가져옴
     private String userID = FirstActivity.userInfo.getString(FirstActivity.USER_ID,null);
