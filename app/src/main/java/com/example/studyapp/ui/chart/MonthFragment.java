@@ -163,7 +163,6 @@ public class MonthFragment extends Fragment {
             }
             @Override
             public String getFormattedValue(float value) {
-                System.out.println(days[(int) value]);
                 return days[(int) value];
             }
         });

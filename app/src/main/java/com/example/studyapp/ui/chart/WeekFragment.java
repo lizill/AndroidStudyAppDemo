@@ -1,6 +1,7 @@
 package com.example.studyapp.ui.chart;
 
 import android.content.Context;
+import android.content.SyncStatusObserver;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -37,7 +38,9 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import org.json.JSONArray;
@@ -110,7 +113,7 @@ public class WeekFragment extends Fragment {
 
             tv_week_date = (TextView) v.findViewById(R.id.tv_week_date);
 
-            barChart = (com.github.mikephil.charting.charts.HorizontalBarChart) v.findViewById(R.id.week_barChart);
+            barChart =  (com.github.mikephil.charting.charts.BarChart) v.findViewById(R.id.week_barChart);
 
             piechart = (com.github.mikephil.charting.charts.PieChart) v.findViewById(R.id.week_piechart);
             searchInfo();
@@ -136,67 +139,63 @@ public class WeekFragment extends Fragment {
         timeArray = new float [len];
     }
     private void setBarChartData(){
-
-    }
-
-    private void setBarData(){
-        barChart.setDrawBarShadow(false);
-        Description description = new Description();
-        description.setText("");
-        barChart.setDescription(description);
-        barChart.getLegend().setEnabled(false);
-        barChart.setPinchZoom(false);
-        barChart.setClickable(false);
-        barChart.setDoubleTapToZoomEnabled(false);
-        barChart.setDrawValueAboveBar(false);
-
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setDrawGridLines(false);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setEnabled(true);
-        xAxis.setDrawAxisLine(false);
-
-        YAxis yLeft = barChart.getAxisLeft();
-        yLeft.setAxisMaximum(max);
-        yLeft.setAxisMinimum(0f);
-        yLeft.setEnabled(false);
-
-        xAxis.setLabelCount(7);
-
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(){
-            private String [] dayslist = {"월", "화", "수", "목", "금", "토", "일"};
-            @Override
-            public String getFormattedValue(float value) {
-                return dayslist[(int)value];
-            }
-        });
-        xAxis.setTextColor(Color.parseColor("#000000"));
-
-        YAxis yRight = barChart.getAxisRight();
-        yRight.setDrawAxisLine(true);
-        yRight.setDrawGridLines(false);
-        yRight.setEnabled(false);
-
-
-        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        ArrayList<BarEntry> entries = new ArrayList<>();
         int j = 0;
         for(int i = 0; i < 7; i++){
-            if(i == dateArray[j]){
-                barEntries.add(new BarEntry(dateArray[j], timeArray[j]));
-                j++;
+            if(j < dateArray.length){
+                if(dateArray[j] == i){
+                    entries.add(new BarEntry(i, timeArray[j]));
+                    j++;
+                }else{
+                    entries.add(new BarEntry(i, 0));
+                }
+            }else{
+                entries.add(new BarEntry(i, 0));
             }
-            if(j >= dateArray.length) break;
         }
+        Description description = new Description();
+        description.setEnabled(false);
+        barChart.setDescription(description);
+        barChart.setMaxVisibleValueCount(7);
+        barChart.setPinchZoom(false);
+        barChart.setDrawBarShadow(false);
+        barChart.setDrawGridBackground(false);
 
-        BarDataSet dataSet = new BarDataSet(barEntries, "요일별 공부");
-        dataSet.setDrawValues(false);
+        YAxis yLeft = barChart.getAxisLeft();
+        yLeft.setAxisMaximum(max); //어디 위치에 선을 그리기 위해 10f로 맥시멈을 정함
+        yLeft.setAxisMinimum(1f); //최소값 0
 
-        BarData data = new BarData(dataSet);
-        data.setBarWidth(0.5f);
+        yLeft.setDrawAxisLine(false);
+        yLeft.setDrawAxisLine(true);
+        yLeft.setDrawLabels(false);
+        yLeft.setEnabled(false);
 
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(0f);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setDrawGridLines(false);
+        xAxis.setValueFormatter(new ValueFormatter() {
+            private String [] days = {"월", "화", "수", "목", "금", "토", "일"};
+            @Override
+            public String getFormattedValue(float value) {
+                return days[(int) value];
+            }
+        });
+
+        barChart.getAxisRight().setEnabled(false);
+        barChart.setTouchEnabled(false);
         barChart.animateY(1000);
+        barChart.getLegend().setEnabled(false);
+
+        BarDataSet barDataSet = new BarDataSet(entries, "DataSet");
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(barDataSet);
+        BarData data = new BarData(dataSets);
+        data.setBarWidth(0.4f);
 
         barChart.setData(data);
+        barChart.setFitBars(false);
         barChart.invalidate();
     }
 
@@ -246,8 +245,7 @@ public class WeekFragment extends Fragment {
                                     max = timeArray[i];
                             }
 
-                            setBarData();
-//                            setBarChartData();
+                            setBarChartData();
                             setPieChartData();
 
                         } catch (JSONException e) {
