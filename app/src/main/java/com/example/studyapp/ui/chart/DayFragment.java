@@ -39,6 +39,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
@@ -188,8 +189,7 @@ public class DayFragment extends Fragment {
 
         barChart.setDrawBarShadow(false);
         Description description = new Description();
-        description.setText("");
-        barChart.setDescription(description);
+        description.setEnabled(false);
         barChart.getLegend().setEnabled(false);
         barChart.setPinchZoom(false);
         barChart.setClickable(false);

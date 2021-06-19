@@ -135,6 +135,10 @@ public class WeekFragment extends Fragment {
         dateArray = new float [len];
         timeArray = new float [len];
     }
+    private void setBarChartData(){
+
+    }
+
     private void setBarData(){
         barChart.setDrawBarShadow(false);
         Description description = new Description();
@@ -243,6 +247,7 @@ public class WeekFragment extends Fragment {
                             }
 
                             setBarData();
+//                            setBarChartData();
                             setPieChartData();
 
                         } catch (JSONException e) {
