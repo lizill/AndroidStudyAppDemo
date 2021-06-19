@@ -20,12 +20,16 @@ public class PlanData {
     // 나중에 만들수록 색상이 짙어짐
     private String iv_color;
 
+    //position
+    private int position;
 
-    public PlanData(int iv_profile, String tv_name, String tv_content, String iv_color) {
+
+    public PlanData(int iv_profile, String tv_name, String tv_content, String iv_color, int position) {
         this.iv_profile = iv_profile;
         this.tv_name = tv_name;
         this.tv_content = tv_content;
         this.iv_color = iv_color;
+        this.position = position;
     }
 
 
@@ -59,5 +63,17 @@ public class PlanData {
 
     public void setTv_color(String iv_color) {
         this.iv_color = iv_color;
+    }
+
+    public void setIv_color(String iv_color) {
+        this.iv_color = iv_color;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

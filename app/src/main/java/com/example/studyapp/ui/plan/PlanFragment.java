@@ -44,6 +44,7 @@ public class PlanFragment extends Fragment {
     static PlanAdapter planAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
+    private static View root;
 
     /*
      * Navigation View를 이용하면 화면을 동적으로 바꿀 수 있는데
@@ -77,7 +78,7 @@ public class PlanFragment extends Fragment {
          */
         planViewModel =
                 new ViewModelProvider(this).get(PlanViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_plan, container, false);
+        root = inflater.inflate(R.layout.fragment_plan, container, false);
 
         /*
          * view 생성 선언 등등...
@@ -148,7 +149,7 @@ public class PlanFragment extends Fragment {
 
 
                 /*
-                 * alert을 사용하여 맨 마지막 계획을 지울지말지 정함.
+                 * alert을 사용하여 모든 계획을 지울지말지 정함.
                  * jsonObject에 데이터를 넣고 PlanTask를 이용하여 서버와 연결해 데이터를 송수신함
                  */
                 AlertDialog.Builder alert = new AlertDialog.Builder(root.getContext());
@@ -157,7 +158,7 @@ public class PlanFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         if(recycleArrayList.size()>0){
-                            alert.setTitle("계획을 지우시겠습니까?").setMessage("공부 한 내역은 사라지지 않습니다.");
+                            alert.setTitle("계획을 전부 지우시겠습니까?").setMessage("공부 한 내역은 사라지지 않습니다.");
 
                             alert.setNegativeButton("네", new DialogInterface.OnClickListener(){
                                 @Override
@@ -167,7 +168,7 @@ public class PlanFragment extends Fragment {
                                         jsonObject.accumulate("user_id", userID);
                                         jsonObject.accumulate("user_password", userPassword);
                                         jsonObject.accumulate("position", recycleArrayList.size());
-                                        PlanTask planTask = new PlanTask(jsonObject, "planDelete", "POST");
+                                        PlanTask planTask = new PlanTask(jsonObject, "planAllDelete", "POST");
                                         planTask.execute();
 
                                         planTask = new PlanTask(jsonObject, "plan", "POST");
@@ -249,5 +250,13 @@ public class PlanFragment extends Fragment {
                 time[i][j]=0;
             }
         }
+    }
+
+    public static View getRoot() {
+        return root;
+    }
+
+    public static ArrayList<PlanData> getRecycleArrayList() {
+        return recycleArrayList;
     }
 }

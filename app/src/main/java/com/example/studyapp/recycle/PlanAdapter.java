@@ -1,16 +1,26 @@
 package com.example.studyapp.recycle;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.studyapp.FirstActivity;
 import com.example.studyapp.R;
+import com.example.studyapp.ui.plan.PlanFragment;
+import com.example.studyapp.ui.plan.PlanTask;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -50,13 +60,65 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.CustomViewHold
 //        holder.iv_profile.setBackgroundColor(arrayList.get(position).getTv_content());
 //        holder.iv_profile.setBackgroundColor(Color.parseColor("#dd3080ff"));
         holder.iv_color.setBackgroundColor(Color.parseColor(arrayList.get(position).getIv_color()));
+
 //        System.out.println(arrayList.get(position).getIv_color());
         holder.itemView.setTag(position);
+        System.out.println(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String curName = holder.tv_name.getText().toString();
+                System.out.println(position);
+                System.out.println(holder.getAdapterPosition());
+                View root = PlanFragment.getRoot();
+                AlertDialog.Builder alert = new AlertDialog.Builder(root.getContext());
+                alert.setTitle("계획을 지우시겠습니까?").setMessage("공부 한 내역은 사라지지 않습니다.");
 
+                alert.setNegativeButton("네", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            String userID = FirstActivity.userInfo.getString(FirstActivity.USER_ID,null);
+                            String userPassword = FirstActivity.userInfo.getString(FirstActivity.USER_PASSWORD,null);
+                            int positions = PlanFragment.getRecycleArrayList().get(holder.getAdapterPosition()).getPosition();
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.accumulate("user_id", userID);
+                            jsonObject.accumulate("user_password", userPassword);
+                            jsonObject.accumulate("position", positions);
+                            PlanTask planTask = new PlanTask(jsonObject, "planDelete", "POST");
+                            planTask.execute();
+
+                            planTask = new PlanTask(jsonObject, "plan", "POST");
+                            planTask.execute();
+                            remove(holder.getAdapterPosition());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        PlanTask.showToast(root.getContext(),"지웠습니다.");
+
+                    }
+                });
+
+                alert.setPositiveButton("아니오", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        PlanTask.showToast(root.getContext(),"취소했습니다");
+                    }
+                });
+
+                AlertDialog alertDialog = alert.create();
+
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @SuppressLint("ResourceAsColor")
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        Button positiveB = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                        Button negativeB = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                        positiveB.setTextColor(R.color.maincolor);
+                        negativeB.setTextColor(R.color.maincolor);
+                    }
+                });
+                alertDialog.show();
             }
         });
 
