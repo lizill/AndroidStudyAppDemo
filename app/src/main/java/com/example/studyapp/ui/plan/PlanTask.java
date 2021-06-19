@@ -49,7 +49,7 @@ public class PlanTask extends JSONTask {
                     int startMin = Integer.parseInt(jsO.getString("START").substring(3,5));
                     int endHour =Integer.parseInt(jsO.getString("END").substring(0,2));
                     int endMin =Integer.parseInt(jsO.getString("END").substring(3,5));
-
+                    int position = Integer.parseInt(jsO.getString("position"));
                     String str = timeStr(startHour, startMin,endHour,endMin+1);
                     timeSet(startHour,startMin,endHour,endMin+1);
 
@@ -78,7 +78,8 @@ public class PlanTask extends JSONTask {
                             picnum,
                             jsO.getString("SUBJECT"),
                             str,
-                            "#"+Integer.toHexString(i)+""+Integer.toHexString(i)+"3080ff");
+                            "#"+Integer.toHexString(i)+""+Integer.toHexString(i)+"3080ff",
+                            position);
                     PlanFragment.recycleArrayList.add(planData);
 //                        ArrayList<PlanData> arrayList;
                 }

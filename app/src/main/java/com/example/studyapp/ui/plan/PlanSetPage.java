@@ -164,13 +164,14 @@ public class PlanSetPage extends AppCompatActivity {
             System.out.println("중복 없음");
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.accumulate("position",PlanFragment.recycleArrayList.size()+1);
+                int position = PlanFragment.recycleArrayList.get(PlanFragment.recycleArrayList.size()-1).getPosition();
+                jsonObject.accumulate("position",position+1);
                 jsonObject.accumulate("user_id", userID);
                 jsonObject.accumulate("user_password", userPassword);
                 jsonObject.accumulate("subject",str);
                 jsonObject.accumulate("start",st_hour+":"+st_min+":00");
                 jsonObject.accumulate("end",en_hour+":"+en_min+":00");
-                jsonObject.accumulate("picture",(int)(Math.random()*50));
+                jsonObject.accumulate("picture",(int)(Math.random()*10));
 
                 PlanTask planTask = new PlanTask(jsonObject, "planInsert", "POST");
                 planTask.execute();
