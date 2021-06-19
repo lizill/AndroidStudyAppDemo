@@ -1,5 +1,6 @@
 package com.example.studyapp.ui.home;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +24,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.studyapp.HomeActivity;
 import com.example.studyapp.R;
+import com.example.studyapp.recycle.HomeAdapter;
+import com.example.studyapp.recycle.HomeData;
 import com.example.studyapp.ui.chart.Env;
 
 import org.json.JSONArray;
@@ -46,7 +49,8 @@ public class StopwatchActivity extends AppCompatActivity {
     private long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     private Handler handler;
     private int Seconds, Minutes, MilliSeconds, Hours, tmp, t, hour, min, sec;
-    private String subject,today,userID,start,end;
+    private String today,userID,start,end;
+    public static String  subject;
     private boolean isFirst = false;
 
     //현재 날짜 불러오기
@@ -54,7 +58,7 @@ public class StopwatchActivity extends AppCompatActivity {
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
     DateFormat timeFormat = new SimpleDateFormat("HH mm ss", Locale.KOREA);
 
-    
+
     private RequestQueue requestQueue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +67,18 @@ public class StopwatchActivity extends AppCompatActivity {
 
         userID = FirstActivity.userInfo.getString("userId", null);
 
+
         dateFormat.setTimeZone(tz);
         timeFormat.setTimeZone(tz);
 
         today = dateFormat.format(new Date());
-
+        System.out.println(today);
         start = timeFormat.format(new Date());
         System.out.println(start);
 
+
         //과목정보 불러오기
+
         Intent intent = getIntent();
         subject = intent.getStringExtra("subject");
 
@@ -91,8 +98,9 @@ public class StopwatchActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(StopwatchActivity.this, HomeActivity.class);
                 startActivity(intent);
+
                 if(isFirst){
-                    InsertData();
+//                    InsertData();
                     isFirst = false;
                 }else{
                     UpdateData();
@@ -100,9 +108,11 @@ public class StopwatchActivity extends AppCompatActivity {
                 handler.removeCallbacks(runnable);
 
                 end = timeFormat.format(new Date());
+                //총 공부시간
                 System.out.println(end);
 
                 BeginEndData();
+                InsertData();
             }
         });
     }
@@ -188,7 +198,6 @@ public class StopwatchActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     String res = jsonObject.getString("success");
                     Toast.makeText(StopwatchActivity.this, res, Toast.LENGTH_SHORT).show();
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -214,6 +223,7 @@ public class StopwatchActivity extends AppCompatActivity {
         request.setShouldCache(false);
         requestQueue.add(request);
     }
+
 
     private void searchStudyTimeToday(){
         String url = String.format(Env.fetchURL, userID,today,subject);

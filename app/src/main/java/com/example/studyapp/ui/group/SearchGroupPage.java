@@ -52,7 +52,6 @@ public class SearchGroupPage extends AppCompatActivity {
         groupRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SearchGroupRecyclerAdapter(this, getApplicationContext(), groupList);
         groupRecyclerView.setAdapter(adapter);
-
         makeGroupButton = findViewById(R.id.makeGroupButton);
         makeGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
