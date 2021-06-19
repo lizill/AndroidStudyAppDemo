@@ -164,7 +164,12 @@ public class PlanSetPage extends AppCompatActivity {
             System.out.println("중복 없음");
             try {
                 JSONObject jsonObject = new JSONObject();
-                int position = PlanFragment.recycleArrayList.get(PlanFragment.recycleArrayList.size()-1).getPosition();
+                int position = 1;
+                try{
+                    position = PlanFragment.recycleArrayList.get(PlanFragment.recycleArrayList.size()-1).getPosition();
+                }catch(Exception e2){
+                    position = 1;
+                }
                 jsonObject.accumulate("position",position+1);
                 jsonObject.accumulate("user_id", userID);
                 jsonObject.accumulate("user_password", userPassword);
