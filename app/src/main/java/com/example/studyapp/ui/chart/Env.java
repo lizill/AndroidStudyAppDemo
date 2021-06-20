@@ -3,6 +3,7 @@ package com.example.studyapp.ui.chart;
 import com.example.studyapp.FirstActivity;
 
 public class Env {
+    public static String DeleteSubjectURL = "https://dong0110.com/chatphp/timer/DeleteSubject.php";
     public static String fetchURL = "https://dong0110.com/chatphp/timer/FetchTime.php?userID=%s&study_date=%s&study_subject=%s";
     public static String reSaveURL = "https://dong0110.com/chatphp/timer/ReSaveTime.php";
     public static String saveURL = "https://dong0110.com/chatphp/timer/SaveTime.php";
@@ -20,4 +21,6 @@ public class Env {
     public static String monthInfo2URL = "https://dong0110.com/chatphp/chart/RequireMonthInfo2.php?userID=%s&study_date=%s";
     public static String allDaysInfoURL = "https://dong0110.com/chatphp/chart/DayStudyTime.php?userID=%s";
     public static String getDaysStudyTimeInfoURL = "https://dong0110.com/chatphp/chart/DayStudyTime2.php?userID=%s&study_date=%s";
+    public static String PlusSubjectURL = "https://dong0110.com/chatphp/timer/SendSubject.php";
+    public static String subjectNameURL = "https://dong0110.com/chatphp/timer/SubjectName.php?userID=%s&study_date=%s";
 }

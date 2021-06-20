@@ -64,7 +64,7 @@ public class StopwatchActivity extends AppCompatActivity {
     private boolean isFirst,isTomorrow;
     private boolean isActiveOn = true;
 
-    private String subject = "";
+    public static String subject = "";
     static boolean isStart;
 
     //현재 날짜 불러오기
