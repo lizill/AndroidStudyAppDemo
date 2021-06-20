@@ -63,12 +63,13 @@
             android:id="@+id/ranking_1_time"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/ranking_1"
-            app:layout_constraintEnd_toEndOf="@+id/ranking_1"
-            app:layout_constraintTop_toBottomOf="@id/ranking_1_name"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="1등 공부 시간"/>
+            android:text="1등 공부 시간"
+            android:textColor="@color/maincolor"
+            app:layout_constraintEnd_toEndOf="@+id/ranking_1"
+            app:layout_constraintStart_toStartOf="@id/ranking_1"
+            app:layout_constraintTop_toBottomOf="@id/ranking_1_name" />
 
         <ImageView
             android:id="@+id/ranking_2"
@@ -95,12 +96,13 @@
             android:id="@+id/ranking_2_time"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/ranking_2"
-            app:layout_constraintEnd_toEndOf="@+id/ranking_2"
-            app:layout_constraintTop_toBottomOf="@id/ranking_2_name"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="2등 공부 시간"/>
+            android:text="2등 공부 시간"
+            android:textColor="@color/maincolor"
+            app:layout_constraintEnd_toEndOf="@+id/ranking_2"
+            app:layout_constraintStart_toStartOf="@id/ranking_2"
+            app:layout_constraintTop_toBottomOf="@id/ranking_2_name" />
 
         <ImageView
             android:id="@+id/ranking_3"
@@ -126,12 +128,13 @@
             android:id="@+id/ranking_3_time"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/ranking_3"
-            app:layout_constraintTop_toBottomOf="@id/ranking_3_name"
-            app:layout_constraintEnd_toEndOf="@id/ranking_3"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="3등 공부 시간"/>
+            android:text="3등 공부 시간"
+            android:textColor="@color/maincolor"
+            app:layout_constraintEnd_toEndOf="@id/ranking_3"
+            app:layout_constraintStart_toStartOf="@id/ranking_3"
+            app:layout_constraintTop_toBottomOf="@id/ranking_3_name" />
 
 
         <androidx.recyclerview.widget.RecyclerView
