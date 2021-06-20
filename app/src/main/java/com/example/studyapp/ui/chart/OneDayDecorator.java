@@ -9,11 +9,22 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
 public class OneDayDecorator implements DayViewDecorator {
     private CalendarDay date;
 
     public OneDayDecorator(){
-        date = CalendarDay.today();
+        TimeZone tz = TimeZone.getTimeZone("Asia/Seoul");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        df.setTimeZone(tz);
+        String [] d = df.format(new Date()).split("-");
+        date = CalendarDay.from(Integer.parseInt(d[0]) , Integer.parseInt(d[1]) - 1, Integer.parseInt(d[2]));
     }
 
     @Override

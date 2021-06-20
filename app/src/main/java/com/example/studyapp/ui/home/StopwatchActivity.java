@@ -88,8 +88,9 @@ public class StopwatchActivity extends AppCompatActivity {
 
         dateFormat.setTimeZone(tz);
         timeFormat.setTimeZone(tz);
-
         today = dateFormat.format(new Date());
+        System.out.println(today);
+
         confirmToday =today.split("-")[2];
         start = timeFormat.format(new Date());
         gapOfSecond = 60 - Integer.parseInt(start.split(" ")[2]);

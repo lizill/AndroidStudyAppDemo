@@ -190,6 +190,7 @@ public class DayFragment extends Fragment {
         barChart.setDrawBarShadow(false);
         Description description = new Description();
         description.setEnabled(false);
+        barChart.setDescription(description);
         barChart.getLegend().setEnabled(false);
         barChart.setPinchZoom(false);
         barChart.setClickable(false);
