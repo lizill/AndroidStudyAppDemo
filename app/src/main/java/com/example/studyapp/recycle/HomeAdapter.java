@@ -13,8 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+<<<<<<< HEAD
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+=======
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.studyapp.FirstActivity;
@@ -40,6 +43,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
 
 
     private ArrayList<HomeData> arrayList;
+<<<<<<< HEAD
     private String userID;
     private RequestQueue requestQueue;
     private HomeFragment homeFragment;
@@ -51,6 +55,17 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
         this.arrayList = arrayList;
         userID = FirstActivity.userInfo.getString("userId", null);
         homeFragment = new HomeFragment();
+=======
+    private String userID;///
+    private RequestQueue requestQueue;///
+    private HomeFragment homeFragment;///
+
+    public HomeAdapter(ArrayList<HomeData> arrayList)
+    {
+        this.arrayList = arrayList;
+        userID = FirstActivity.userInfo.getString("userId",null);///
+        homeFragment = new HomeFragment();///
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
     }
 
     @NonNull
@@ -68,7 +83,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
     public void onBindViewHolder(@NonNull final HomeAdapter.CustomViewHolder holder, int position) {
         holder.tv_name.setText(arrayList.get(position).getTv_name());
         holder.subject_time.setText(arrayList.get(position).getSubject_time());
+<<<<<<< HEAD
+=======
+        //holder.iv_profile.setImageResource(arrayList.get(position).getIv_profile());
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
         holder.itemView.setTag(position);
+
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,12 +97,27 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
             }
         });
 
+<<<<<<< HEAD
         holder.itemView.setOnClickListener(v -> {
             mSocket.emit("start", userID);
        Intent intent = new Intent(v.getContext(),StopwatchActivity.class);
        intent.putExtra("subject", arrayList.get(position).getTv_name());
        intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
        v.getContext().startActivity(intent);
+=======
+        holder.itemView.setOnClickListener(v->{
+           mSocket.emit("start",userID);
+           Intent intent = new Intent(v.getContext(), StopwatchActivity.class);
+           intent.putExtra("subject",arrayList.get(position).getTv_name());
+           intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+           v.getContext().startActivity(intent);
+        });
+
+        holder.itemView.setOnLongClickListener(v -> {
+            requestQueue = Volley.newRequestQueue(HomeFragment.root.getContext());
+            remove(holder.getAdapterPosition());
+            return true;
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
         });
 
         holder.itemView.setOnLongClickListener(v -> {
@@ -120,8 +156,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.CustomViewHold
             this.iv_profile = (ImageView) itemView.findViewById(R.id.iv_home_profile);
 
             this.tv_name = (TextView) itemView.findViewById(R.id.tv_home_name);
+<<<<<<< HEAD
 
             this.subject_time = (TextView) itemView.findViewById(R.id.subject_name);
+=======
+            this.subject_time = (TextView) itemView.findViewById(R.id.subject_time);
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
         }
     }
 

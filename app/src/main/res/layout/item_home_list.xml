@@ -17,7 +17,11 @@
             android:layout_width="73dp"
             android:layout_height="68dp"
 
+<<<<<<< HEAD
             android:src="@drawable/startbuttonsmall" />
+=======
+            android:src="@drawable/bluebtnsmall5"/>
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,11 +32,16 @@
             <TextView
                 android:id="@+id/tv_home_name"
                 android:layout_width="162dp"
+<<<<<<< HEAD
                 android:layout_height="match_parent"
+=======
+                android:layout_height="34dp"
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="0dp"
                 android:height="100dp"
                 android:text=""
+<<<<<<< HEAD
                 android:textSize="40dp" />
 
             <TextView
@@ -41,6 +50,17 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="0dp"
                 android:textSize="40dp"
+=======
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/subject_time"
+                android:layout_width="140dp"
+                android:layout_height="29dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginLeft="15dp"
+                android:textSize="25dp"
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
                 />
 
 

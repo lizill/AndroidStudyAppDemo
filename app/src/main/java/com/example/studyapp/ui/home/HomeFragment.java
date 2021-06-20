@@ -6,9 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+<<<<<<< HEAD
 
 import android.widget.EditText;
 import android.widget.LinearLayout;
+=======
+import android.widget.EditText;
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +66,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private EditText editTextTextPersonName;
+<<<<<<< HEAD
     private RecyclerView subjectRecyclerView;
     public static Socket mSocket;
 
@@ -73,6 +78,16 @@ public class HomeFragment extends Fragment {
     private String today,userID, subject;
     public static String TOTAL_STUDY_TIME;
     public static View root;
+=======
+    private HomeViewModel homeViewModel;
+
+//    private Button sub1;
+    private TextView tv_data;
+    private RequestQueue requestQueue;
+    private String today,userID,subject;
+    public static View root;
+    public static boolean isDayFragment, isWeekFragment,isMonthFragment;
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
 
     public static boolean isDayFragment, isWeekFragment,isMonthFragment;
 
@@ -83,6 +98,7 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         root = inflater.inflate(R.layout.fragment_home, container, false);
+<<<<<<< HEAD
 
         editTextTextPersonName = (EditText)root.findViewById(R.id.editTextTextPersonName);
         recyclerView = (RecyclerView) root.findViewById(R.id.rv_home);
@@ -92,6 +108,17 @@ public class HomeFragment extends Fragment {
         homeAdapter = new HomeAdapter(arrayList);
         recyclerView.setAdapter(homeAdapter);
 
+=======
+
+        editTextTextPersonName = (EditText)root.findViewById(R.id.editTextTextPersonName);
+        recyclerView = (RecyclerView)root.findViewById(R.id.rv_home);
+        linearLayoutManager = new LinearLayoutManager(root.getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        arrayList = new ArrayList<>();
+        homeAdapter = new HomeAdapter(arrayList);
+        recyclerView.setAdapter(homeAdapter);
+
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
         subject = StopwatchActivity.subject;
         userID = FirstActivity.userInfo.getString("userId", null);
 
@@ -111,7 +138,10 @@ public class HomeFragment extends Fragment {
         totalSubject();
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
         tv_data = (TextView) root.findViewById(R.id.tv_data);
 
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -123,7 +153,11 @@ public class HomeFragment extends Fragment {
                 Button addButton = (Button)root.findViewById(R.id.addButton);
                 addButton.setOnClickListener(new View.OnClickListener(){
                     @Override
+<<<<<<< HEAD
                     public void onClick(View v){
+=======
+                    public void onClick(View v) {
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
                         HomeData homeData = null;
                         homeData = new HomeData(editTextTextPersonName.getText().toString(),"00:00:00");
                         plusSubject();
@@ -131,6 +165,13 @@ public class HomeFragment extends Fragment {
                         homeAdapter.notifyDataSetChanged();
                     }
 
+<<<<<<< HEAD
+=======
+//                    @Override
+//                    public void onClock(View v){
+//                        HomeData homeData = null;
+//                    }
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
                 });
             }
         });
@@ -143,6 +184,7 @@ public class HomeFragment extends Fragment {
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 response -> {
                     try {
+<<<<<<< HEAD
 
                         //json object >> {response:[{key : value}, {.....
                         JSONObject jsonObject = new JSONObject(response);
@@ -193,6 +235,35 @@ public class HomeFragment extends Fragment {
 //                            tv_data.setText(TOTAL_STUDY_TIME);
 //                        }
 //                        System.out.println(TOTAL_STUDY_TIME);
+=======
+                        //json object >> {response:[{key : value}, {.....
+                        JSONObject jsonObject = new JSONObject(response);
+
+                        //object start name : response  >>>>> array
+                        JSONArray jsonArray = jsonObject.getJSONArray("response");
+
+                        JSONObject studyObject = jsonArray.getJSONObject(0);
+                        String todayStudyTime = studyObject.getString("study_time");
+
+                        JSONObject studyObject2 = jsonArray.getJSONObject(1);
+                        String study_week_time = studyObject2.getString("study_week_time");
+
+                        JSONObject studyObject3 = jsonArray.getJSONObject(2);
+                        String study_month_time = studyObject3.getString("study_month_time");
+
+                        if(!study_week_time.equals("null")) isWeekFragment = true;
+                        System.out.println("isWeekFragment : " + study_week_time);
+                        if(!study_month_time.equals("null")) isMonthFragment = true;
+
+                        if(!todayStudyTime.equals("null")){
+                            isDayFragment = true;
+                        }else{
+                            todayStudyTime = "00:00:00";
+                        }
+
+                        tv_data.setText(todayStudyTime);
+
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -206,7 +277,10 @@ public class HomeFragment extends Fragment {
         requestQueue.add(request);
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
     private void totalSubject() {
         String url = String.format(Env.subjectNameURL, userID, today);
 
@@ -277,4 +351,9 @@ public class HomeFragment extends Fragment {
         requestQueue.add(request);
     }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
 }

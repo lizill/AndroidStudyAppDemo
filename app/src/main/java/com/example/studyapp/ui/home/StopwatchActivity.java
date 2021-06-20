@@ -49,10 +49,21 @@ public class StopwatchActivity extends AppCompatActivity {
     private ImageButton back_btn;
     private long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     private Handler handler;
+<<<<<<< HEAD
     private int Seconds, Minutes, MilliSeconds, Hours, tmp, t, hour, min, sec, allhour,allmin,allsec,at,ahour,amin,asec;
     private String today,userID,start,end;
     public static String subject;
     private boolean isFirst = false;
+=======
+    private int Seconds, Minutes, Hours, tmp, t, t2, hour, min, sec, totalHour, totalMin, totalSec, gapOfSecond,gapOfMinute,studyTimeSec,studyTimeTotalSec;
+    private String today,userID,start,end,confirmToday;
+
+    private boolean isFirst,isTomorrow;
+    private boolean isActiveOn = true;
+
+    public static String subject = "";
+    static boolean isStart;
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
 
     //현재 날짜 불러오기
     private TimeZone tz = TimeZone.getTimeZone("Asia/Seoul");
@@ -72,9 +83,13 @@ public class StopwatchActivity extends AppCompatActivity {
 
         dateFormat.setTimeZone(tz);
         timeFormat.setTimeZone(tz);
-
         today = dateFormat.format(new Date());
         System.out.println(today);
+<<<<<<< HEAD
+=======
+
+        confirmToday =today.split("-")[2];
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
         start = timeFormat.format(new Date());
         System.out.println(start);
 
@@ -100,8 +115,17 @@ public class StopwatchActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(StopwatchActivity.this, HomeActivity.class);
                 startActivity(intent);
+<<<<<<< HEAD
 
 
+=======
+                if(isFirst){
+                    InsertData();
+                    isFirst = false;
+                }else{
+                    UpdateData();
+                }
+>>>>>>> 46e6dc88e85b4aef9baf959afc20deeeee334b32
                 handler.removeCallbacks(runnable);
 
                 end = timeFormat.format(new Date());

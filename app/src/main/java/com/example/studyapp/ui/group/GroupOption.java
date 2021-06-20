@@ -138,7 +138,7 @@ public class GroupOption extends AppCompatActivity {
                                         boolean success = jsonResponse.getBoolean("success");
                                         if (success) {
 
-                                            HomeFragment.mSocket.emit("left", gson.toJson(new RoomData(userID, groupName, System.currentTimeMillis())));
+//                                            HomeFragment.mSocket.emit("left", gson.toJson(new RoomData(userID, groupName, System.currentTimeMillis())));
 
                                             Log.d("성공",":::");
                                             Response.Listener<String> responseListener = new Response.Listener<String>() {
