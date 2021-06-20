@@ -112,6 +112,8 @@ public class ChatActivity extends AppCompatActivity {
 //            HomeFragment.mSocket.emit("enter", gson.toJson(new RoomData(userID, roomName, System.currentTimeMillis())));
 //        });
 
+        mSocket.emit("join", gson.toJson(roomName));
+
         mSocket.on("update", args -> {
             MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
             addChat(data);
