@@ -110,9 +110,9 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
                                                         boolean success = jsonResponse.getBoolean("success");
                                                         if (success) {
 
-                                                            HomeFragment.mSocket.on(Socket.EVENT_CONNECT, args -> {
-                                                                HomeFragment.mSocket.emit("enter", gson.toJson(new RoomData(userID, group, System.currentTimeMillis())));
-                                                            });
+//                                                            HomeFragment.mSocket.on(Socket.EVENT_CONNECT, args -> {
+//                                                                HomeFragment.mSocket.emit("enter", gson.toJson(new RoomData(userID, group, System.currentTimeMillis())));
+//                                                            });
 
                                                             Log.d("성공",":::");
                                                             peopleCountIncrease(group);

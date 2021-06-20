@@ -1,11 +1,8 @@
 package com.example.studyapp.recycle;
 
-import android.text.Editable;
-
 public class HomeData {
     private String tv_home_name;
     private String subject_time;
-
 
     public HomeData(String tv_name,String subject_time) {
         this.subject_time = subject_time;

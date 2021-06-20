@@ -17,7 +17,7 @@
             android:layout_width="73dp"
             android:layout_height="68dp"
 
-            android:src="@drawable/startbuttonsmall" />
+            android:src="@drawable/bluebtnsmall5"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,19 +28,20 @@
             <TextView
                 android:id="@+id/tv_home_name"
                 android:layout_width="162dp"
-                android:layout_height="match_parent"
+                android:layout_height="34dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="0dp"
                 android:height="100dp"
                 android:text=""
-                android:textSize="40dp" />
+                android:textSize="25dp" />
 
             <TextView
-                android:id="@+id/subject_name"
-                android:layout_width="160dp"
-                android:layout_height="match_parent"
+                android:id="@+id/subject_time"
+                android:layout_width="140dp"
+                android:layout_height="29dp"
                 android:layout_marginRight="0dp"
-                android:textSize="40dp"
+                android:layout_marginLeft="15dp"
+                android:textSize="25dp"
                 />
 
 
