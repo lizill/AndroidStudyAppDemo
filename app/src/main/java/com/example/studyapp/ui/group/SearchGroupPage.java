@@ -68,7 +68,6 @@ public class SearchGroupPage extends AppCompatActivity {
         groupRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SearchGroupRecyclerAdapter(this, getApplicationContext(), groupList);
         groupRecyclerView.setAdapter(adapter);
-
         makeGroupButton = findViewById(R.id.makeGroupButton);
         makeGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,7 +208,6 @@ public class SearchGroupPage extends AppCompatActivity {
                     startDate = object.getString("startDate");
                     memberLimit = object.getString("peopleLimit");
                     Group group = new Group(groupName, contents, peopleCount, category, goalTime, master, startDate, memberLimit);
-                    Log.d("불러오나", groupName +contents + peopleCount + category + goalTime + master + startDate);
                     groupList.add(group);
                     adapter.notifyDataSetChanged();
                     count++;

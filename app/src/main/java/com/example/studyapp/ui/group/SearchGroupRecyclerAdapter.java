@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -72,7 +73,6 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
                 @Override
                 public void onClick(View v) {
                     String group = (String)((TextView)v.findViewById(R.id.search_groupText)).getText();
-                    Log.d("?????: ", group);
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setTitle(group).setMessage("그룹에 가입하시겠습니까?");
@@ -87,7 +87,6 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
                                         JSONArray jsonArray = jsonObject.getJSONArray("response");
                                         jsonObject = jsonArray.getJSONObject(0);
                                         String memberCount = jsonObject.getString("count");
-                                        Log.d("아아아아", memberCount);
                                         String memberLimit = "";
                                         int pos = getAdapterPosition();
                                         if (pos != RecyclerView.NO_POSITION) {
@@ -95,7 +94,6 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
                                         }
                                         Log.d(""+(Integer.parseInt(memberCount) >= Integer.parseInt(memberLimit)), memberCount + ":" + memberLimit);
                                         if (Integer.parseInt(memberCount) >= Integer.parseInt(memberLimit) ) {
-                                            Log.d("크거나 같음","불가능");
                                             androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(activity);
                                             builder.setMessage("정원이 모두 찼습니다")
                                                     .setNegativeButton("확인", null)
@@ -114,7 +112,6 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
                                                                 HomeFragment.mSocket.emit("enter", gson.toJson(new RoomData(userID, group, System.currentTimeMillis())));
                                                             });
 
-                                                            Log.d("성공",":::");
                                                             peopleCountIncrease(group);
                                                             Intent intent = new Intent(activity,  GroupPage.class);
                                                             intent.putExtra("group", group);
@@ -191,7 +188,6 @@ public class SearchGroupRecyclerAdapter extends RecyclerView.Adapter<SearchGroup
                     JSONObject jsonResponse = new JSONObject(response);
                     boolean success = jsonResponse.getBoolean("success");
                     if (success) {
-                        Log.d("성공",":::");
                     }
                 } catch (Exception e){
                     e.printStackTrace();

@@ -1,23 +1,15 @@
 package com.example.studyapp.ui.home;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.KeyguardManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.util.Log;
-import android.view.KeyboardShortcutGroup;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -33,6 +25,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.studyapp.HomeActivity;
 import com.example.studyapp.R;
+import com.example.studyapp.recycle.HomeAdapter;
+import com.example.studyapp.recycle.HomeData;
 import com.example.studyapp.ui.chart.Env;
 
 import org.json.JSONArray;
@@ -48,59 +42,47 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import com.example.studyapp.FirstActivity;
-import com.google.gson.Gson;
-
-import static com.example.studyapp.ui.home.HomeFragment.mSocket;
 
 public class StopwatchActivity extends AppCompatActivity {
 
-    private TextView tv_total_timer, tv_subject, tv_subject_timer;
+    private TextView textView ;
     private ImageButton back_btn;
-    private long MillisecondTime, StartTime, leaveTime, termTime = 0L ;
+    private long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     private Handler handler;
-    private int Seconds, Minutes, Hours, tmp, t, t2, hour, min, sec, totalHour, totalMin, totalSec, gapOfSecond,gapOfMinute,studyTimeSec,studyTimeTotalSec;
-    private String today,userID,start,end,confirmToday;
-
-    private boolean isFirst,isTomorrow;
-    private boolean isActiveOn = true;
-
-    private String subject = "";
-    static boolean isStart;
+    private int Seconds, Minutes, MilliSeconds, Hours, tmp, t, hour, min, sec, allhour,allmin,allsec,at,ahour,amin,asec;
+    private String today,userID,start,end;
+    public static String subject;
+    private boolean isFirst = false;
 
     //현재 날짜 불러오기
     private TimeZone tz = TimeZone.getTimeZone("Asia/Seoul");
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
     DateFormat timeFormat = new SimpleDateFormat("HH mm ss", Locale.KOREA);
 
+
     private RequestQueue requestQueue;
-
-    private Gson gson = new Gson();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isStart = true;
         setContentView(R.layout.activity_stopwatch);
-        tv_total_timer = (TextView)findViewById(R.id.tv_total_timer);
-        tv_subject_timer = (TextView)findViewById(R.id.tv_subject_timer);
+        textView = (TextView)findViewById(R.id.tv_subject_timer);
 
         userID = FirstActivity.userInfo.getString("userId", null);
+
 
         dateFormat.setTimeZone(tz);
         timeFormat.setTimeZone(tz);
 
         today = dateFormat.format(new Date());
-        confirmToday =today.split("-")[2];
+        System.out.println(today);
         start = timeFormat.format(new Date());
-        gapOfSecond = 60 - Integer.parseInt(start.split(" ")[2]);
-        gapOfMinute = 60 - Integer.parseInt(start.split(" ")[1]) - 1;
+        System.out.println(start);
+
 
         //과목정보 불러오기
-        Intent intent = getIntent();
 
+        Intent intent = getIntent();
         subject = intent.getStringExtra("subject");
-        tv_subject = findViewById(R.id.tv_subject);
-        tv_subject.setText(subject);
 
 
         //Volley Queue  & request json
@@ -112,29 +94,27 @@ public class StopwatchActivity extends AppCompatActivity {
         handler = new Handler() ;
         StartTime = SystemClock.uptimeMillis();
 
+
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isStart = false;
                 Intent intent = new Intent(StopwatchActivity.this, HomeActivity.class);
                 startActivity(intent);
-                if(isFirst){
-                    InsertData();
-                    isFirst = false;
 
-                }else{
-                    UpdateData();
-                }
+
                 handler.removeCallbacks(runnable);
 
                 end = timeFormat.format(new Date());
+                //총 공부시간
+                System.out.println(end);
 
                 BeginEndData();
+                InsertData();
             }
         });
     }
     private void BeginEndData(){
-        String url = Env.beginEndURL;
+        String url = Env.BeginEndURL;
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -142,6 +122,7 @@ public class StopwatchActivity extends AppCompatActivity {
                     //json object >> {response:[{key : value}, {.....
                     JSONObject jsonObject = new JSONObject(response);
                     String res = jsonObject.getString("success");
+                    System.out.println("BeginEndData save");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -162,6 +143,7 @@ public class StopwatchActivity extends AppCompatActivity {
                 params.put("study_start", start.replace(" ", ":"));
                 params.put("study_end", end.replace(" ", ":"));
 
+                System.out.println(userID + " " + today + " " + subject + " " + start.replace(" ", ":") + end.replace(" ", ":"));
                 return params;
             }
         };
@@ -169,7 +151,7 @@ public class StopwatchActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
     private void InsertData(){
-        String url = Env.saveURL;
+        String url = Env.SaveURL;
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -177,6 +159,7 @@ public class StopwatchActivity extends AppCompatActivity {
                         //json object >> {response:[{key : value}, {.....
                         JSONObject jsonObject = new JSONObject(response);
                         String res = jsonObject.getString("success");
+                        Toast.makeText(StopwatchActivity.this, res, Toast.LENGTH_SHORT).show();
 
                     } catch (JSONException e) {
                     e.printStackTrace();
@@ -190,12 +173,20 @@ public class StopwatchActivity extends AppCompatActivity {
         })  {
             @Override
             protected Map<String, String> getParams() {
-                String time = tv_subject_timer.getText().toString().replace(":","");
+                int updateTime = (hour*3600+min*60+sec)-(Hours*3600+Minutes*60+Seconds);
+                int newHour = updateTime /3600;
+                updateTime %=3600;
+                int newMin = updateTime/60;
+                updateTime %=60;
+                int newSec = updateTime;
+                String newTime = String.format("%02d", newHour) + ":" + String.format("%02d", newMin) + ":" + String.format("%02d", newSec);
+                System.out.println(newTime);
+                String time = textView.getText().toString().replace(":","");
                 Map<String,String> params = new HashMap<>();
                 params.put("userID", userID);
                 params.put("study_date", today);
                 params.put("study_subject", subject);
-                params.put("study_time", time);
+                params.put("study_time", newTime);
                 return params;
             }
         };
@@ -203,7 +194,7 @@ public class StopwatchActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
     private void UpdateData(){
-        String url = Env.reSaveURL;
+        String url = Env.ReSaveURL;
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -211,7 +202,7 @@ public class StopwatchActivity extends AppCompatActivity {
                     //json object >> {response:[{key : value}, {.....
                     JSONObject jsonObject = new JSONObject(response);
                     String res = jsonObject.getString("success");
-
+                    Toast.makeText(StopwatchActivity.this, res, Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -224,19 +215,28 @@ public class StopwatchActivity extends AppCompatActivity {
         })  {
             @Override
             protected Map<String, String> getParams() {
-                String time = tv_subject_timer.getText().toString().replace(":","");
-
+                int updateTime = (hour*3600+min*60+sec)-(Hours*3600+Minutes*60+Seconds);
+                int newHour = updateTime /3600;
+                updateTime %=3600;
+                int newMin = updateTime/60;
+                updateTime %=60;
+                int newSec = updateTime;
+                String newTime = String.format("%02d", newHour) + ":" + String.format("%02d", newMin) + ":" + String.format("%02d", newSec);
+//                private int Seconds, Minutes, MilliSeconds, Hours, tmp, t, hour, min, sec, allhour,allmin,allsec,at,ahour,amin,asec;
+                String time = textView.getText().toString().replace(":","");
+                System.out.println(userID + " " + today + " " + subject + " " + time);
                 Map<String,String> params = new HashMap<>();
                 params.put("userID", userID);
                 params.put("study_date", today);
                 params.put("study_subject", subject);
-                params.put("study_time", time);
+                params.put("study_time", newTime);
                 return params;
             }
         };
         request.setShouldCache(false);
         requestQueue.add(request);
     }
+
 
     private void searchStudyTimeToday(){
         String url = String.format(Env.fetchURL, userID,today,subject);
@@ -251,23 +251,26 @@ public class StopwatchActivity extends AppCompatActivity {
                             //object start name : response  >>>>> array
                             JSONArray jsonArray = jsonObject.getJSONArray("response");
                             JSONObject studyObject = jsonArray.getJSONObject(0);
-                            JSONObject studyObject2 = jsonArray.getJSONObject(1);
-
                             String studyTime = studyObject.getString("study_time");
-                            String studyTimeSecTmp = studyObject.getString("study_time_sec");
-                            String studyTotalTime = studyObject2.getString("study_total_time");
+                            int totalTime = 0;
+                            try {
+                                totalTime = Integer.parseInt(jsonArray.getJSONObject(1).getString("study_total_time"));
+                            }catch(Exception error){
 
+                            }
+
+                            allhour = totalTime/3600;
+                            allmin = (totalTime%3600)/60;
+                            allsec = (totalTime%3600)%60;
+                            String formatedTime = String.format("%02d", allhour) + ":" + String.format("%02d", allmin) + ":" + String.format("%02d", allsec);
+                            TextView allTime = findViewById(R.id.tv_total_timer);
+                            allTime.setText(formatedTime);
+                            System.out.println(formatedTime);
+//                            String.format("%02d", totalTime_hour) + ":" + String.format("%02d", totalTime_min) + ":" + String.format("%02d", totalTime_sec)
                             if(!studyTime.equals("null")){
                                 convertToTime(studyTime);
-                                studyTimeSec = Integer.parseInt(studyTimeSecTmp);
                             }else{
                                 isFirst = true;
-                                studyTimeSec = 0;
-                            }
-                            if(studyTotalTime.equals("null")){
-                                studyTimeTotalSec = 0;
-                            }else{
-                                studyTimeTotalSec = Integer.parseInt(studyTotalTime);
                             }
                             handler.postDelayed(runnable, 0);
                         } catch (JSONException e) {
@@ -288,148 +291,54 @@ public class StopwatchActivity extends AppCompatActivity {
         Hours = Integer.parseInt(time[0]);
         Minutes = Integer.parseInt(time[1]);
         Seconds = Integer.parseInt(time[2]);
-
-        if(Seconds + gapOfSecond >= 60){
-            gapOfMinute++;
-            gapOfSecond = Seconds + gapOfSecond - 60;
-        }
-        if(Minutes + gapOfMinute > 60){
-            gapOfMinute = Minutes + gapOfMinute - 60;
-        }
     }
     public Runnable runnable = new Runnable() {
+        //인덱스
         public void run() {
-            /*
-            현재 부팅한 시간을 나타낸다 uptimeMiillis, StartTime = 처음 부팅 시간
-            SystemClock.uptimeMillis() - StartTime을 하면 밀리 초가 나오고 그것을 1000으로 나누면 1초다.
-            leaveTime은 중간에 다른 공간으로 가면 시간의 텀을 빼주는 것 이다.
-             */
-            MillisecondTime = SystemClock.uptimeMillis() - StartTime - leaveTime;
+            MillisecondTime = SystemClock.uptimeMillis() - StartTime;
+
+            UpdateTime = TimeBuff + MillisecondTime;
 
             //시간의 흐름
-            tmp = (int)(MillisecondTime / 1000);
-            t = studyTimeSec + tmp;
-            hour = t / 3600;
+            tmp = (int)(UpdateTime / 1000);
+            t = Seconds + tmp;
+             at = allsec + tmp;
+            hour = Hours + t / 3600;
+            ahour = allhour + at/3600;
             t %= 3600;
-            min = t / 60;
+            at%=3600;
+            min = Minutes + t / 60;
+            amin = allmin+at/60;
             t %= 60;
+            at %= 60;
             sec = t;
+            asec = at;
+            MilliSeconds = (int) (UpdateTime % 1000);
 
-            t2 = studyTimeTotalSec + tmp;
-            totalHour = t / 3600;
-            t2 %= 3600;
-            totalMin = t2 / 60;
-            t2 %= 60;
-            totalSec = t2;
 
-            //구현해야할것 데이터 insert update 부분
-            //다음날 데이터 초기화 등등 전체적으로 다시 살펴보기
-            if(min == gapOfMinute && sec == gapOfSecond & !isTomorrow){
-                System.out.println("정각입니다.");
-                String tDay = dateFormat.format(new Date()).split("-")[2];
-                if(!tDay.equals(confirmToday)){
-                    isTomorrow = true;
-                    if(isFirst){
-                        InsertData();
-                        isFirst = false;
-                    }else{
-                        UpdateData();
-                    }
-                    end="23:59:59";
-                    BeginEndData();
-                    restart();
-                }
-            }
+            TextView allTime = findViewById(R.id.tv_total_timer);
+//            String oldAllTime = allTime.getText().toString();
+//            String[] time = oldAllTime.split(":");
+//            int oldhour = Integer.parseInt(time[0]);
+//            int oldmin = Integer.parseInt(time[1]);
+//            int oldsec = Integer.parseInt(time[2]);
+//            oldsec+=(tmp%3600)%60;
+//            if(oldsec>=60){
+//                oldsec = 0;
+//                oldmin++;
+//                if(oldmin>=60){
+//                    oldmin=0;
+//                    oldhour++;
+//                }
+//            }
+            String formatedTime = String.format("%02d", ahour) + ":" + String.format("%02d", amin) + ":" + String.format("%02d", asec);
+            allTime.setText(formatedTime);
+
+
 
             //String format을 통한 시간 대입
-            tv_subject_timer.setText(String.format("%02d", hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec));
-            tv_total_timer.setText(String.format("%02d", totalHour) + ":" + String.format("%02d", totalMin) + ":" + String.format("%02d", totalSec));
-
+            textView.setText(String.format("%02d", hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec));
             handler.postDelayed(this, 0);
         }
     };
-    private void restart(){
-        tv_subject_timer.setText("00:00:00");
-        today = dateFormat.format(new Date());
-        start="00:00:00";
-        StartTime = SystemClock.uptimeMillis();
-        leaveTime = Seconds = Minutes = Hours = hour = min = sec = totalSec = totalHour = totalMin = 0;
-    }
-
-    @Override
-    protected void onUserLeaveHint() {
-        super.onUserLeaveHint();
-        // 공부 종료 정보를 서버로 보냄
-        mSocket.emit("end", userID);
-
-        isActiveOn = false;
-        handler.removeCallbacks(runnable);
-        if(isFirst){
-            InsertData();
-            isFirst = false;
-        }else{
-            UpdateData();
-        }
-        termTime = SystemClock.uptimeMillis();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(!isActiveOn){
-            showMessage();
-        }
-    }
-    //dialog 정의
-    private void showMessage(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("공부합시다.");
-        builder.setMessage("공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해" +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 "
-        );
-        builder.setPositiveButton("계속", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // 공부 시작 정보를 서버로 보냄
-                mSocket.emit("start", userID);
-
-                //정지된 만큼 텀 계산
-                termTime = SystemClock.uptimeMillis() - termTime;
-                leaveTime += termTime;
-                isActiveOn = true;
-                handler.postDelayed(runnable, 0000);
-            }
-        });
-        builder.show();
-    }
-
-    //버튼 누른 효과를 그대로 뒤로가기 버튼누를 때 나타남
-    @Override
-    public void onBackPressed() {
-        isStart = false;
-        Intent intent = new Intent(StopwatchActivity.this, HomeActivity.class);
-        startActivity(intent);
-        if(isFirst){
-            InsertData();
-            isFirst = false;
-        }else{
-            UpdateData();
-        }
-        handler.removeCallbacks(runnable);
-
-        end = timeFormat.format(new Date());
-
-        BeginEndData();
-        super.onBackPressed();
-    }
 }
