@@ -119,17 +119,7 @@ public class StopwatchActivity extends AppCompatActivity {
                 isStart = false;
                 Intent intent = new Intent(StopwatchActivity.this, HomeActivity.class);
                 startActivity(intent);
-                if(isFirst){
-                    InsertData();
-                    isFirst = false;
-                }else{
-                    UpdateData();
-                }
                 handler.removeCallbacks(runnable);
-
-                end = timeFormat.format(new Date());
-
-                BeginEndData();
             }
         });
     }
@@ -178,6 +168,10 @@ public class StopwatchActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(response);
                         String res = jsonObject.getString("success");
 
+                        end = timeFormat.format(new Date());
+
+                        BeginEndData();
+
                     } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -211,6 +205,10 @@ public class StopwatchActivity extends AppCompatActivity {
                     //json object >> {response:[{key : value}, {.....
                     JSONObject jsonObject = new JSONObject(response);
                     String res = jsonObject.getString("success");
+
+                    end = timeFormat.format(new Date());
+
+                    BeginEndData();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -322,25 +320,6 @@ public class StopwatchActivity extends AppCompatActivity {
             t2 %= 60;
             totalSec = t2;
 
-            //구현해야할것 데이터 insert update 부분
-            //다음날 데이터 초기화 등등 전체적으로 다시 살펴보기
-            if(min == gapOfMinute && sec == gapOfSecond & !isTomorrow){
-                System.out.println("정각입니다.");
-                String tDay = dateFormat.format(new Date()).split("-")[2];
-                if(!tDay.equals(confirmToday)){
-                    isTomorrow = true;
-                    if(isFirst){
-                        InsertData();
-                        isFirst = false;
-                    }else{
-                        UpdateData();
-                    }
-                    end="23:59:59";
-                    BeginEndData();
-                    restart();
-                }
-            }
-
             //String format을 통한 시간 대입
             tv_subject_timer.setText(String.format("%02d", hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec));
             tv_total_timer.setText(String.format("%02d", totalHour) + ":" + String.format("%02d", totalMin) + ":" + String.format("%02d", totalSec));
@@ -361,6 +340,7 @@ public class StopwatchActivity extends AppCompatActivity {
         super.onUserLeaveHint();
         // 공부 종료 정보를 서버로 보냄
         mSocket.emit("end", userID);
+        System.out.println("sdafsa");
 
         isActiveOn = false;
         handler.removeCallbacks(runnable);
@@ -370,9 +350,7 @@ public class StopwatchActivity extends AppCompatActivity {
         }else{
             UpdateData();
         }
-        end = timeFormat.format(new Date());
 
-        BeginEndData();
         termTime = SystemClock.uptimeMillis();
     }
 
@@ -398,6 +376,7 @@ public class StopwatchActivity extends AppCompatActivity {
                 termTime = SystemClock.uptimeMillis() - termTime;
                 leaveTime += termTime;
                 isActiveOn = true;
+                start = timeFormat.format(new Date());
                 handler.postDelayed(runnable, 0000);
             }
         });
@@ -410,17 +389,8 @@ public class StopwatchActivity extends AppCompatActivity {
         isStart = false;
         Intent intent = new Intent(StopwatchActivity.this, HomeActivity.class);
         startActivity(intent);
-        if(isFirst){
-            InsertData();
-            isFirst = false;
-        }else{
-            UpdateData();
-        }
         handler.removeCallbacks(runnable);
 
-        end = timeFormat.format(new Date());
-
-        BeginEndData();
         super.onBackPressed();
     }
 }
