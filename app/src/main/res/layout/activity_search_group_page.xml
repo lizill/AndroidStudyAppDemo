@@ -7,9 +7,10 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:hint="  검색"
+        android:hint="검색"
         android:id="@+id/searchName_ET"
         android:background="@null"
+        android:paddingLeft="15dp"
         >
     </EditText>
     <TextView

@@ -64,7 +64,6 @@ public class MakeGroup extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         categorySelect.setText(categoryArr[which]);
-                        Toast.makeText(getApplicationContext(), categoryArr[which], Toast.LENGTH_LONG).show();
                     }
                 });
                 builder.show();
@@ -85,7 +84,6 @@ public class MakeGroup extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         goalTimeSelect.setText(goalTimeArr[which]);
                         goalTime = which + 1;
-                        Toast.makeText(getApplicationContext(), goalTimeArr[which], Toast.LENGTH_LONG).show();
                     }
                 });
                 builder.show();
@@ -106,7 +104,6 @@ public class MakeGroup extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         memberLimitSelect.setText(memberLimitArr[which]);
                         memberLimit = which + 2;
-                        Toast.makeText(getApplicationContext(), memberLimitArr[which], Toast.LENGTH_LONG).show();
                     }
                 });
                 builder.show();

@@ -119,6 +119,7 @@ public class HomeFragment extends Fragment {
                         plusSubject();
                         arrayList.add(homeData);
                         homeAdapter.notifyDataSetChanged();
+                        editTextTextPersonName.setText("");
                     }
 
 //                    @Override
@@ -187,7 +188,6 @@ public class HomeFragment extends Fragment {
                         while(count<jsonArray.length()) {
                             JSONObject studyObject = jsonArray.getJSONObject(count);
                             String subjectName = studyObject.getString("subject"+count);
-                            String todaySubjectName = studyObject.getString("todaySubjectName"+count);
                             String todaySubjectTime = studyObject.getString("todaySubjectTime"+count);
                             if(todaySubjectTime.equals("")||todaySubjectTime.equals("null")){
                                 todaySubjectTime = "00:00:00";

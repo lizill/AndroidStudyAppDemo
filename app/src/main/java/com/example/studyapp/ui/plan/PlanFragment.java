@@ -173,6 +173,7 @@ public class PlanFragment extends Fragment {
 
                                         planTask = new PlanTask(jsonObject, "plan", "POST");
                                         planTask.execute();
+                                        planAdapter.notifyDataSetChanged();;
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }

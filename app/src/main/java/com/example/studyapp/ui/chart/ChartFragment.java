@@ -187,33 +187,6 @@ public class ChartFragment extends Fragment {
         for(Fragment frag : fragments){
             pagerAdapter2.addFrag(frag);
         }
-
-        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                if (getChildFragmentManager().getFragments().size() > position) {
-                    Fragment fragment = getChildFragmentManager().getFragments().get(position);
-                    if(fragment.getView() != null){
-                        updatePagerHeightForChild(getView(), viewPager2);
-                    }
-                }
-            }
-
-            public void  updatePagerHeightForChild(View view, ViewPager2 pager) {
-                view.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY);
-                        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-                        view.measure(widthMeasureSpec, heightMeasureSpec);
-                        if (pager.getLayoutParams().height != view.getMeasuredHeight()) {
-                            pager.getLayoutParams().height = view.getMeasuredHeight();
-                        }
-                    }
-                });
-            }
-        });
         viewPager2.setAdapter(pagerAdapter2);
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText(titles[position])).attach();
     }

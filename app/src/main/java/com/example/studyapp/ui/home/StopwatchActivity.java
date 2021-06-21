@@ -370,6 +370,9 @@ public class StopwatchActivity extends AppCompatActivity {
         }else{
             UpdateData();
         }
+        end = timeFormat.format(new Date());
+
+        BeginEndData();
         termTime = SystemClock.uptimeMillis();
     }
 
@@ -384,19 +387,7 @@ public class StopwatchActivity extends AppCompatActivity {
     private void showMessage(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("공부합시다.");
-        builder.setMessage("공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해" +
-                "공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 공부 해 " +
-                "공부 해 공부 해 공부 해 공부 해 "
-        );
+        builder.setMessage("이어하기");
         builder.setPositiveButton("계속", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

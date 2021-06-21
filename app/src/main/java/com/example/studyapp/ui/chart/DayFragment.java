@@ -179,6 +179,10 @@ public class DayFragment extends Fragment {
         PieDataSet set = new PieDataSet(entries, "Study Information");
         set.setColors(colorList);
         PieData data = new PieData(set);
+
+        Description description = new Description();
+        description.setText("공부/휴식 통계");
+        piechart.setDescription(description);
         piechart.setData(data);
         piechart.invalidate();
     }
@@ -297,6 +301,14 @@ public class DayFragment extends Fragment {
         quitLog = new String [len];
         focusLog = new String [len];
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        View view = getView();
+        view.requestLayout();
+    }
+
     private void searchTimelineData(){
         String url = String.format(Env.timelineURL, userID,today);
         StringRequest request = new StringRequest(Request.Method.GET, url,
@@ -356,12 +368,14 @@ public class DayFragment extends Fragment {
                             JSONObject studyObject = jsonArray.getJSONObject(0);
                             JSONObject studyObject2 = jsonArray.getJSONObject(1);
 
+
                             MinStartTime = studyObject.getString("START");
                             MaxEndTime = studyObject.getString("END");
                             MaxFocus = studyObject.getString("focusOn");
                             sumDayStartEndTerm = Float.parseFloat(studyObject.getString("TERM"));
                             totalTime = studyObject2.getString("TOTAL");
                             allStudyTimeOnDaySec = Float.parseFloat(studyObject2.getString("TOTALSEC"));
+
 
 
                             tv_longTime.setText(MaxFocus);

@@ -116,6 +116,12 @@ public class MonthFragment extends Fragment {
         }
         return v;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        View view = getView();
+        view.requestLayout();
+    }
     private void setBarChartData(){
         ArrayList<BarEntry> entries = new ArrayList<>();
         int j = 0;
@@ -193,6 +199,9 @@ public class MonthFragment extends Fragment {
 
         set.setColors(colorList);
         PieData data = new PieData(set);
+        Description description = new Description();
+        description.setText("공부/휴식 통계");
+        piechart.setDescription(description);
         piechart.setData(data);
         piechart.invalidate();
     }

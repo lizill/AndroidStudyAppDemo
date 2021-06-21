@@ -131,12 +131,22 @@ public class WeekFragment extends Fragment {
         PieDataSet set = new PieDataSet(entries, "Study Information");
         set.setColors(colorList);
         PieData data = new PieData(set);
+
+        Description description = new Description();
+        description.setText("공부/휴식 통계");
+        piechart.setDescription(description);
         piechart.setData(data);
         piechart.invalidate();
     }
     private void createBarChartDataArray(int len){
         dateArray = new float [len];
         timeArray = new float [len];
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        View view = getView();
+        view.requestLayout();
     }
     private void setBarChartData(){
         ArrayList<BarEntry> entries = new ArrayList<>();
