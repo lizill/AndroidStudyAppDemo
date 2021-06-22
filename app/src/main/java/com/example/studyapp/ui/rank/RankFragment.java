@@ -116,9 +116,7 @@ public class RankFragment extends Fragment {
 
 
     private void searchData(String date, String time){
-        while(recycleArrayList.size()>0){
-            recycleArrayList.remove(0);
-        };
+        recycleArrayList.clear();
 
         String url = String.format(date+"?study_date="+time);
         StringRequest request = new StringRequest(Request.Method.GET, url,
@@ -172,6 +170,15 @@ public class RankFragment extends Fragment {
                                         recycleArrayList.add(rankData);
                                         continue;
                                 }
+                                int online = jo.getInt("online");
+
+                                RankData rankData = new RankData(
+                                        jo.getString("Ranking"),
+                                        name,
+                                        joTotalTime,
+                                        ((timeSecond*100)/first)>0?(timeSecond*100)/first:1,
+                                        online);
+                                recycleArrayList.add(rankData);
                                 tv_name.setText(name);
                                 tv_time.setText(joTotalTime);
                             }
