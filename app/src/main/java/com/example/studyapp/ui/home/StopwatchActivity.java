@@ -89,12 +89,9 @@ public class StopwatchActivity extends AppCompatActivity {
         dateFormat.setTimeZone(tz);
         timeFormat.setTimeZone(tz);
         today = dateFormat.format(new Date());
-        System.out.println(today);
 
         confirmToday =today.split("-")[2];
-        start = timeFormat.format(new Date());
-        gapOfSecond = 60 - Integer.parseInt(start.split(" ")[2]);
-        gapOfMinute = 60 - Integer.parseInt(start.split(" ")[1]) - 1;
+
 
         //과목정보 불러오기
         Intent intent = getIntent();
@@ -123,43 +120,8 @@ public class StopwatchActivity extends AppCompatActivity {
             }
         });
     }
-    private void BeginEndData(){
-        String url = Env.beginEndURL;
-        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    //json object >> {response:[{key : value}, {.....
-                    JSONObject jsonObject = new JSONObject(response);
-                    String res = jsonObject.getString("success");
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        })  {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String,String> params = new HashMap<>();
-                params.put("userID", userID);
-                params.put("study_date", today);
-                params.put("study_subject", subject);
-                params.put("study_start", start.replace(" ", ":"));
-                params.put("study_end", end.replace(" ", ":"));
-
-                return params;
-            }
-        };
-        request.setShouldCache(false);
-        requestQueue.add(request);
-    }
     private void InsertData(){
-        String url = Env.saveURL;
+        String url = Env.save2URL;
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -167,10 +129,8 @@ public class StopwatchActivity extends AppCompatActivity {
                         //json object >> {response:[{key : value}, {.....
                         JSONObject jsonObject = new JSONObject(response);
                         String res = jsonObject.getString("success");
-
-                        end = timeFormat.format(new Date());
-
-                        BeginEndData();
+                        System.out.println("start  " + start + "  end"  + end);
+//                        BeginEndData();
 
                     } catch (JSONException e) {
                     e.printStackTrace();
@@ -185,11 +145,14 @@ public class StopwatchActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 String time = tv_subject_timer.getText().toString().replace(":","");
+                end = timeFormat.format(new Date());
                 Map<String,String> params = new HashMap<>();
                 params.put("userID", userID);
                 params.put("study_date", today);
                 params.put("study_subject", subject);
                 params.put("study_time", time);
+                params.put("study_start", start.replace(" ", ":"));
+                params.put("study_end", end.replace(" ", ":"));
                 return params;
             }
         };
@@ -197,7 +160,7 @@ public class StopwatchActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
     private void UpdateData(){
-        String url = Env.reSaveURL;
+        String url = Env.reSave2URL;
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -206,9 +169,7 @@ public class StopwatchActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     String res = jsonObject.getString("success");
 
-                    end = timeFormat.format(new Date());
-
-                    BeginEndData();
+//                    BeginEndData();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -223,12 +184,14 @@ public class StopwatchActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 String time = tv_subject_timer.getText().toString().replace(":","");
-
+                end = timeFormat.format(new Date());
                 Map<String,String> params = new HashMap<>();
                 params.put("userID", userID);
                 params.put("study_date", today);
                 params.put("study_subject", subject);
                 params.put("study_time", time);
+                params.put("study_start", start.replace(" ", ":"));
+                params.put("study_end", end.replace(" ", ":"));
                 return params;
             }
         };
@@ -268,6 +231,9 @@ public class StopwatchActivity extends AppCompatActivity {
                                 studyTimeTotalSec = Integer.parseInt(studyTotalTime);
                             }
                             handler.postDelayed(runnable, 0);
+                            start = timeFormat.format(new Date());
+                            gapOfSecond = 60 - Integer.parseInt(start.split(" ")[2]);
+                            gapOfMinute = 60 - Integer.parseInt(start.split(" ")[1]) - 1;
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

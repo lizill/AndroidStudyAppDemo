@@ -6,7 +6,9 @@ public class Env {
     public static String DeleteSubjectURL = "https://dong0110.com/chatphp/timer/DeleteSubject.php";
     public static String fetchURL = "https://dong0110.com/chatphp/timer/FetchTime.php?userID=%s&study_date=%s&study_subject=%s";
     public static String reSaveURL = "https://dong0110.com/chatphp/timer/ReSaveTime.php";
+    public static String reSave2URL = "https://dong0110.com/chatphp/timer/ReSaveTime2.php";
     public static String saveURL = "https://dong0110.com/chatphp/timer/SaveTime.php";
+    public static String save2URL = "https://dong0110.com/chatphp/timer/SaveTime2.php";
     public static String beginEndURL = "https://dong0110.com/chatphp/timer/BeginEndTime.php";
     public static String totalURL = "https://dong0110.com/chatphp/timer/TotalTime.php?userID=%s&study_date=%s";
     public static String total2URL = "https://dong0110.com/chatphp/timer/TotalTime2.php?userID=%s&study_date=%s";
