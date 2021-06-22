@@ -169,8 +169,6 @@ public class StopwatchActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     String res = jsonObject.getString("success");
 
-//                    BeginEndData();
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -280,7 +278,7 @@ public class StopwatchActivity extends AppCompatActivity {
             sec = t;
 
             t2 = studyTimeTotalSec + tmp;
-            totalHour = t / 3600;
+            totalHour = t2 / 3600;
             t2 %= 3600;
             totalMin = t2 / 60;
             t2 %= 60;
@@ -289,17 +287,10 @@ public class StopwatchActivity extends AppCompatActivity {
             //String format을 통한 시간 대입
             tv_subject_timer.setText(String.format("%02d", hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec));
             tv_total_timer.setText(String.format("%02d", totalHour) + ":" + String.format("%02d", totalMin) + ":" + String.format("%02d", totalSec));
-
+            System.out.println(totalHour +  "          " + hour);
             handler.postDelayed(this, 0);
         }
     };
-    private void restart(){
-        tv_subject_timer.setText("00:00:00");
-        today = dateFormat.format(new Date());
-        start="00:00:00";
-        StartTime = SystemClock.uptimeMillis();
-        leaveTime = Seconds = Minutes = Hours = hour = min = sec = totalSec = totalHour = totalMin = 0;
-    }
 
     @Override
     protected void onUserLeaveHint() {
@@ -343,7 +334,7 @@ public class StopwatchActivity extends AppCompatActivity {
                 leaveTime += termTime;
                 isActiveOn = true;
                 start = timeFormat.format(new Date());
-                handler.postDelayed(runnable, 0000);
+                handler.postDelayed(runnable, 0);
             }
         });
         builder.show();
